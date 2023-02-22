@@ -1,3 +1,17 @@
-backend/node_modules/
-frontend/node_modules/
-mobile/node_modules/
+# backend folder
+/backend/node_modules
+/backend/dist
+/backend/coverage
+/backend/config.env
+/backend/data/products
+
+
+# frontend folder
+/frontend/node_modules
+/frontend/dist
+/frontend/coverage
+/frontend/config.env
+
+# mobile folder
+/mobile/node_modules
+/mobile/config.env
