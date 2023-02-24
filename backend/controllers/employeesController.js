@@ -31,6 +31,13 @@ exports.updateEmployee = catchAsync(async (req, res, next) => {
     new: true,
     runValidators: true,
   });
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      employee,
+    },
+  });
 });
 
 exports.getEmployee = catchAsync(async (req, res, next) => {
@@ -53,7 +60,7 @@ exports.getEmployee = catchAsync(async (req, res, next) => {
 exports.deleteEmployee = catchAsync(async (req, res, next) => {
   const { pin } = req.params;
 
-  await Employee.findOneAndDelete({ pin: pin });
+  await Employee.findOneAndDelete({ pin });
 
   res.status(204).json({
     status: 'success',

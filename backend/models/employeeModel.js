@@ -1,28 +1,28 @@
 const mongoose = require('mongoose');
 
 const workDaySchema = new mongoose.Schema({
-  start: {
+  startWorkDay: {
     type: Date,
     required: true,
   },
-  end: {
+  endworkDay: {
     type: Date,
   },
-  startOfWork: {
+  startOfWorkTime: {
     type: Date,
     required: true,
   },
-  endOfWork: {
+  endOfWorkTime: {
     type: Date,
   },
 });
 
 const vacationSchema = new mongoose.Schema({
-  start: {
+  startDay: {
     type: Date,
     required: true,
   },
-  end: {
+  endDay: {
     type: Date,
     required: true,
   },
@@ -37,49 +37,58 @@ const vacationSchema = new mongoose.Schema({
       'bezpłatny',
     ],
     required: true,
+    default: 'wypoczynkowy',
   },
 });
 
 const illnessSchema = new mongoose.Schema({
-  start: {
+  startDay: {
     type: Date,
     required: true,
   },
-  end: {
+  endDay: {
     type: Date,
     required: true,
   },
 });
 
-const employeeSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
-    trim: true,
+const employeeSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    surname: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    pin: {
+      type: Number,
+      required: true,
+      unique: true,
+      min: 101,
+    },
+    workDays: [workDaySchema],
+    vacationDays: [vacationSchema],
+    illnesseDays: [illnessSchema],
+    vacationDaysTotal: {
+      type: Number,
+    },
+    vacationDaysUsed: {
+      type: Number,
+      default: 0,
+    },
   },
-  surname: {
-    type: String,
-    required: true,
-    trim: true,
+  {
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
   },
-  pin: {
-    type: Number,
-    required: true,
-    unique: true,
-  },
-  workDays: [workDaySchema],
-  vacations: [vacationSchema],
-  illnesses: [illnessSchema],
-  vacationDaysTotal: {
-    type: Number,
-  },
-  vacationDaysUsed: {
-    type: Number,
-    default: 0,
-  },
-  vacationDaysRemaining: {
-    type: Number,
-  },
+);
+
+employeeSchema.virtual('vacationDaysRemaining').get(function getVacationDaysRemaining() {
+  return this.vacationDaysTotal - this.vacationDaysUsed;
 });
 
 const Employee = mongoose.model('Employee', employeeSchema);
