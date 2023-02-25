@@ -1,4 +1,5 @@
 const Employee = require('../models/employeeModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAssync');
 const { calculateVacationDays } = require('../utils/vacationUtils');
 
@@ -12,10 +13,7 @@ exports.addVacation = catchAsync(async (req, res, next) => {
 
   const vacationDays = calculateVacationDays(newStartDay, newEndDay, typeOfLeave);
   if (vacationDays > employee.vacationDaysRemaining) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Not enough vacation days remaining',
-    });
+    return next(new AppError('Not enough vacation days remaining', 400));
   }
 
   const conflictVacationPeriod = employee.vacationDays.find(
@@ -26,10 +24,7 @@ exports.addVacation = catchAsync(async (req, res, next) => {
   );
 
   if (conflictVacationPeriod) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Vacation period already exists for the selected dates.',
-    });
+    return next(new AppError('Vacation period already exists for the selected dates.', 400));
   }
 
   employee.vacationDays.push({
@@ -60,10 +55,7 @@ exports.deleteVacation = catchAsync(async (req, res, next) => {
   );
 
   if (vacationIndex === -1) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Vacation period not found',
-    });
+    return next(new AppError('Vacation period not found', 400));
   }
 
   const { startDay, endDay, typeOfLeave } = employee.vacationDays.id(id);

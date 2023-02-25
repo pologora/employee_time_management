@@ -19,7 +19,7 @@
     "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.27.5",
-    "morgan": "^1.10.0",
-    "ndb": "^1.1.5"
+    "ndb": "^1.1.5",
+    "morgan": "^1.10.0"
   }
 }

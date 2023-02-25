@@ -5,10 +5,7 @@ dotenv.config({ path: './config.env' });
 const mongoose = require('mongoose');
 
 const connectBase = async () => {
-  const DB = process.env.DATABASE.replace(
-    '<PASSWORD>',
-    process.env.DATABASE_PASSWORD
-  );
+  const DB = process.env.DATABASE.replace('<PASSWORD>', process.env.DATABASE_PASSWORD);
   mongoose.set('strictQuery', false);
   await mongoose.connect(DB);
 

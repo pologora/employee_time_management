@@ -1,4 +1,5 @@
 const Employee = require('../models/employeeModel');
+const AppError = require('../utils/appError');
 
 exports.getEmployeeByPin = async (req, res, next) => {
   const { pin } = req.params;
@@ -14,10 +15,7 @@ exports.getEmployeeByPin = async (req, res, next) => {
   );
 
   if (!employee) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Employee not found',
-    });
+    return next(new AppError('Employee not found'), 404);
   }
 
   req.employee = employee;

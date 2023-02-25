@@ -1,32 +1,43 @@
+const WorkDay = require('../models/workDayModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAssync');
 
 exports.startEndWorkHandler = catchAsync(async (req, res, next) => {
+  const { pin } = req.params;
   const {
     employee,
-    employee: { isWorking, workDays },
+    employee: { isWorking },
   } = req;
-  const { startWork, endWork } = req.body;
 
+  const { startWork, endWork } = req.body;
+  let newWorkTime;
   if (startWork) {
     if (isWorking) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Employee is already working',
-      });
+      return next(new AppError('Employee is already working'), 400);
     }
-    workDays.push({ startWork });
+    newWorkTime = await WorkDay.create({ startWork, pin });
     employee.isWorking = true;
   }
 
   if (endWork) {
     if (!isWorking) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Employee is not currently working',
-      });
+      return next(new AppError('Employee is not currently working'), 400);
     }
-    const { length } = workDays;
-    workDays[length - 1].endWork = endWork;
+    newWorkTime = await WorkDay.findOneAndUpdate(
+      { pin, endWork: { $exists: false } },
+      { $set: { endWork } },
+      { new: true },
+    );
+
+    if (!newWorkTime) {
+      return next(
+        new AppError(
+          `No active workday was found for the employee with the given parameters. 
+          Please make sure the employee is currently working before ending their workday.`,
+          400,
+        ),
+      );
+    }
     employee.isWorking = false;
   }
 
@@ -36,45 +47,71 @@ exports.startEndWorkHandler = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       updatedEmployee,
+      newWorkTime,
     },
   });
 });
 
 exports.updateWorkTime = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  const { employee } = req;
+  const { startWork, endWork } = req.body;
 
-  const startWorkIndex = employee.workDays.findIndex((workDay) => workDay.id === id);
+  const newWorkTime = await WorkDay.findByIdAndUpdate(id, { startWork, endWork });
 
-  if (startWorkIndex === -1) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Wrong startWork id',
-    });
+  if (startWork > endWork) {
+    return next(new AppError('End time could not be later than a start time', 400));
   }
-
-  const { startWork: oldStartWork, endWork: oldEndWork } = employee.workDays[startWorkIndex];
-  const newStartWork = req.body.startWork || oldStartWork;
-  const newEndWork = req.body.endWork || oldEndWork;
-
-  if (newStartWork > newEndWork) {
-    return res.status(400).json({
-      status: 'fail',
-      message: 'End time could not be later than a start time',
-    });
-  }
-  employee.workDays[startWorkIndex] = {
-    ...employee.workDays[startWorkIndex],
-    startWork: newStartWork,
-    endWork: newEndWork,
-  };
-
-  const updatedEmployee = await employee.save();
 
   return res.status(200).json({
     status: 'success',
     data: {
-      updatedEmployee,
+      newWorkTime,
     },
+  });
+});
+
+exports.getWorkDaysByEmployeePin = catchAsync(async (req, res, next) => {
+  const { pin } = req.params;
+  const today = new Date();
+  const thisMonth = today.getMonth();
+  const thisYear = today.getFullYear();
+
+  let startDay;
+  let endDay;
+
+  if (req.query.startDay && req.query.endDay) {
+    startDay = new Date(req.query.startDay);
+    endDay = new Date(req.query.endDay);
+  } else {
+    startDay = new Date(thisYear, thisMonth, 1);
+    endDay = new Date(thisYear, thisMonth + 1, 0, '24');
+  }
+
+  const workDays = await WorkDay.find({
+    pin,
+    startWork: { $gte: startDay },
+    endWork: { $lte: endDay },
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    data: {
+      workDays,
+    },
+  });
+});
+
+exports.deleteWorkDay = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+
+  const deletedDay = await WorkDay.findByIdAndDelete(id);
+
+  if (!deletedDay) {
+    return next(new AppError('No such ID', 400));
+  }
+
+  return res.status(204).json({
+    status: 'success',
+    message: 'Document deleted',
   });
 });

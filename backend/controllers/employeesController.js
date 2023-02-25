@@ -1,8 +1,9 @@
 const Employee = require('../models/employeeModel');
+const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAssync');
 
 exports.getAllEmployees = catchAsync(async (req, res, next) => {
-  const employees = await Employee.find({});
+  const employees = await Employee.find();
 
   res.status(200).json({
     status: 'success',
@@ -32,7 +33,11 @@ exports.updateEmployee = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  res.status(200).json({
+  if (!employee) {
+    return next(new AppError(`Brak pracownika z pinem: ${pin}`, 404));
+  }
+
+  return res.status(200).json({
     status: 'success',
     data: {
       employee,
@@ -46,10 +51,10 @@ exports.getEmployee = catchAsync(async (req, res, next) => {
   const employee = await Employee.findOne({ pin });
 
   if (!employee) {
-    throw new Error(`Pin: ${pin} you provided is wrong`);
+    return next(new AppError(`Brak pracownika z pinem: ${pin}`, 404));
   }
 
-  res.status(200).json({
+  return res.status(200).json({
     status: 'success',
     data: {
       employee,
@@ -60,9 +65,13 @@ exports.getEmployee = catchAsync(async (req, res, next) => {
 exports.deleteEmployee = catchAsync(async (req, res, next) => {
   const { pin } = req.params;
 
-  await Employee.findOneAndDelete({ pin });
+  const employee = await Employee.findOneAndDelete({ pin });
 
-  res.status(204).json({
+  if (!employee) {
+    return next(new AppError(`Brak pracownika z pinem: ${pin}`, 404));
+  }
+
+  return res.status(204).json({
     status: 'success',
     message: 'Employee deleted',
   });

@@ -1,20 +1,5 @@
 const mongoose = require('mongoose');
 
-const workDaySchema = new mongoose.Schema({
-  startWork: {
-    type: Date,
-    required: true,
-  },
-  endWork: {
-    type: Date,
-  },
-  expireAt: {
-    type: Date,
-    default: new Date(),
-    expire: 20,
-  },
-});
-
 const vacationSchema = new mongoose.Schema({
   startDay: {
     type: Date,
@@ -33,20 +18,10 @@ const vacationSchema = new mongoose.Schema({
       'szkoleniowy',
       'na żądanie',
       'bezpłatny',
+      'zaświadczenie lekarskie',
     ],
     required: true,
     default: 'wypoczynkowy',
-  },
-});
-
-const illnessSchema = new mongoose.Schema({
-  startDay: {
-    type: Date,
-    required: true,
-  },
-  endDay: {
-    type: Date,
-    required: true,
   },
 });
 
@@ -67,9 +42,7 @@ const employeeSchema = new mongoose.Schema(
       unique: true,
       min: 101,
     },
-    workDays: [workDaySchema],
     vacationDays: [vacationSchema],
-    illnesseDays: [illnessSchema],
     vacationDaysTotal: {
       type: Number,
     },
@@ -84,11 +57,6 @@ const employeeSchema = new mongoose.Schema(
     isWorking: {
       type: Boolean,
       default: false,
-    },
-    expireAt: {
-      type: Date,
-      default: new Date(),
-      expire: 40,
     },
   },
   {
