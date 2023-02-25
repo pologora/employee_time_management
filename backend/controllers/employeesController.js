@@ -27,7 +27,7 @@ exports.createEmployee = catchAsync(async (req, res, next) => {
 exports.updateEmployee = catchAsync(async (req, res, next) => {
   const { pin } = req.params;
 
-  const employee = await Employee.findOneAndUpdate({ pin: pin }, req.body, {
+  const employee = await Employee.findOneAndUpdate({ pin }, req.body, {
     new: true,
     runValidators: true,
   });
@@ -43,7 +43,7 @@ exports.updateEmployee = catchAsync(async (req, res, next) => {
 exports.getEmployee = catchAsync(async (req, res, next) => {
   const { pin } = req.params;
 
-  const employee = await Employee.findOne({ pin: pin });
+  const employee = await Employee.findOne({ pin });
 
   if (!employee) {
     throw new Error(`Pin: ${pin} you provided is wrong`);

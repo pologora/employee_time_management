@@ -3,6 +3,7 @@ const morgan = require('morgan');
 
 const employeeRoute = require('./routes/employeesRoute');
 const authRoute = require('./routes/authRoute');
+const workTimeRoute = require('./routes/workTimeRoute');
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 
 app.use('/api/v1/employees', employeeRoute);
 app.use('/api/v1/users', authRoute);
+app.use('/api/v1/employees', workTimeRoute);
 
 app.all('*', (req, res, next) => {
   const err = new Error(`Can't find ${req.originalUrl} on this server!`, 404);

@@ -1,19 +1,17 @@
 const mongoose = require('mongoose');
 
 const workDaySchema = new mongoose.Schema({
-  startWorkDay: {
+  startWork: {
     type: Date,
     required: true,
   },
-  endworkDay: {
+  endWork: {
     type: Date,
   },
-  startOfWorkTime: {
+  expireAt: {
     type: Date,
-    required: true,
-  },
-  endOfWorkTime: {
-    type: Date,
+    default: new Date(),
+    expire: 20,
   },
 });
 
@@ -66,7 +64,6 @@ const employeeSchema = new mongoose.Schema(
     },
     pin: {
       type: Number,
-      required: true,
       unique: true,
       min: 101,
     },
@@ -80,12 +77,33 @@ const employeeSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    isSNTI: {
+      type: Boolean,
+      default: false,
+    },
+    isWorking: {
+      type: Boolean,
+      default: false,
+    },
+    expireAt: {
+      type: Date,
+      default: new Date(),
+      expire: 40,
+    },
   },
   {
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
   },
 );
+
+employeeSchema.pre('save', async function generatePin(next) {
+  if (this.isNew && !this.pin) {
+    const lastEmployee = await this.constructor.findOne({}, { pin: 1 }, { sort: { pin: -1 } });
+    this.pin = lastEmployee ? lastEmployee.pin + 1 : 101;
+  }
+  next();
+});
 
 employeeSchema.virtual('vacationDaysRemaining').get(function getVacationDaysRemaining() {
   return this.vacationDaysTotal - this.vacationDaysUsed;
