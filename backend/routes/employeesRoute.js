@@ -1,4 +1,6 @@
 const express = require('express');
+const { protect } = require('../controllers/authController');
+
 const {
   createEmployee,
   getAllEmployees,
@@ -12,11 +14,12 @@ const {
   deleteVacation,
   getVacationsByDate,
 } = require('../controllers/vacationController');
+
 const { getEmployeeByPin } = require('../middlewares/employeeVacationMiddleware');
 
 const router = express.Router();
 
-router.route('/').get(getAllEmployees).post(createEmployee);
+router.route('/').get(protect, getAllEmployees).post(createEmployee);
 router.route('/:pin').get(getEmployee).patch(updateEmployee).delete(deleteEmployee);
 
 router.route('/:pin/vacation').post(getEmployeeByPin, addVacation);

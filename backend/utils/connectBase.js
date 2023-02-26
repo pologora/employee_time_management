@@ -9,6 +9,7 @@ const connectBase = async () => {
   mongoose.set('strictQuery', false);
   await mongoose.connect(DB);
 
+  // eslint-disable-next-line no-console
   console.log('DB connected');
 };
 
