@@ -1,11 +1,14 @@
 /* eslint-disable react/prop-types */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View, TouchableOpacity, Text, StyleSheet,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import { actionDanger, backgroundLight, mainDark } from './Styles';
+import { Audio } from 'expo-av';
+import {
+  actionDanger, actionPositive, backgroundLight, mainDark,
+} from './Styles';
 
 const styles = StyleSheet.create({
   keypadContainer: {
@@ -34,13 +37,41 @@ const styles = StyleSheet.create({
   },
 });
 
-export default function Keypad({ onPinChange }) {
+export default function Keypad({ onPinChange, navigation }) {
   const [pin, setPin] = useState('');
+  const [sound, setSound] = useState();
+
+  async function playSound() {
+    if (sound) {
+      await sound.setPositionAsync(0);
+      await sound.playAsync();
+    }
+  }
+
+  async function loadSound() {
+    try {
+      const { newSound } = await Audio.Sound.createAsync(require('./assets/ping.mp3'));
+      setSound(newSound);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    loadSound();
+    return () => {
+      if (sound) {
+        sound.unloadAsync();
+      }
+    };
+  }, []);
 
   const handleDigitPress = (digit) => {
-    const newPin = pin + digit;
-    setPin(newPin);
-    onPinChange(newPin);
+    if (pin.length < 3) {
+      const newPin = pin + digit;
+      setPin(newPin);
+      onPinChange(newPin);
+    }
   };
 
   const handleBackspacePress = () => {
@@ -50,9 +81,11 @@ export default function Keypad({ onPinChange }) {
   };
 
   const handleDalejPress = () => {
+    navigation.navigate('StartWork');
     const newPin = '';
     setPin(newPin);
     onPinChange(newPin);
+    playSound();
   };
 
   return (
@@ -100,10 +133,14 @@ export default function Keypad({ onPinChange }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.keypadButton, styles.next]}
-            onPress={handleDalejPress}
+            onPress={() => handleDalejPress()}
             disabled={pin.length < 3 && true}
           >
-            <AntDesign name="checkcircle" size={68} color={pin.length > 2 ? 'green' : 'gray'} />
+            <AntDesign
+              name="checkcircle"
+              size={68}
+              color={pin.length > 2 ? actionPositive : 'gray'}
+            />
           </TouchableOpacity>
         </View>
       </View>

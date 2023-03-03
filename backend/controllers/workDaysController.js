@@ -95,6 +95,7 @@ exports.getWorkDaysByEmployeePin = catchAsync(async (req, res, next) => {
 
   return res.status(200).json({
     status: 'success',
+    length: workDays.length,
     data: {
       workDays,
     },

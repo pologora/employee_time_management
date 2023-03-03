@@ -1,9 +1,13 @@
 const Employee = require('../models/employeeModel');
+const APIFeatures = require('../utils/APIFeatures');
 const AppError = require('../utils/appError');
 const catchAsync = require('../utils/catchAssync');
 
 exports.getAllEmployees = catchAsync(async (req, res, next) => {
-  const employees = await Employee.find();
+  const features = new APIFeatures(Employee.find(), req.query);
+  features.filter().sort().limitFields();
+
+  const employees = await features.query;
 
   res.status(200).json({
     status: 'success',
