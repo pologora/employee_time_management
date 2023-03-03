@@ -1,4 +1,0 @@
-// Configure for Android
-// Add android.permission.RECORD_AUDIO permission to your manifest (android/app/src/main/AndroidManifest.xml):
-
-// <uses-permission android:name="android.permission.RECORD_AUDIO" />
