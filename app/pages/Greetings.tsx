@@ -12,7 +12,7 @@ export default function Greetings({
   navigation,
   route,
 }: GreetingsProps): JSX.Element {
-  const {employeeObject} = route.params;
+  const {employee} = route.params;
   const currentTime = new Date().toLocaleTimeString([], {
     hour: '2-digit',
     minute: '2-digit',
@@ -34,10 +34,10 @@ export default function Greetings({
       <Logo />
       <View style={styles.actionContainer}>
         <Text style={[styles.text, styles.name]}>
-          {employeeObject.name} {employeeObject.surname}
+          {employee.name} {employee.surname}
         </Text>
         <Text style={[styles.text, styles.action]}>
-          {employeeObject.isWorking ? 'Rozpoczynasz pracę' : 'Kończysz pracę'}
+          {employee.isWorking ? 'Rozpoczynasz pracę' : 'Kończysz pracę'}
         </Text>
         <Text style={[styles.text, styles.time]}>{time}</Text>
       </View>

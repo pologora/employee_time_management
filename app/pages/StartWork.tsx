@@ -67,48 +67,6 @@ export default function StartWork({
     }
   };
 
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: backgroundDark,
-      alignItems: 'center',
-      justifyContent: 'flex-start',
-    },
-    nameTextContainer: {
-      backgroundColor: backgroundLight,
-      width: '80%',
-      marginTop: '50%',
-      padding: 0,
-    },
-    text: {
-      marginVertical: 20,
-      fontSize: 24,
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-    backHomeContainer: {
-      position: 'absolute',
-      bottom: 20,
-      left: 20,
-    },
-    startWorkContainer: {
-      backgroundColor: actionButtonBackgroundColor,
-      borderRadius: 30,
-      paddingHorizontal: 20,
-      paddingVertical: 20,
-      width: '80%',
-      marginTop: '30%',
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    startWorkText: {
-      color: mainLight,
-      fontWeight: 'bold',
-      fontSize: 18,
-      textTransform: 'uppercase',
-    },
-  });
-
   return (
     <View style={styles.container}>
       <Logo />
@@ -118,7 +76,10 @@ export default function StartWork({
         </Text>
       </View>
       <TouchableOpacity
-        style={styles.startWorkContainer}
+        style={[
+          styles.startWorkContainer,
+          {backgroundColor: actionButtonBackgroundColor},
+        ]}
         onPress={startEndWorkHandler}>
         <Text style={styles.startWorkText}>{textInStartButton}</Text>
       </TouchableOpacity>
@@ -130,3 +91,44 @@ export default function StartWork({
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: backgroundDark,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+  },
+  nameTextContainer: {
+    backgroundColor: backgroundLight,
+    width: '80%',
+    marginTop: '50%',
+    padding: 0,
+  },
+  text: {
+    marginVertical: 20,
+    fontSize: 24,
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  backHomeContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+  },
+  startWorkContainer: {
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    width: '80%',
+    marginTop: '30%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  startWorkText: {
+    color: mainLight,
+    fontWeight: 'bold',
+    fontSize: 18,
+    textTransform: 'uppercase',
+  },
+});
