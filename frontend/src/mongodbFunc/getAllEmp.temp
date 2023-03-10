@@ -1,0 +1,9 @@
+exports = async function ({ query, headers, body }, response) {
+  const collection = context.services.get('mongodb-atlas').db('magazyn').collection('Employee');
+  const projection = {
+    name: 1, surname: 1, isWorking: 1, pin: 1,
+  };
+  const employeeList = await collection.find({}, projection);
+
+  return employeeList;
+};
