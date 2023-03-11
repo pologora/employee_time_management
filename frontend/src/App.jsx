@@ -1,13 +1,8 @@
-import { Typography } from '@mui/material';
+// import { Container } from '@mui/material';
 import Dashboard from './components/Dashboard';
 
 function App() {
-  return (
-    <>
-      <Dashboard />
-      <Typography>Hi</Typography>
-    </>
-  );
+  return <Dashboard />;
 }
 
 export default App;

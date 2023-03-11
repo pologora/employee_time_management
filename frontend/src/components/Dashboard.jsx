@@ -1,11 +1,8 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import CssBaseline from '@mui/material/CssBaseline';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
-// import Typography from '@mui/material/Typography';
-import Divider from '@mui/material/Divider';
+// import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -16,10 +13,9 @@ import ForestSharpIcon from '@mui/icons-material/ForestSharp';
 import ListAltSharpIcon from '@mui/icons-material/ListAltSharp';
 import { useState } from 'react';
 import Home from './pages/home/Home';
-import Pracownicy from './pages/pracownicy/Pracownicy';
-import Raporty from './pages/raporty/Raporty';
-import Urlop from './pages/urlop/Urlop';
-// import { useState } from 'react';
+import Employees from './pages/pracownicy/Employees';
+import Raporty from './pages/raporty/Raports';
+import Urlop from './pages/urlop/Vacations';
 
 const drawerWidth = 240;
 
@@ -63,7 +59,7 @@ export default function PermanentDrawerLeft() {
       componentToRender = <Home />;
       break;
     case 'pracownicy':
-      componentToRender = <Pracownicy />;
+      componentToRender = <Employees />;
       break;
     case 'urlop':
       componentToRender = <Urlop />;
@@ -80,12 +76,6 @@ export default function PermanentDrawerLeft() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        sx={{ width: `calc(100% - ${drawerWidth}px)`, ml: `${drawerWidth}px` }}
-      >
-        <Toolbar />
-      </AppBar>
       <Drawer
         sx={{
           width: drawerWidth,
@@ -93,18 +83,19 @@ export default function PermanentDrawerLeft() {
           '& .MuiDrawer-paper': {
             width: drawerWidth,
             boxSizing: 'border-box',
+            backgroundColor: '#f0f0f0',
           },
         }}
         variant="permanent"
         anchor="left"
       >
-        <Toolbar />
-        <Divider />
-        <List>
+        <List sx={{ marginTop: 10 }}>
           {nav.map(({ title, icon, link }) => (
             <ListItem key={title} disablePadding>
               <ListItemButton onClick={() => handleMenuClick(link)}>
-                <ListItemIcon>{icon}</ListItemIcon>
+                <ListItemIcon sx={selectedMenuItem === link ? { color: '#2196f3' } : {}}>
+                  {icon}
+                </ListItemIcon>
                 <ListItemText
                   primary={title}
                   sx={selectedMenuItem === link ? activeMenuSxStyle : {}}
@@ -113,10 +104,8 @@ export default function PermanentDrawerLeft() {
             </ListItem>
           ))}
         </List>
-        <Divider />
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
-        <Toolbar />
         {componentToRender}
       </Box>
     </Box>
