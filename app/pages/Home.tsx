@@ -24,12 +24,20 @@ type HomeProps = {
 };
 
 export default function Home({navigation}: HomeProps): JSX.Element {
-  const {useQuery} = employeeContext;
+  const {useQuery, useRealm} = employeeContext;
   const [pin, setPin] = useState<string>('');
   const [employee, setEmployee] = useState<EmployeeModel | undefined>(
     undefined,
   );
 
+  const realm = useRealm();
+  const handlePress = () => {
+    console.log(realm);
+
+    // realm.write(() => {
+    //   realm.deleteAll();
+    // });
+  };
   const employeesAll = useQuery(EmployeeModel);
 
   const handlePinChange = (newPin: string) => {
@@ -70,6 +78,9 @@ export default function Home({navigation}: HomeProps): JSX.Element {
         <View style={styles.dateContainer}>
           <Clock />
         </View>
+        {/* <TouchableOpacity onPress={handlePress}>
+          <Text>Click Me</Text>
+        </TouchableOpacity> */}
         <Logo />
         <View style={styles.nameTextContainer}>
           <Text style={styles.pinText}>

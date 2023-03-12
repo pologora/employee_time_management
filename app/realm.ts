@@ -16,6 +16,8 @@ export class EmployeeModel extends Realm.Object<EmployeeModel> {
       surname: 'string',
       pin: 'string',
       isWorking: {type: 'bool', default: false},
+      workDays: {type: 'Workdays[]', default: []},
+      vacationDays: {type: 'Vacations[]', default: []},
     },
   };
 }
@@ -34,10 +36,38 @@ export class WorkTimeModel extends Realm.Object<WorkTimeModel> {
       startWork: 'date',
       endWork: {type: 'date?', default: null},
       pin: 'string',
+      employee: {
+        type: 'linkingObjects',
+        objectType: 'Employee',
+        property: 'workDays',
+      },
+    },
+  };
+}
+
+export class VacationModel extends Realm.Object<VacationModel> {
+  _id!: Realm.BSON.ObjectId;
+  pin!: string;
+  startVacation!: Date;
+  endVacation!: Date;
+
+  static schema = {
+    name: 'Vacations',
+    primaryKey: '_id',
+    properties: {
+      _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
+      startVacation: 'date',
+      endVacation: 'date',
+      pin: 'string',
+      employee: {
+        type: 'linkingObjects',
+        objectType: 'Employee',
+        property: 'vacationDays',
+      },
     },
   };
 }
 
 export const employeeContext = createRealmContext({
-  schema: [EmployeeModel, WorkTimeModel],
+  schema: [EmployeeModel, WorkTimeModel, VacationModel],
 });

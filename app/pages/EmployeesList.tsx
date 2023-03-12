@@ -16,9 +16,6 @@ export default function EmployeesList({navigation}: EmployeesListProps) {
   const employeesAll = useQuery(EmployeeModel);
   const employees = employeesAll.filtered('isWorking=true');
 
-  const workHours = useQuery(WorkTimeModel);
-  console.log(workHours.length);
-
   const listEployeesItem = employees?.map((item: EmployeeModel) => (
     <Employee item={item} key={item.pin} />
   ));

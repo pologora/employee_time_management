@@ -39,8 +39,9 @@ export default function StartWork({
       endWork: null,
     };
     realm.write(() => {
-      realm.create('Workdays', newStartWorkTime);
+      const workDay = realm.create('Workdays', newStartWorkTime);
       employee.isWorking = true;
+      employee.workDays.push(workDay);
     });
   }, [realm, employee, pin]);
 
