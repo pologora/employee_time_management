@@ -6,8 +6,8 @@ import Paper from '@mui/material/Paper';
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   '& > *': {
-    padding: 5,
-    paddingLeft: 10,
+    padding: '5px',
+    paddingLeft: '10px',
   },
   '&:hover': {
     backgroundColor: theme.palette.action.hover,

@@ -4,13 +4,11 @@ import useAxios from '../../../hooks/useAxios';
 
 import AddEmployee from './AddEmployeeModal';
 import EmployeesTable from './EmployeesTable';
-import UpdateEmployee from './UpdateEmployeeModal';
 
 function Employees() {
   const [employees, setEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
   const { get, isLoading } = useAxios();
 
   const getEmployees = async () => {
@@ -45,7 +43,6 @@ function Employees() {
             onChange={(e) => setSearchTerm(e.target.value)}
           />
           <AddEmployee employees={employees} getEmployees={getEmployees} />
-          <UpdateEmployee />
         </Box>
         {!isLoading ? <EmployeesTable employees={filteredEmployees} /> : <CircularProgress />}
       </Box>

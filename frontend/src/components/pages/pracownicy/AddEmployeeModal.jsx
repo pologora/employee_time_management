@@ -36,7 +36,7 @@ export default function AddEmployee({ employees, getEmployees }) {
   const [pin, setDifaultPin] = useState('');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
-  const [isSNTI, setIsSNTI] = useState(false);
+  const [isSnti, setIsSnti] = useState(false);
 
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
 
@@ -44,6 +44,7 @@ export default function AddEmployee({ employees, getEmployees }) {
     name,
     surname,
     pin,
+    isSnti,
   };
 
   const addEmployee = async (data) => {
@@ -59,7 +60,7 @@ export default function AddEmployee({ employees, getEmployees }) {
   const handleClearForm = () => {
     setName('');
     setSurname('');
-    setIsSNTI(false);
+    setIsSnti(false);
     setDifaultPin('');
     setOpen(false);
   };
@@ -144,7 +145,7 @@ export default function AddEmployee({ employees, getEmployees }) {
               <Typography variant="subtitle1" sx={{ mr: 1 }}>
                 SNTI
               </Typography>
-              <Checkbox checked={isSNTI} onChange={(e) => setIsSNTI(e.target.checked)} />
+              <Checkbox checked={isSnti} onChange={(e) => setIsSnti(e.target.checked)} />
             </Box>
             <Button
               variant="contained"

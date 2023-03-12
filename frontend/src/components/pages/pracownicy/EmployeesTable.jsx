@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import {
   Button,
-  Modal,
   Table,
   TableBody,
   TableCell,
@@ -10,21 +9,12 @@ import {
   TableRow,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useState } from 'react';
-import UpdateEmployee from './UpdateEmployeeModal';
+// import { useState } from 'react';
 
 function EmployeesTable({ employees }) {
-  const [modalOpen, setModalOpen] = useState(false);
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
-
-  const handleCloseModal = () => {
-    setModalOpen(false);
-    setSelectedEmployee(null);
-  };
-
   const handleEdit = (employee) => {
-    setSelectedEmployee(employee);
-    setModalOpen(true);
+    // setModalOpen(true);
+    console.log(employee);
   };
 
   const handleEmployeeClick = (pin) => {
@@ -36,8 +26,8 @@ function EmployeesTable({ employees }) {
   };
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '& > *': {
-      padding: 5,
-      paddingLeft: 10,
+      padding: 0,
+      paddingLeft: '10px',
     },
     '&:hover': {
       backgroundColor: theme.palette.action.hover,
@@ -73,7 +63,7 @@ function EmployeesTable({ employees }) {
               <TableCell align="left">{row.pin}</TableCell>
               <TableCell align="left">
                 <Button size="small" color="secondary" onClick={() => handleEdit(row)}>
-                  redagować
+                  edytuj
                 </Button>
               </TableCell>
               <TableCell align="left">
@@ -85,14 +75,6 @@ function EmployeesTable({ employees }) {
           ))}
         </TableBody>
       </Table>
-      <Modal
-        open={modalOpen}
-        onClose={handleCloseModal}
-        aria-labelledby="modal-title"
-        aria-describedby="modal-description"
-      >
-        <UpdateEmployee employee={selectedEmployee} onClose={handleCloseModal} />
-      </Modal>
     </TableContainer>
   );
 }

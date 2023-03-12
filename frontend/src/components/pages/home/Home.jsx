@@ -21,10 +21,6 @@ function Home() {
     getEmployees();
   }, []);
 
-  const employeesSortedByTime = [...employees].sort(
-    (a, b) => new Date(a.startWorkingTime).getTime() - new Date(b.startWorkingTime).getTime(),
-  );
-
   return (
     <div>
       <Button variant="outlined" onClick={getEmployees}>
@@ -32,7 +28,7 @@ function Home() {
       </Button>
       <Box sx={{ marginTop: 5 }}>
         {!isLoading && !error ? (
-          <EmployeesActiveTable employees={employeesSortedByTime} />
+          <EmployeesActiveTable employees={employees} />
         ) : (
           <div>
             {error ? (
