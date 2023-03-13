@@ -1,8 +1,13 @@
-// import { Container } from '@mui/material';
+import { CssBaseline } from '@mui/material';
 import Dashboard from './components/Dashboard';
 
 function App() {
-  return <Dashboard />;
+  return (
+    <>
+      <CssBaseline />
+      <Dashboard />
+    </>
+  );
 }
 
 export default App;

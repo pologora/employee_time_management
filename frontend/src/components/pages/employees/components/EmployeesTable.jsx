@@ -9,11 +9,9 @@ import {
   TableRow,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
-// import { useState } from 'react';
 
-function EmployeesTable({ employees }) {
+function EmployeesTable({ employees, setSelectedEmployee, handleChangeComponentToRender }) {
   const handleEdit = (employee) => {
-    // setModalOpen(true);
     console.log(employee);
   };
 
@@ -21,10 +19,12 @@ function EmployeesTable({ employees }) {
     console.log(pin);
   };
 
-  const handleWorkTime = (pin) => {
-    console.log(pin);
+  const handleWorkTime = (employee) => {
+    setSelectedEmployee(employee);
+    handleChangeComponentToRender('workTime');
   };
-  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+
+  const StyledTableRowEmployees = styled(TableRow)(({ theme }) => ({
     '& > *': {
       padding: 0,
       paddingLeft: '10px',
@@ -56,7 +56,7 @@ function EmployeesTable({ employees }) {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <StyledTableRow key={row.pin} onClick={() => handleEmployeeClick(row.pin)}>
+            <StyledTableRowEmployees key={row.pin} onClick={() => handleEmployeeClick(row)}>
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
@@ -67,11 +67,11 @@ function EmployeesTable({ employees }) {
                 </Button>
               </TableCell>
               <TableCell align="left">
-                <Button size="small" color="primary" onClick={() => handleWorkTime(row.pin)}>
+                <Button size="small" color="primary" onClick={() => handleWorkTime(row)}>
                   godziny
                 </Button>
               </TableCell>
-            </StyledTableRow>
+            </StyledTableRowEmployees>
           ))}
         </TableBody>
       </Table>

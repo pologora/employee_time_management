@@ -4,10 +4,10 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRowEmployeeActive = styled(TableRow)(({ theme }) => ({
   '& > *': {
-    padding: '5px',
-    paddingLeft: '10px',
+    padding: '3px !important',
+    paddingLeft: '10px !important',
   },
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
@@ -15,21 +15,16 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 function EmployeesActiveTable({ employees }) {
-  let longWorkHours = false;
-
   const rows = employees.map((employee) => {
     const { name, surname, startWork } = employee;
     const start = new Date(startWork);
 
+    const now = new Date();
+    const diff = now - start;
+    const minutes = Math.floor(diff / 1000 / 60);
+    const hours = Math.floor(minutes / 60);
+    const remainingMinutes = minutes % 60;
     const getTimePassed = () => {
-      const now = new Date();
-      const diff = now - start;
-      const minutes = Math.floor(diff / 1000 / 60);
-      const hours = Math.floor(minutes / 60);
-      const remainingMinutes = minutes % 60;
-
-      longWorkHours = hours > 10;
-
       const formatHours = (hoursPassed) => {
         if (hoursPassed === 1) {
           return `${hoursPassed} godzina`;
@@ -60,6 +55,7 @@ function EmployeesActiveTable({ employees }) {
       name: `${name} ${surname}`,
       startWorkTime: start.toLocaleString(),
       hoursWorked: getTimePassed(),
+      longWorkHours: hours > 10,
     };
   });
 
@@ -75,15 +71,15 @@ function EmployeesActiveTable({ employees }) {
         </TableHead>
         <TableBody>
           {rows.map((row) => (
-            <StyledTableRow key={row.startWorkTime}>
+            <StyledTableRowEmployeeActive key={row.startWorkTime}>
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>
               <TableCell align="left">{row.startWorkTime}</TableCell>
-              <TableCell align="left" sx={longWorkHours ? { color: 'red' } : {}}>
+              <TableCell align="left" sx={row.longWorkHours ? { color: 'red' } : {}}>
                 {row.hoursWorked}
               </TableCell>
-            </StyledTableRow>
+            </StyledTableRowEmployeeActive>
           ))}
         </TableBody>
       </Table>

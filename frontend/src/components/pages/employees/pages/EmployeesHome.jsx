@@ -1,11 +1,10 @@
 import { Box, CircularProgress, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import useAxios from '../../../hooks/useAxios';
+import useAxios from '../../../../hooks/useAxios';
+import AddEmployee from '../components/AddEmployeeModal';
+import EmployeesTable from '../components/EmployeesTable';
 
-import AddEmployee from './AddEmployeeModal';
-import EmployeesTable from './EmployeesTable';
-
-function Employees() {
+function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   const [employees, setEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
@@ -44,9 +43,17 @@ function Employees() {
           />
           <AddEmployee employees={employees} getEmployees={getEmployees} />
         </Box>
-        {!isLoading ? <EmployeesTable employees={filteredEmployees} /> : <CircularProgress />}
+        {!isLoading ? (
+          <EmployeesTable
+            employees={filteredEmployees}
+            setSelectedEmployee={setSelectedEmployee}
+            handleChangeComponentToRender={handleChangeComponentToRender}
+          />
+        ) : (
+          <CircularProgress />
+        )}
       </Box>
     </div>
   );
 }
-export default Employees;
+export default EmployeesHome;

@@ -1,8 +1,6 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import CssBaseline from '@mui/material/CssBaseline';
 import List from '@mui/material/List';
-// import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -13,7 +11,7 @@ import ForestSharpIcon from '@mui/icons-material/ForestSharp';
 import ListAltSharpIcon from '@mui/icons-material/ListAltSharp';
 import { useState } from 'react';
 import Home from './pages/home/Home';
-import Employees from './pages/pracownicy/Employees';
+import Employees from './pages/employees/Employees';
 import Raporty from './pages/raporty/Raports';
 import Urlop from './pages/urlop/Vacations';
 
@@ -75,7 +73,6 @@ export default function PermanentDrawerLeft() {
 
   return (
     <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
       <Drawer
         sx={{
           width: drawerWidth,

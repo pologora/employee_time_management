@@ -1,10 +1,4 @@
-import WorkTime from '../pracownicy/WorkTime';
-
 function Raporty() {
-  return (
-    <div>
-      <WorkTime />
-    </div>
-  );
+  return <div>Raporty</div>;
 }
 export default Raporty;
