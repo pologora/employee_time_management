@@ -61,6 +61,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 26,
+    color: mainDark,
   },
   name: {
     marginVertical: '10%',
