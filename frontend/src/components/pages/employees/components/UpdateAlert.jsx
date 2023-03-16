@@ -16,7 +16,7 @@ export default function UpdateAlert({ open, onClose, employee }) {
   const [employeeToUpdate, setEmployeeToUpdate] = useState(null);
   const { pin } = employee || {};
   const {
-    post, get, isLoading, error, patch,
+    get, isLoading, error, post,
   } = useAxios();
 
   const updateEmployeeField = (name, value) => {
@@ -24,18 +24,9 @@ export default function UpdateAlert({ open, onClose, employee }) {
   };
 
   const updateEmployee = async () => {
-    const loginUrl = 'https://eu-central-1.aws.realm.mongodb.com/api/client/v2.0/app/test-hbegu/auth/providers/local-userpass/login';
-    const headersForLogin = {
-      username: 'mail@mail.com',
-      password: '6545248',
-    };
-    const accessToken = await post(loginUrl, headersForLogin);
-    console.log(accessToken);
-    const headersForUpdate = {
-      Authorization: `Bearer ${accessToken.access_token}`,
-    };
-    const url = 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employee';
-    await patch(url, employeeToUpdate, headersForUpdate);
+    const url = 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employeeUpdate';
+    const updated = await post(url, employeeToUpdate);
+    console.log(updated);
   };
   const handleUpdate = () => {
     updateEmployee();
