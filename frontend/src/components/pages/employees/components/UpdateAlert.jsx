@@ -25,8 +25,10 @@ export default function UpdateAlert({ open, onClose, employee }) {
 
   const updateEmployee = async () => {
     const url = 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employeeUpdate';
-    const updated = await post(url, employeeToUpdate);
-    console.log(updated);
+    await post(url, employeeToUpdate);
+    if (!error) {
+      alert('Successfully updated');
+    }
   };
   const handleUpdate = () => {
     updateEmployee();
