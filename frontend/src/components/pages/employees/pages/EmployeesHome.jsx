@@ -48,6 +48,7 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
             employees={filteredEmployees}
             setSelectedEmployee={setSelectedEmployee}
             handleChangeComponentToRender={handleChangeComponentToRender}
+            getEmployees={getEmployees}
           />
         ) : (
           <CircularProgress />
