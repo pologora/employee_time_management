@@ -6,6 +6,10 @@ export class EmployeeModel extends Realm.Object<EmployeeModel> {
   surname!: string;
   pin!: string;
   isWorking!: boolean;
+  workDays!: Array<WorkTimeModel>;
+  vacationDays!: Array<VacationModel>;
+  vacationDaysPerYear!: number;
+  isSnti!: boolean;
 
   static schema = {
     name: 'Employee',
@@ -15,9 +19,11 @@ export class EmployeeModel extends Realm.Object<EmployeeModel> {
       name: 'string',
       surname: 'string',
       pin: 'string',
+      isSnti: {type: 'bool', default: false},
       isWorking: {type: 'bool', default: false},
-      workDays: {type: 'Workdays[]', default: []},
-      vacationDays: {type: 'Vacations[]', default: []},
+      workDays: {type: 'WorkTime[]', default: () => []},
+      vacationDays: {type: 'Vacations[]', default: () => []},
+      vacationDaysPerYear: {type: 'int', default: 0},
     },
   };
 }
@@ -29,7 +35,7 @@ export class WorkTimeModel extends Realm.Object<WorkTimeModel> {
   endWork!: Date;
 
   static schema = {
-    name: 'Workdays',
+    name: 'WorkTime',
     primaryKey: '_id',
     properties: {
       _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
