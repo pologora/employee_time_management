@@ -34,9 +34,9 @@ export default function Home({navigation}: HomeProps): JSX.Element {
   const handlePress = () => {
     console.log(realm);
 
-    // realm.write(() => {
-    //   realm.deleteAll();
-    // });
+    realm.write(() => {
+      realm.deleteAll();
+    });
   };
   const employeesAll = useQuery(EmployeeModel);
 
@@ -50,6 +50,7 @@ export default function Home({navigation}: HomeProps): JSX.Element {
         employee,
       });
     } else {
+      return;
     }
   };
 

@@ -4,7 +4,7 @@ import Employee from '../Employee';
 import Logo from '../Logo';
 import {backgroundDark, backgroundLight} from '../styles/styles';
 
-import {employeeContext, EmployeeModel, WorkTimeModel} from '../realm';
+import {employeeContext, EmployeeModel} from '../realm';
 
 type EmployeesListProps = {
   navigation: any;

@@ -21,7 +21,7 @@ export class EmployeeModel extends Realm.Object<EmployeeModel> {
       pin: 'string',
       isSnti: {type: 'bool', default: false},
       isWorking: {type: 'bool', default: false},
-      workDays: {type: 'WorkTime[]', default: () => []},
+      workDays: {type: 'Workdays[]', default: () => []},
       vacationDays: {type: 'Vacations[]', default: () => []},
       vacationDaysPerYear: {type: 'int', default: 0},
     },
@@ -35,7 +35,7 @@ export class WorkTimeModel extends Realm.Object<WorkTimeModel> {
   endWork!: Date;
 
   static schema = {
-    name: 'WorkTime',
+    name: 'Workdays',
     primaryKey: '_id',
     properties: {
       _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
