@@ -96,6 +96,7 @@ function EmployeesTable({
         open={isOpenUpdateAlert}
         onClose={hadleCloseUpdateAlert}
         employee={activeEmployee}
+        getEmployees={getEmployees}
       />
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table aria-label="Pracownicy table">

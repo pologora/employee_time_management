@@ -12,7 +12,9 @@ import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 import useAxios from '../../../../hooks/useAxios';
 
-export default function UpdateAlert({ open, onClose, employee }) {
+export default function UpdateAlert({
+  open, onClose, employee, getEmployees,
+}) {
   const [employeeToUpdate, setEmployeeToUpdate] = useState(null);
   const { pin } = employee || {};
   const {
@@ -28,6 +30,7 @@ export default function UpdateAlert({ open, onClose, employee }) {
     await post(url, employeeToUpdate);
     if (!error) {
       alert('Successfully updated');
+      getEmployees();
     }
   };
   const handleUpdate = () => {
