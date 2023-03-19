@@ -110,6 +110,27 @@ function WorkTimeTable({
 
   const emptyErray = createCalendarArray(startDate, endDate);
 
+  const calculateTotalWorkTime = (workTimeData) => {
+    const totalWorkMinutes = workTimeData?.reduce((acc, doc) => {
+      const { startWork, endWork } = doc;
+      let totalTimeInMinutes;
+      if (endWork) {
+        // eslint-disable-next-line max-len
+        totalTimeInMinutes = Math.round(
+          (new Date(endWork).getTime() - new Date(startWork).getTime()) / (1000 * 60),
+        );
+      } else {
+        totalTimeInMinutes = Math.round(
+          (new Date().getTime() - new Date(startWork).getTime()) / (1000 * 60),
+        );
+      }
+      return acc + totalTimeInMinutes;
+    }, 0);
+    const hours = Math.floor(totalWorkMinutes / 60);
+    const minutes = Math.floor(totalWorkMinutes % 60);
+    return `${hours}h ${minutes}min`;
+  };
+
   const workHoursDataArray = workTime?.map((workDocument) => {
     const { _id, startWork, endWork } = workDocument;
     const dayStartWork = new Date(startWork).getDate();
@@ -128,12 +149,12 @@ function WorkTimeTable({
 
     const hours = Math.floor(totalTimeInMinutes / 60);
     const minutes = Math.floor(totalTimeInMinutes % 60);
-    const totalTime = `${hours}g ${minutes}m`;
+    const totalWorkTime = `${hours}g ${minutes}m`;
 
     return {
       id: _id,
       day: dayStartWork,
-      totalTimeWork: totalTime,
+      totalTimeWork: totalWorkTime,
       startWork,
       endWork,
     };
@@ -227,6 +248,13 @@ function WorkTimeTable({
                   </TableCell>
                 </StyledTableRowWorkTime>
               ))}
+              <TableRow>
+                <TableCell colSpan={4} align="right" />
+                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                  {calculateTotalWorkTime(workTime)}
+                </TableCell>
+                <TableCell />
+              </TableRow>
             </TableBody>
           </Table>
         </TableContainer>
