@@ -5,7 +5,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
 import AddIcon from '@mui/icons-material/Add';
 import {
-  AppBar, Checkbox, TextField, Toolbar, Typography,
+  AppBar,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  TextField,
+  Toolbar,
+  Typography,
 } from '@mui/material';
 import useAxios from '../../../../hooks/useAxios';
 
@@ -37,6 +43,7 @@ export default function AddEmployee({ employees, getEmployees }) {
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [isSnti, setIsSnti] = useState(false);
+  const [vacationDaysPerYear, setVacationDaysPerYear] = useState(0);
 
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
 
@@ -45,6 +52,7 @@ export default function AddEmployee({ employees, getEmployees }) {
     surname,
     pin,
     isSnti,
+    vacationDaysPerYear,
   };
 
   const addEmployee = async (data) => {
@@ -63,6 +71,7 @@ export default function AddEmployee({ employees, getEmployees }) {
     setIsSnti(false);
     setDifaultPin('');
     setOpen(false);
+    setVacationDaysPerYear(0);
   };
 
   const handleAddEmployee = () => {
@@ -141,11 +150,26 @@ export default function AddEmployee({ employees, getEmployees }) {
               value={pin}
               onChange={(e) => setDifaultPin(e.target.value)}
             />
+            <TextField
+              margin="dense"
+              id="vacationDaysPerYear"
+              label="Dni wakacyjne w roku"
+              value={vacationDaysPerYear}
+              onChange={(e) => setVacationDaysPerYear(+e.target.value)}
+              fullWidth
+              variant="standard"
+            />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography variant="subtitle1" sx={{ mr: 1 }}>
-                SNTI
-              </Typography>
-              <Checkbox checked={isSnti} onChange={(e) => setIsSnti(e.target.checked)} />
+              <RadioGroup
+                row
+                aria-label="employee-type"
+                defaultValue={isSnti ? 'SNTI' : 'Agencja'}
+                value={isSnti ? 'SNTI' : 'Agencja'}
+                onChange={(e) => setIsSnti(e.target.value === 'SNTI')}
+              >
+                <FormControlLabel value="SNTI" control={<Radio />} label="SNTI" />
+                <FormControlLabel value="Agencja" control={<Radio />} label="Agencja" />
+              </RadioGroup>
             </Box>
             <Button
               variant="contained"

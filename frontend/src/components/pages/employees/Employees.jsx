@@ -4,7 +4,11 @@ import EmployeeWorkTime from './pages/EmployeeWorkTime';
 
 function Employees() {
   const [selectedComponent, setSelectedComponent] = useState('home');
-  const [selectedEmployee, setSelectedEmployee] = useState(null);
+  const [selectedEmployee, setSelectedEmployee] = useState({
+    employee: {},
+    startDate: '',
+    endDate: '',
+  });
 
   const handleChangeComponentToRender = (component) => {
     setSelectedComponent(component);

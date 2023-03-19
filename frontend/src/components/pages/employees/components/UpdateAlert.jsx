@@ -28,10 +28,7 @@ export default function UpdateAlert({
   const updateEmployee = async () => {
     const url = 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employeeUpdate';
     await post(url, employeeToUpdate);
-    if (!error) {
-      alert('Successfully updated');
-      getEmployees();
-    }
+    getEmployees();
   };
   const handleUpdate = () => {
     updateEmployee();
@@ -50,7 +47,6 @@ export default function UpdateAlert({
   useEffect(() => {
     if (error) {
       alert(JSON.stringify(error));
-      console.log(error);
     }
   }, [error]);
 
@@ -66,7 +62,7 @@ export default function UpdateAlert({
               autoFocus
               margin="dense"
               id="name"
-              label="Name"
+              label="Imię"
               value={employeeToUpdate?.name}
               onChange={(e) => updateEmployeeField('name', e.target.value)}
               fullWidth
@@ -75,7 +71,7 @@ export default function UpdateAlert({
             <TextField
               margin="dense"
               id="surname"
-              label="Surname"
+              label="Nazwisko"
               value={employeeToUpdate?.surname}
               onChange={(e) => updateEmployeeField('surname', e.target.value)}
               fullWidth
@@ -93,9 +89,9 @@ export default function UpdateAlert({
             <TextField
               margin="dense"
               id="vacationDaysPerYear"
-              label="Vacation Days Per Year"
+              label="Dni wakacyjne w roku"
               value={employeeToUpdate?.vacationDaysPerYear}
-              onChange={(e) => updateEmployeeField('vacationDaysPerYear', e.target.value)}
+              onChange={(e) => updateEmployeeField('vacationDaysPerYear', +e.target.value)}
               fullWidth
               variant="standard"
             />

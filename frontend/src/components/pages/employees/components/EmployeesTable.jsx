@@ -13,6 +13,7 @@ import { useState } from 'react';
 import DeleteAlert from './DeleteAlert';
 import UpdateAlert from './UpdateAlert';
 import useAxios from '../../../../hooks/useAxios';
+import WorkHoursAlert from './WorkHoursAlert';
 
 function EmployeesTable({
   employees,
@@ -20,9 +21,10 @@ function EmployeesTable({
   handleChangeComponentToRender,
   getEmployees,
 }) {
-  const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState(false);
   const [activeEmployee, setActiveEmployee] = useState(null);
+  const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState(false);
   const [isOpenUpdateAlert, setIsOpenUpdateAlert] = useState(false);
+  const [isOpenWorkHoursAlert, setIsOpenWorkHoursAlert] = useState(false);
   const { deleteItem } = useAxios();
 
   const handleOpenUpdateAlert = (employee) => {
@@ -47,10 +49,6 @@ function EmployeesTable({
     }
   };
 
-  const handleEmployeeClick = (pin) => {
-    console.log(pin);
-  };
-
   const handleOpendDeleteAlert = (employee) => {
     setIsOpenDeleteAlert(true);
     setActiveEmployee(employee);
@@ -60,8 +58,17 @@ function EmployeesTable({
     setIsOpenDeleteAlert(false);
   };
 
-  const handleWorkTime = (employee) => {
-    setSelectedEmployee(employee);
+  const handleOpenWorkHoursAlert = (employee) => {
+    setIsOpenWorkHoursAlert(true);
+    setActiveEmployee(employee);
+  };
+
+  const handleCloseOpenWorkHoursAlert = () => {
+    setIsOpenWorkHoursAlert(false);
+  };
+
+  const handleDateRangeSelected = (employee, startDate, endDate) => {
+    setSelectedEmployee(employee, startDate, endDate);
     handleChangeComponentToRender('workTime');
   };
 
@@ -98,6 +105,12 @@ function EmployeesTable({
         employee={activeEmployee}
         getEmployees={getEmployees}
       />
+      <WorkHoursAlert
+        open={isOpenWorkHoursAlert}
+        onClose={handleCloseOpenWorkHoursAlert}
+        employee={activeEmployee}
+        onDateRangeSelected={handleDateRangeSelected}
+      />
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table aria-label="Pracownicy table">
           <TableHead>
@@ -110,7 +123,7 @@ function EmployeesTable({
           </TableHead>
           <TableBody>
             {rows.map((row) => (
-              <StyledTableRowEmployees key={row.pin} onClick={() => handleEmployeeClick(row)}>
+              <StyledTableRowEmployees key={row.pin}>
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
@@ -121,7 +134,11 @@ function EmployeesTable({
                   </Button>
                 </TableCell>
                 <TableCell align="left">
-                  <Button size="small" color="primary" onClick={() => handleWorkTime(row)}>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={() => handleOpenWorkHoursAlert(row)}
+                  >
                     godziny
                   </Button>
                 </TableCell>
