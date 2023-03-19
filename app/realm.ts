@@ -56,6 +56,7 @@ export class VacationModel extends Realm.Object<VacationModel> {
   pin!: string;
   startVacation!: Date;
   endVacation!: Date;
+  type!: string;
 
   static schema = {
     name: 'Vacations',
@@ -65,6 +66,7 @@ export class VacationModel extends Realm.Object<VacationModel> {
       startVacation: 'date',
       endVacation: 'date',
       pin: 'string',
+      type: 'string',
       employee: {
         type: 'linkingObjects',
         objectType: 'Employee',
