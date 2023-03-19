@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 import {
   Box,
   Button,
+  CircularProgress,
   IconButton,
   Table,
   TableBody,
@@ -36,7 +37,9 @@ function WorkTimeTable({
   const [isOpenUpdateCreateWorkTime, setisOpenUpdateCreateWorkTime] = useState(false);
   const [selectedWorkTimeDocument, setSelectedWorkTimeDocument] = useState(null);
   const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
-  const { get, error, post } = useAxios();
+  const {
+    get, error, post, isLoading, deleteItem,
+  } = useAxios();
   const {
     employee: { name, pin },
     startDate,
@@ -58,16 +61,22 @@ function WorkTimeTable({
 
   const createTime = async (employeePin, startWork, endWork) => {
     const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/worktime?pin=${employeePin}&startWork=${startWork}&endWork=${endWork}`;
-    const res = await post(url);
-    console.log(res);
+
+    return post(url);
     // alert
   };
 
   const updateTime = async (id, startWork, endWork) => {
     const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/worktime/update?id=${id}&startWork=${startWork}&endWork=${endWork}`;
 
-    const res = await post(url);
-    console.log(res);
+    return post(url);
+    // alert
+  };
+
+  const deleteTime = async (id) => {
+    const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/worktime?id=${id}`;
+
+    return deleteItem(url);
     // alert
   };
 
@@ -85,12 +94,17 @@ function WorkTimeTable({
     setisOpenUpdateCreateWorkTime(false);
   };
 
-  const handleTimeUpdate = (id, startWork, endWork) => {
+  const handleTimeUpdate = async (id, startWork, endWork) => {
     if (!id) {
-      createTime(pin, startWork, endWork);
+      await createTime(pin, startWork, endWork);
     } else {
-      updateTime(id, startWork, endWork);
+      await updateTime(id, startWork, endWork);
     }
+    getEmployeeWorkTime();
+  };
+
+  const handleTimeDelete = async (id) => {
+    await deleteTime(id);
     getEmployeeWorkTime();
   };
 
@@ -103,9 +117,13 @@ function WorkTimeTable({
     let totalTimeInMinutes;
     if (endWork) {
       // eslint-disable-next-line max-len
-      totalTimeInMinutes = (new Date(endWork).getTime() - new Date(startWork).getTime()) / (1000 * 60);
+      totalTimeInMinutes = Math.round(
+        (new Date(endWork).getTime() - new Date(startWork).getTime()) / (1000 * 60),
+      );
     } else {
-      totalTimeInMinutes = (new Date().getTime() - new Date(startWork).getTime()) / (1000 * 60);
+      totalTimeInMinutes = Math.round(
+        (new Date().getTime() - new Date(startWork).getTime()) / (1000 * 60),
+      );
     }
 
     const hours = Math.floor(totalTimeInMinutes / 60);
@@ -128,7 +146,10 @@ function WorkTimeTable({
       const totalTimeInMinutes = workHoursData.reduce((acc, curr) => {
         const { startWork } = curr;
         const endWork = curr.endWork ? curr.endWork : new Date();
-        return acc + (new Date(endWork).getTime() - new Date(startWork).getTime()) / (1000 * 60);
+        return (
+          acc
+          + Math.round((new Date(endWork).getTime() - new Date(startWork).getTime()) / (1000 * 60))
+        );
       }, 0);
 
       const hours = Math.floor(totalTimeInMinutes / 60);
@@ -159,7 +180,6 @@ function WorkTimeTable({
 
     return dayData;
   });
-
   return (
     <Box>
       <WorkTimeUpdateCreateAlert
@@ -168,44 +188,49 @@ function WorkTimeTable({
         onTimeSelected={handleTimeUpdate}
         selectedWorkTimeDocument={selectedWorkTimeDocument}
         dayIsoTime={selectedDayIsoTime}
+        handleTimeDelete={handleTimeDelete}
       />
       <Button onClick={handleAllEmployeesClick}>Wszyscy pracownicy</Button>
       <Typography variant="h4">{`${name}`}</Typography>
-      <TableContainer component={Paper} sx={{ marginTop: 2 }}>
-        <Table aria-label="Pracownicy table">
-          <TableHead>
-            <TableRow>
-              <TableCell align="left">Dzień</TableCell>
-              <TableCell align="center">Dzień tygodnia</TableCell>
-              <TableCell align="center">Początek pracy</TableCell>
-              <TableCell align="center">Koniec pracy</TableCell>
-              <TableCell align="center">Ilość godzin</TableCell>
-              <TableCell align="center">Redagowanie</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {workTimeTableRows.map((row) => (
-              <StyledTableRowWorkTime key={row.id}>
-                <TableCell align="center">{row.day}</TableCell>
-                <TableCell align="center">{row.dayOfWeek}</TableCell>
-                <TableCell align="center">{row.startWork}</TableCell>
-                <TableCell align="center">{row.endWork}</TableCell>
-                <TableCell align="center">{row.total}</TableCell>
-                <TableCell align="center">
-                  <IconButton
-                    color="primary"
-                    aria-label="redagowanie czasu pracy"
-                    sx={{ width: '7px', height: '7px' }}
-                    onClick={() => handleTimeUpdateClick(row.id, row.isoTime)}
-                  >
-                    <AlarmIcon />
-                  </IconButton>
-                </TableCell>
-              </StyledTableRowWorkTime>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      {isLoading ? (
+        <CircularProgress />
+      ) : (
+        <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+          <Table aria-label="Pracownicy table">
+            <TableHead>
+              <TableRow>
+                <TableCell align="left">Dzień</TableCell>
+                <TableCell align="center">Dzień tygodnia</TableCell>
+                <TableCell align="center">Początek pracy</TableCell>
+                <TableCell align="center">Koniec pracy</TableCell>
+                <TableCell align="center">Ilość godzin</TableCell>
+                <TableCell align="center">Redagowanie</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {workTimeTableRows.map((row) => (
+                <StyledTableRowWorkTime key={row.id}>
+                  <TableCell align="center">{row.day}</TableCell>
+                  <TableCell align="center">{row.dayOfWeek}</TableCell>
+                  <TableCell align="center">{row.startWork}</TableCell>
+                  <TableCell align="center">{row.endWork}</TableCell>
+                  <TableCell align="center">{row.total}</TableCell>
+                  <TableCell align="center">
+                    <IconButton
+                      color="primary"
+                      aria-label="redagowanie czasu pracy"
+                      sx={{ width: '7px', height: '7px' }}
+                      onClick={() => handleTimeUpdateClick(row.id, row.isoTime)}
+                    >
+                      <AlarmIcon />
+                    </IconButton>
+                  </TableCell>
+                </StyledTableRowWorkTime>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
     </Box>
   );
 }

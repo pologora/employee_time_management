@@ -13,16 +13,20 @@ export default function WorkTimeUpdateCreateAlert({
   onTimeSelected,
   selectedWorkTimeDocument,
   dayIsoTime,
+  handleTimeDelete,
 }) {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [idWorkTimeDoc, setIdWorkTimeDoc] = useState(null);
+  const [error, setError] = useState('');
   const isTimeValues = endTime && startTime;
+  const isDocumentToDelete = isTimeValues && idWorkTimeDoc;
 
   const handleResetStates = () => {
     setStartTime(null);
     setEndTime(null);
     setIdWorkTimeDoc(null);
+    setError('');
   };
 
   const handleDateSelection = () => {
@@ -36,6 +40,11 @@ export default function WorkTimeUpdateCreateAlert({
     handleResetStates();
   };
 
+  const handleDeleteTimeClick = (id) => {
+    handleTimeDelete(id);
+    handleResetStates();
+  };
+
   const createFullTimeString = (dayTimeIso, selectedTime) => {
     const hours = selectedTime.toISOString().slice(10);
     const day = dayTimeIso.slice(0, 10);
@@ -44,6 +53,7 @@ export default function WorkTimeUpdateCreateAlert({
 
   const handleTimeChange = useCallback(
     (name, date) => {
+      if (error) return;
       let newTime = createFullTimeString(dayIsoTime, date);
       if (name === 'start') {
         setStartTime(newTime);
@@ -71,12 +81,15 @@ export default function WorkTimeUpdateCreateAlert({
       setStartTime(startWork);
       setEndTime(endWork);
       setIdWorkTimeDoc(id);
+      if (startWork && !endWork) {
+        setError('Nie można redagować niezakończonej pracy');
+      }
     }
   }, [selectedWorkTimeDocument]);
 
   return (
     <div>
-      <Dialog open={open} onClose={onClose} fullWidth maxWidth="xs">
+      <Dialog open={open} onClose={handleCloseAlert} fullWidth maxWidth="xs">
         <DialogTitle>Wybierz czas</DialogTitle>
         <DialogContent>
           <DatePicker
@@ -97,13 +110,26 @@ export default function WorkTimeUpdateCreateAlert({
             timeCaption="Time"
             dateFormat="HH:mm"
           />
-          <Box sx={{ height: '200px' }} />
+          <Box sx={{ height: '200px', color: 'red' }}>{error}</Box>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleCloseAlert} variant="outlined" color="error">
+          <Button
+            onClick={() => handleDeleteTimeClick(idWorkTimeDoc)}
+            variant="outlined"
+            color="error"
+            disabled={!isDocumentToDelete}
+          >
+            Usuń
+          </Button>
+          <Button onClick={handleCloseAlert} variant="outlined" color="primary">
             Powrót
           </Button>
-          <Button onClick={handleDateSelection} disabled={!isTimeValues} variant="contained">
+          <Button
+            onClick={handleDateSelection}
+            disabled={!isTimeValues}
+            color="secondary"
+            variant="contained"
+          >
             Zapisz
           </Button>
         </DialogActions>

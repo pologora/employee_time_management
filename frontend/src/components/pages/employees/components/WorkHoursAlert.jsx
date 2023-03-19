@@ -41,7 +41,7 @@ export default function WorkHoursAlert({
   return (
     <div>
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
-        <DialogTitle>Wybierz date</DialogTitle>
+        <DialogTitle>Wybierz datę</DialogTitle>
         <DialogContent>
           <DialogContentText sx={{ marginBottom: 1, color: 'black', fontWeight: 'bold' }}>
             {startDate.toLocaleDateString()}
@@ -74,7 +74,7 @@ export default function WorkHoursAlert({
               }}
             >
               <Button onClick={handleThisMonth} variant="outlined" sx={{ marginLeft: '8px' }}>
-                Bierzący misiąc
+                Bieżący miesiąc
               </Button>
               <Button onClick={handleLastMonth} variant="outlined" sx={{}}>
                 Poprzedni miesiąc
