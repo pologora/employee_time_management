@@ -70,16 +70,15 @@ function Calendar() {
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
         headerToolbar={{
-          left: 'prev,next today',
+          left: 'prev,next',
           center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay',
         }}
         initialView="dayGridMonth"
         events={urlop}
         dateClick={handleDateClick}
         eventClick={handleEventClick}
         selectable
-        editable
+        editable={false}
         eventResizableFromStart
       />
     </div>
