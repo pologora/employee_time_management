@@ -12,8 +12,8 @@ import ListAltSharpIcon from '@mui/icons-material/ListAltSharp';
 import { useState } from 'react';
 import Home from './pages/home/Home';
 import Employees from './pages/employees/Employees';
-import Raporty from './pages/raporty/Raports';
-import Urlop from './pages/urlop/Vacations';
+import Raporty from './pages/raports/Raports';
+import Urlop from './pages/vacations/Vacations';
 
 const drawerWidth = 240;
 
