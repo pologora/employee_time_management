@@ -58,6 +58,7 @@ export class VacationModel extends Realm.Object<VacationModel> {
   endVacation!: Date;
   type!: string;
   duration!: number;
+  created_at!: Date;
 
   static schema = {
     name: 'Vacations',
@@ -74,6 +75,7 @@ export class VacationModel extends Realm.Object<VacationModel> {
         objectType: 'Employee',
         property: 'vacationDays',
       },
+      created_at: 'date',
     },
   };
 }
