@@ -26,7 +26,7 @@ export default function StartWork({
   const workHours = useQuery(WorkTimeModel);
   const realm = useRealm();
   const {employee} = route.params;
-  const {pin, isWorking} = employee;
+  const {isWorking, _id: id} = employee;
 
   const textInStartButton = isWorking ? 'Kończę pracę' : 'Rozpoczynam pracę';
   const actionButtonBackgroundColor = isWorking ? actionDanger : actionPositive;
@@ -34,20 +34,20 @@ export default function StartWork({
   const startWork = useCallback(() => {
     const newStartWorkTime = {
       _id: new Realm.BSON.ObjectId(),
-      pin,
+      employeeId: id,
       startWork: new Date(),
       endWork: null,
     };
     realm.write(() => {
-      const workDay = realm.create('Workdays', newStartWorkTime);
+      realm.create('Workdays', newStartWorkTime);
       employee.isWorking = true;
-      employee.workDays.push(workDay);
     });
-  }, [realm, employee, pin]);
+  }, [realm, employee, id]);
 
   const endWork = useCallback(() => {
     const currentWorkday = workHours.filtered(
-      `pin = "${pin}" AND endWork = null`,
+      'employeeId = $0 AND endWork = null',
+      id,
     )[0];
     if (currentWorkday) {
       realm.write(() => {
@@ -55,7 +55,7 @@ export default function StartWork({
         employee.isWorking = false;
       });
     }
-  }, [realm, employee, pin, workHours]);
+  }, [realm, employee, id, workHours]);
 
   const startEndWorkHandler = () => {
     navigation.navigate('Greetings', {

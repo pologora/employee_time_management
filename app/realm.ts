@@ -6,8 +6,6 @@ export class EmployeeModel extends Realm.Object<EmployeeModel> {
   surname!: string;
   pin!: string;
   isWorking!: boolean;
-  workDays!: Array<WorkTimeModel>;
-  vacationDays!: Array<VacationModel>;
   vacationDaysPerYear!: number;
   isSnti!: boolean;
 
@@ -21,16 +19,14 @@ export class EmployeeModel extends Realm.Object<EmployeeModel> {
       pin: 'string',
       isSnti: {type: 'bool', default: false},
       isWorking: {type: 'bool', default: false},
-      workDays: {type: 'Workdays[]', default: () => []},
-      vacationDays: {type: 'Vacations[]', default: () => []},
-      vacationDaysPerYear: {type: 'int', default: 0},
+      vacationDaysPerYear: {type: 'double', default: 0},
     },
   };
 }
 
 export class WorkTimeModel extends Realm.Object<WorkTimeModel> {
   _id!: Realm.BSON.ObjectId;
-  pin!: string;
+  employeeId!: Realm.BSON.ObjectId;
   startWork!: Date;
   endWork!: Date;
 
@@ -41,20 +37,15 @@ export class WorkTimeModel extends Realm.Object<WorkTimeModel> {
       _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
       startWork: 'date',
       endWork: {type: 'date?', default: null},
-      pin: 'string',
-      employee: {
-        type: 'linkingObjects',
-        objectType: 'Employee',
-        property: 'workDays',
-      },
+      employeeId: 'objectId',
     },
   };
 }
 
 export class VacationModel extends Realm.Object<VacationModel> {
   _id!: Realm.BSON.ObjectId;
-  pin!: string;
   startVacation!: Date;
+  employeeId!: Realm.BSON.ObjectId;
   endVacation!: Date;
   type!: string;
   duration!: number;
@@ -65,16 +56,11 @@ export class VacationModel extends Realm.Object<VacationModel> {
     primaryKey: '_id',
     properties: {
       _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
+      employeeId: 'objectId',
       startVacation: 'date',
       endVacation: 'date',
-      pin: 'string',
       type: 'string',
       duration: 'int',
-      employee: {
-        type: 'linkingObjects',
-        objectType: 'Employee',
-        property: 'vacationDays',
-      },
       created_at: 'date',
     },
   };
