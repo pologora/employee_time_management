@@ -83,11 +83,14 @@ function EmployeesTable({
   }));
 
   const rows = employees.map((employee) => {
-    const { name, surname, pin } = employee;
+    const {
+      name, surname, pin, _id: id,
+    } = employee;
 
     return {
       name: `${name} ${surname}`,
       pin,
+      id,
     };
   });
 

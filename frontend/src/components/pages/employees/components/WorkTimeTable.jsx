@@ -41,7 +41,7 @@ function WorkTimeTable({
     get, error, post, isLoading, deleteItem,
   } = useAxios();
   const {
-    employee: { name, pin },
+    employee: { name, id: employeeId },
     startDate,
     endDate,
   } = selectedEmployee;
@@ -59,8 +59,8 @@ function WorkTimeTable({
     }
   };
 
-  const createTime = async (employeePin, startWork, endWork) => {
-    const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/worktime?pin=${employeePin}&startWork=${startWork}&endWork=${endWork}`;
+  const createTime = async (id, startWork, endWork) => {
+    const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/worktime?id=${id}&startWork=${startWork}&endWork=${endWork}`;
 
     return post(url);
     // alert
@@ -96,7 +96,7 @@ function WorkTimeTable({
 
   const handleTimeUpdate = async (id, startWork, endWork) => {
     if (!id) {
-      await createTime(pin, startWork, endWork);
+      await createTime(employeeId, startWork, endWork);
     } else {
       await updateTime(id, startWork, endWork);
     }

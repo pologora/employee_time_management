@@ -7,7 +7,7 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   const { isLoading, error, get } = useAxios();
   const [workTime, setWorkTime] = useState(null);
   const {
-    employee: { pin },
+    employee: { id },
     startDate,
     endDate,
   } = selectedEmployee;
@@ -17,7 +17,7 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   }
 
   const getEmployeeWorkTime = async () => {
-    const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employee/worktime?pin=${pin}&startDate=${toISODate(
+    const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employee/worktime?id=${id}&startDate=${toISODate(
       startDate,
     )}&endDate=${toISODate(endDate)}`;
     const data = await get(url);
