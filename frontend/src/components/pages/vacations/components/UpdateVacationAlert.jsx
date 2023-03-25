@@ -120,7 +120,11 @@ export default function UpdateVacationAlert({
   };
 
   return !employees ? (
-    <CircularProgress />
+    <CircularProgress
+      sx={{
+        position: 'absolute', top: '50%', left: '50%', zIndex: '100',
+      }}
+    />
   ) : (
     <div>
       <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
@@ -200,11 +204,6 @@ export default function UpdateVacationAlert({
               {duration}
             </DialogContentText>
           </Box>
-          <DialogContentText sx={{ color: '#00693E' }}>
-            Pozostało dni urlopu:
-            {' '}
-            {activeEmployee?.vacationDaysPerYear}
-          </DialogContentText>
           <Box
             sx={{
               display: 'flex',

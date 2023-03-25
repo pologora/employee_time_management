@@ -54,7 +54,6 @@ function WorkTimeTable({
   const [severity, setSeverity] = useState(severityOptions.SUCCESS);
 
   const showAlert = (message, severityOption) => {
-    console.log('showAlert called', message, severityOption);
     setAlertMessage(message);
     setSeverity(severityOption);
     setOpenAlert(true);

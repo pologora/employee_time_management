@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import {
   Alert, Box, Button, Snackbar,
 } from '@mui/material';
@@ -13,7 +14,7 @@ import severityOptions from '../../../options/severityOptions';
 function Vacations() {
   const [selectedComponent, setSelectedComponent] = useState('home');
   const [isOpenAddVacationAlert, setIsOpenAddVacationAlert] = useState(false);
-  const { get, post } = useAxios();
+  const { get, post, deleteItem } = useAxios();
   const [employees, setEmployees] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [alertMessage, setAlertMessage] = useState('');
@@ -51,6 +52,28 @@ function Vacations() {
     handleRealoadData();
   };
 
+  const updateVacation = async (vacation) => {
+    const url = `${baseUrl}/vacations/update?id=${vacation.id}`;
+    const result = await post(url, vacation);
+    if (!(result instanceof Error)) {
+      showAlert('Urlop został zmieniony', severityOptions.SUCCESS);
+    } else {
+      showAlert(result.message, severityOptions.ERROR);
+    }
+    handleRealoadData();
+  };
+
+  const deleteVacation = async (vacation) => {
+    const url = `${baseUrl}/vacations?id=${vacation._id}`;
+    const result = await deleteItem(url);
+    if (!(result instanceof Error)) {
+      showAlert('Urlop został usunięty', severityOptions.SUCCESS);
+    } else {
+      showAlert(result.message, severityOptions.ERROR);
+    }
+    handleRealoadData();
+  };
+
   useEffect(() => {
     getEmployees();
   }, []);
@@ -71,14 +94,31 @@ function Vacations() {
           reload={reload}
           employees={employees}
           getEmployees={getEmployees}
+          updateVacation={updateVacation}
+          deleteVacation={deleteVacation}
         />
       );
       break;
     case 'calendar':
-      componentToRender = <Calendar />;
+      componentToRender = (
+        <Calendar
+          reload={reload}
+          employees={employees}
+          onUpdate={updateVacation}
+          onDelete={deleteVacation}
+        />
+      );
       break;
     default:
-      componentToRender = <VacationsTable />;
+      componentToRender = (
+        <VacationsTable
+          reload={reload}
+          employees={employees}
+          getEmployees={getEmployees}
+          updateVacation={updateVacation}
+          deleteVacation={deleteVacation}
+        />
+      );
       break;
   }
 

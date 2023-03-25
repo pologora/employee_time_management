@@ -16,6 +16,7 @@ import {
   CircularProgress,
   Autocomplete,
   TextField,
+  Typography,
 } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -39,16 +40,20 @@ const getRowColor = (type) => {
   return color || '#29AB87';
 };
 
-function VacationsTable({ reload, employees, getEmployees }) {
+function VacationsTable({
+  reload,
+  employees,
+  getEmployees,
+  updateVacation,
+  deleteVacation,
+}) {
   const [vacations, setVacations] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [isOpenUpdateeAlert, setIsOpenUpdateAlert] = useState(false);
   const [activeVacation, setActiveVacation] = useState(null);
   const [activeEmployee, setActiveEmployee] = useState(null);
-  const {
-    get, deleteItem, post, isLoading,
-  } = useAxios();
+  const { get, isLoading } = useAxios();
 
   async function getVacations() {
     const url = `${baseUrl}/vacations?page=${page}&employeeId=${
@@ -60,15 +65,13 @@ function VacationsTable({ reload, employees, getEmployees }) {
   }
 
   const handleDeleteVacation = async (vacation) => {
-    const url = `${baseUrl}/vacations?id=${vacation._id}`;
-    await deleteItem(url);
+    deleteVacation(vacation);
     getVacations();
     getEmployees();
   };
 
   const handleUpdateVacation = async (vacation) => {
-    const url = `${baseUrl}/vacations/update?id=${vacation.id}`;
-    await post(url, vacation);
+    updateVacation(vacation);
     getVacations();
     getEmployees();
   };
@@ -124,19 +127,40 @@ function VacationsTable({ reload, employees, getEmployees }) {
         onUpdate={handleUpdateVacation}
         employees={employees}
       />
-      {/* <Typography variant="h4">Vacations</Typography> */}
-      <Autocomplete
-        value={activeEmployee}
-        onChange={(e, value) => {
-          setActiveEmployee(value);
-        }}
-        {...propsAutocompl}
-        disablePortal
-        sx={{ width: '35%', paddingTop: 2, paddingBottom: 2 }}
-        renderInput={(params) => (
-          <TextField {...params} label="Wybierz pracownika" />
-        )}
-      />
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Autocomplete
+          value={activeEmployee}
+          onChange={(e, value) => {
+            setActiveEmployee(value);
+          }}
+          {...propsAutocompl}
+          disablePortal
+          sx={{ width: '35%', paddingTop: 2, paddingBottom: 2 }}
+          renderInput={(params) => (
+            <TextField {...params} label="Wybierz pracownika" />
+          )}
+        />
+        <Box sx={{ paddingTop: 2, paddingBottom: 2, marginRight: 10 }}>
+          <Typography color="#00693E">
+            Dni wakacyjne w roku:
+            <Typography
+              component="span"
+              sx={{ marginLeft: 1, fontWeight: 'bold' }}
+            >
+              {activeEmployee && activeEmployee.vacationDaysPerYear}
+            </Typography>
+          </Typography>
+          <Typography color="#00693E">
+            Wykorzystane dni:
+            <Typography
+              component="span"
+              sx={{ marginLeft: 1, fontWeight: 'bold' }}
+            >
+              {activeEmployee && activeEmployee.vacations}
+            </Typography>
+          </Typography>
+        </Box>
+      </Box>
       <TableContainer component={Paper}>
         <Table aria-label="vacations table">
           <TableHead>

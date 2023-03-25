@@ -171,11 +171,7 @@ export default function AddVacatonAlert({
               {duration}
             </DialogContentText>
           </Box>
-          <DialogContentText sx={{ color: '#00693E' }}>
-            Pozostało dni urlopu:
-            {' '}
-            {activeEmployee?.vacationDaysPerYear}
-          </DialogContentText>
+
           <Box
             sx={{
               display: 'flex',
