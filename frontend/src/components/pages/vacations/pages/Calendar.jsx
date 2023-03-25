@@ -25,14 +25,7 @@ function Calendar({
 
     const dataForEvents = data?.map((doc) => {
       const {
-        _id: id,
-        employeeId,
-        startVacation,
-        endVacation,
-        type,
-        name,
-        surname,
-        duration,
+        _id: id, startVacation, endVacation, type, name, surname,
       } = doc;
 
       const date = new Date(endVacation);
@@ -42,16 +35,13 @@ function Calendar({
       const backgroundColor = vacationTypes.find(
         (item) => item.label === type,
       ).color;
+
       return {
         type,
         start: startVacation,
         end: endPlusDay,
-        name,
-        surname,
         title: `${name} ${surname} ${type}`,
         allDay: true,
-        duration,
-        employeeId,
         id,
         backgroundColor,
       };
@@ -67,6 +57,7 @@ function Calendar({
     const url = `${baseUrl}/vacations/id?id=${id}`;
     return get(url);
   };
+
   const handleEventClick = async (arg) => {
     setIsOpenUpdateAlert(true);
     setActiveVacation(null);
