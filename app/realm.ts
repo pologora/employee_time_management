@@ -60,7 +60,7 @@ export class VacationModel extends Realm.Object<VacationModel> {
       startVacation: 'date',
       endVacation: 'date',
       type: 'string',
-      duration: 'int',
+      duration: 'double',
       created_at: 'date',
     },
   };

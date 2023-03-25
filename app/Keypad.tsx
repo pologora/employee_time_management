@@ -18,7 +18,7 @@ export default function Keypad({onPinChange, handleAcceptButton}: KeypadProps) {
   const [pin, setPin] = useState('');
 
   const handleDigitPress = (digit: string) => {
-    if (pin.length < 3) {
+    if (pin.length < 4) {
       const newPin = pin + digit;
       setPin(newPin);
       onPinChange(newPin);
