@@ -13,6 +13,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
+import baseUrl from '../../../../options/baseUrl';
 import useAxios from '../../../../hooks/useAxios';
 
 const style = {
@@ -56,7 +57,7 @@ export default function AddEmployee({ employees, getEmployees }) {
   };
 
   const addEmployee = async (data) => {
-    const url = 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employees';
+    const url = `${baseUrl}/employees`;
     const response = await post(url, data);
     getEmployees();
     if (response) {
@@ -124,7 +125,9 @@ export default function AddEmployee({ employees, getEmployees }) {
               <CloseIcon onClick={handleClose} sx={closeModalBtnSx} />
             </Toolbar>
           </AppBar>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}>
+          <Box
+            sx={{ display: 'flex', flexWrap: 'wrap', flexDirection: 'column' }}
+          >
             <TextField
               label="Imię"
               required
@@ -167,8 +170,16 @@ export default function AddEmployee({ employees, getEmployees }) {
                 value={isSnti ? 'SNTI' : 'Agencja'}
                 onChange={(e) => setIsSnti(e.target.value === 'SNTI')}
               >
-                <FormControlLabel value="SNTI" control={<Radio />} label="SNTI" />
-                <FormControlLabel value="Agencja" control={<Radio />} label="Agencja" />
+                <FormControlLabel
+                  value="SNTI"
+                  control={<Radio />}
+                  label="SNTI"
+                />
+                <FormControlLabel
+                  value="Agencja"
+                  control={<Radio />}
+                  label="Agencja"
+                />
               </RadioGroup>
             </Box>
             <Button

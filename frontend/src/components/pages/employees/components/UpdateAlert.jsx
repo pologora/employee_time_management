@@ -11,6 +11,7 @@ import Radio from '@mui/material/Radio';
 import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
 import useAxios from '../../../../hooks/useAxios';
+import baseUrl from '../../../../options/baseUrl';
 
 export default function UpdateAlert({
   open, onClose, employee, getEmployees,
@@ -26,7 +27,7 @@ export default function UpdateAlert({
   };
 
   const updateEmployee = async () => {
-    const url = 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employeeUpdate';
+    const url = `${baseUrl}/employeeUpdate`;
     await post(url, employeeToUpdate);
     getEmployees();
   };
@@ -37,7 +38,7 @@ export default function UpdateAlert({
 
   useEffect(() => {
     const getEmployeeByPin = async (employeePin) => {
-      const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employee?pin=${employeePin}`;
+      const url = `${baseUrl}/employee?pin=${employeePin}`;
       const employeeData = await get(url);
       setEmployeeToUpdate(employeeData);
     };
@@ -103,7 +104,11 @@ export default function UpdateAlert({
               onChange={(e) => updateEmployeeField('isSnti', e.target.value === 'SNTI')}
             >
               <FormControlLabel value="SNTI" control={<Radio />} label="SNTI" />
-              <FormControlLabel value="Agencja" control={<Radio />} label="Agencja" />
+              <FormControlLabel
+                value="Agencja"
+                control={<Radio />}
+                label="Agencja"
+              />
             </RadioGroup>
           </DialogContent>
         )}

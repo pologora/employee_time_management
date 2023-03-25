@@ -12,6 +12,7 @@ export default function DeleteAlert({
     onDelete(employee);
     onClose();
   };
+
   return (
     <div>
       <Dialog
@@ -24,7 +25,9 @@ export default function DeleteAlert({
       >
         <DialogTitle id="alert-dialog-title">Usunąć pracownika?</DialogTitle>
         <DialogContent>
-          <DialogContentText id="alert-dialog-description">{employee?.name}</DialogContentText>
+          <DialogContentText id="alert-dialog-description">
+            {employee?.name}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="primary">

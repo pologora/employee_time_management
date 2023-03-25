@@ -2,6 +2,7 @@ import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import useAxios from '../../../../hooks/useAxios';
 import WorkTimeTable from '../components/WorkTimeTable';
+import baseUrl from '../../../../options/baseUrl';
 
 function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   const { isLoading, error, get } = useAxios();
@@ -17,7 +18,7 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   }
 
   const getEmployeeWorkTime = async () => {
-    const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employee/worktime?id=${id}&startDate=${toISODate(
+    const url = `${baseUrl}/employee/worktime?id=${id}&startDate=${toISODate(
       startDate,
     )}&endDate=${toISODate(endDate)}`;
     const data = await get(url);

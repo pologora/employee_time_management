@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useState } from 'react';
+import baseUrl from '../../../../options/baseUrl';
 import DeleteAlert from './DeleteAlert';
 import UpdateAlert from './UpdateAlert';
 import useAxios from '../../../../hooks/useAxios';
@@ -37,16 +38,11 @@ function EmployeesTable({
   };
 
   const handleDeleteEmployee = async (employee) => {
-    const { pin } = employee;
-    const url = `https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employee?pin=${pin}`;
-    const deleted = await deleteItem(url);
+    const { id } = employee;
+    const url = `${baseUrl}/employee?id=${id}`;
+    await deleteItem(url);
 
-    if (deleted.deletedCount === 1) {
-      alert('Successfully deleted');
-      getEmployees();
-    } else {
-      alert('No documents matched');
-    }
+    getEmployees();
   };
 
   const handleOpendDeleteAlert = (employee) => {
@@ -82,14 +78,21 @@ function EmployeesTable({
     },
   }));
 
-  const rows = employees.map((employee) => {
+  const rows = employees?.map((employee) => {
     const {
-      name, surname, pin, _id: id,
+      name,
+      surname,
+      pin,
+      _id: id,
+      vacationDaysPerYear,
+      isSnti,
     } = employee;
 
     return {
       name: `${name} ${surname}`,
+      vacationDaysPerYear,
       pin,
+      isSnti,
       id,
     };
   });
@@ -120,6 +123,8 @@ function EmployeesTable({
             <TableRow>
               <TableCell>Imię i nazwisko</TableCell>
               <TableCell align="left">PIN</TableCell>
+              <TableCell align="left">Urlop</TableCell>
+              <TableCell align="left" />
               <TableCell align="left" />
               <TableCell align="left" />
             </TableRow>
@@ -132,7 +137,14 @@ function EmployeesTable({
                 </TableCell>
                 <TableCell align="left">{row.pin}</TableCell>
                 <TableCell align="left">
-                  <Button size="small" color="secondary" onClick={() => handleOpenUpdateAlert(row)}>
+                  {row.isSnti ? row.vacationDaysPerYear : null}
+                </TableCell>
+                <TableCell align="left">
+                  <Button
+                    size="small"
+                    color="secondary"
+                    onClick={() => handleOpenUpdateAlert(row)}
+                  >
                     edytuj
                   </Button>
                 </TableCell>
@@ -146,7 +158,11 @@ function EmployeesTable({
                   </Button>
                 </TableCell>
                 <TableCell align="left">
-                  <Button size="small" color="error" onClick={() => handleOpendDeleteAlert(row)}>
+                  <Button
+                    size="small"
+                    color="error"
+                    onClick={() => handleOpendDeleteAlert(row)}
+                  >
                     delete
                   </Button>
                 </TableCell>

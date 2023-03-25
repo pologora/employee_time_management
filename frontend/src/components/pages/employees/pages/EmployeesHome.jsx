@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import useAxios from '../../../../hooks/useAxios';
 import AddEmployee from '../components/AddEmployeeModal';
 import EmployeesTable from '../components/EmployeesTable';
+import baseUrl from '../../../../options/baseUrl';
 
 function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   const [employees, setEmployees] = useState([]);
@@ -11,7 +12,7 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   const { get, isLoading } = useAxios();
 
   const getEmployees = async () => {
-    const url = 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint/employees';
+    const url = `${baseUrl}/employees`;
     const data = await get(url);
     setEmployees(data);
     setFilteredEmployees(data);
@@ -32,7 +33,13 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   return (
     <div>
       <Box sx={{ marginTop: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
           <TextField
             label="Wyszukaj po imieniu"
             variant="standard"
