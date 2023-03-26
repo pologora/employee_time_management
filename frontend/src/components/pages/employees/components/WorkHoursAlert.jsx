@@ -9,7 +9,10 @@ import { Box, DialogContent, DialogContentText } from '@mui/material';
 import { enGB } from 'date-fns/locale';
 
 export default function WorkHoursAlert({
-  open, onClose, employee, onDateRangeSelected,
+  open,
+  onClose,
+  employee,
+  onDateRangeSelected,
 }) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(null);
@@ -34,7 +37,15 @@ export default function WorkHoursAlert({
   const handleLastMonth = () => {
     const now = new Date();
     const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
-    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0, 23, 59, 59, 999);
+    const endOfLastMonth = new Date(
+      now.getFullYear(),
+      now.getMonth(),
+      0,
+      23,
+      59,
+      59,
+      999,
+    );
     setStartDate(startOfLastMonth);
     setEndDate(endOfLastMonth);
   };
@@ -44,8 +55,10 @@ export default function WorkHoursAlert({
       <Dialog open={open} onClose={onClose} fullWidth maxWidth="sm">
         <DialogTitle>Wybierz datę</DialogTitle>
         <DialogContent>
-          <DialogContentText sx={{ marginBottom: 1, color: 'black', fontWeight: 'bold' }}>
-            {startDate.toLocaleDateString()}
+          <DialogContentText
+            sx={{ marginBottom: 1, color: 'black', fontWeight: 'bold' }}
+          >
+            {startDate?.toLocaleDateString()}
             {' - '}
             {endDate?.toLocaleDateString()}
           </DialogContentText>
@@ -75,7 +88,11 @@ export default function WorkHoursAlert({
                 marginLeft: '10px',
               }}
             >
-              <Button onClick={handleThisMonth} variant="outlined" sx={{ marginLeft: '8px' }}>
+              <Button
+                onClick={handleThisMonth}
+                variant="outlined"
+                sx={{ marginLeft: '8px' }}
+              >
                 Bieżący miesiąc
               </Button>
               <Button onClick={handleLastMonth} variant="outlined" sx={{}}>

@@ -123,7 +123,6 @@ function EmployeesTable({
             <TableRow>
               <TableCell>Imię i nazwisko</TableCell>
               <TableCell align="left">PIN</TableCell>
-              <TableCell align="left">Urlop</TableCell>
               <TableCell align="left" />
               <TableCell align="left" />
               <TableCell align="left" />
@@ -136,9 +135,6 @@ function EmployeesTable({
                   {row.name}
                 </TableCell>
                 <TableCell align="left">{row.pin}</TableCell>
-                <TableCell align="left">
-                  {row.isSnti ? row.vacationDaysPerYear : null}
-                </TableCell>
                 <TableCell align="left">
                   <Button
                     size="small"

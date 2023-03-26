@@ -112,7 +112,6 @@ export default function AddVacatonAlert({
               }}
               {...propsAutocompl}
               disablePortal
-              id="combo-box-demo"
               sx={{ width: '100%' }}
               renderInput={(params) => (
                 <TextField {...params} label="Wybierz pracownika" />
@@ -125,7 +124,6 @@ export default function AddVacatonAlert({
               }}
               {...propsTypeVacation}
               disablePortal
-              id="combo-box-demo"
               sx={{ width: '100%' }}
               renderInput={(params) => (
                 <TextField {...params} label="Wybierz rodzaj wolnego" />

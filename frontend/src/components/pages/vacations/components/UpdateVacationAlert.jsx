@@ -1,5 +1,4 @@
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable react/jsx-props-no-spreading */
 import { useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
@@ -76,7 +75,7 @@ export default function UpdateVacationAlert({
       );
       if (!isCustomType) {
         setCustomVacationType(vacationType);
-        setType('inne');
+        setType(vacationTypes.find((item) => item.label === 'inne'));
       }
     }
   };
@@ -122,7 +121,10 @@ export default function UpdateVacationAlert({
   return !employees ? (
     <CircularProgress
       sx={{
-        position: 'absolute', top: '50%', left: '50%', zIndex: '100',
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        zIndex: '100',
       }}
     />
   ) : (
@@ -145,7 +147,6 @@ export default function UpdateVacationAlert({
               }}
               {...propsAutocompl}
               disablePortal
-              id="combo-box-demo"
               sx={{ width: '100%' }}
               renderInput={(params) => (
                 <TextField {...params} label="Wybierz pracownika" />
@@ -158,7 +159,6 @@ export default function UpdateVacationAlert({
               }}
               {...propsTypeVacation}
               disablePortal
-              id="combo-box-demo"
               sx={{ width: '100%' }}
               renderInput={(params) => (
                 <TextField {...params} label="Wybierz rodzaj wolnego" />

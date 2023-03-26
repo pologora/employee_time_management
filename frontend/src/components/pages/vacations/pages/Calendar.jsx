@@ -34,7 +34,7 @@ function Calendar({
 
       const backgroundColor = vacationTypes.find(
         (item) => item.label === type,
-      ).color;
+      )?.color;
 
       return {
         type,
@@ -43,7 +43,9 @@ function Calendar({
         title: `${name} ${surname} ${type}`,
         allDay: true,
         id,
-        backgroundColor,
+        backgroundColor:
+          backgroundColor
+          || vacationTypes.find((item) => item.label === 'inne').color,
       };
     });
     setEvents(dataForEvents);
@@ -108,7 +110,6 @@ function Calendar({
           editable={false}
           eventResizableFromStart
           dayCellClassNames={dayCellClassNames}
-          nextDayThreshold="00:00:00"
         />
       </div>
     </div>

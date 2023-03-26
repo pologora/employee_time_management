@@ -23,5 +23,5 @@ export default [
     short: 'WS',
     color: '#E0AB76',
   },
-  { label: 'inne', short: 'in', color: '#98817B' },
+  { label: 'inne', short: 'in', color: '#008B8B' },
 ];

@@ -9,7 +9,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  // Typography,
   Box,
   styled,
   IconButton,
@@ -37,15 +36,11 @@ const StyledTableRowVacations = styled(TableRow)(({ theme }) => ({
 
 const getRowColor = (type) => {
   const color = vacationTypes.find((item) => item.label === type)?.color;
-  return color || '#29AB87';
+  return color || vacationTypes.find((item) => item.label === 'inne').color;
 };
 
 function VacationsTable({
-  reload,
-  employees,
-  getEmployees,
-  updateVacation,
-  deleteVacation,
+  reload, employees, updateVacation, deleteVacation,
 }) {
   const [vacations, setVacations] = useState([]);
   const [page, setPage] = useState(1);
@@ -61,24 +56,32 @@ function VacationsTable({
     }`;
     const data = await get(url);
     setVacations(data.vacationsList);
-    setTotalPages(Math.ceil(data.vacationSize / 25));
+    if (activeEmployee) {
+      setTotalPages(Math.ceil(data.vacationsList.length / 25));
+    } else {
+      setTotalPages(Math.ceil(data.vacationSize / 25));
+    }
   }
 
   const handleDeleteVacation = async (vacation) => {
     deleteVacation(vacation);
     getVacations();
-    getEmployees();
   };
 
   const handleUpdateVacation = async (vacation) => {
     updateVacation(vacation);
     getVacations();
-    getEmployees();
   };
 
   useEffect(() => {
     getVacations();
   }, [page, reload, activeEmployee]);
+
+  useEffect(() => {
+    if (employees && activeEmployee) {
+      setActiveEmployee((prev) => employees.find((employee) => employee._id === prev._id));
+    }
+  }, [employees]);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -136,6 +139,7 @@ function VacationsTable({
           {...propsAutocompl}
           disablePortal
           sx={{ width: '35%', paddingTop: 2, paddingBottom: 2 }}
+          isOptionEqualToValue={(option, value) => option._id === value._id}
           renderInput={(params) => (
             <TextField {...params} label="Wybierz pracownika" />
           )}
