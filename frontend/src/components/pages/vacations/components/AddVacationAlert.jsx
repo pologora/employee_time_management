@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { enGB } from 'date-fns/locale';
+import { pl } from 'date-fns/locale';
 import {
   Box,
   CircularProgress,
@@ -18,6 +18,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import calculateDuration from '../../../../utils/calculateVacationDuration';
 import './customDatePickerStyles.css';
 import vacationTypes from '../../../../options/vacationTypes';
+import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 
 const isWeekend = (date) => {
   const day = date.getDay();
@@ -64,8 +65,8 @@ export default function AddVacatonAlert({
     const { _id: id } = activeEmployee;
     const typeVacation = type.label === 'inne' ? customVacationType : type.label;
     const newVacationData = {
-      startVacation: startDate?.toISOString(),
-      endVacation: endDate?.toISOString(),
+      startVacation: toISOStringWithLocalTimezone(startDate),
+      endVacation: toISOStringWithLocalTimezone(endDate),
       duration,
       type: typeVacation,
       id,
@@ -185,7 +186,7 @@ export default function AddVacatonAlert({
               endDate={endDate}
               selectsRange
               inline
-              locale={enGB}
+              locale={pl}
               dayClassName={weekendClass}
             />
           </Box>

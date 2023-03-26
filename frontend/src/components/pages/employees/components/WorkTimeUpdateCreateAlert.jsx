@@ -6,6 +6,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Box, DialogContent } from '@mui/material';
+import { pl } from 'date-fns/locale';
+import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 
 export default function WorkTimeUpdateCreateAlert({
   open,
@@ -46,7 +48,7 @@ export default function WorkTimeUpdateCreateAlert({
   };
 
   const createFullTimeString = (dayTimeIso, selectedTime) => {
-    const hours = selectedTime.toISOString().slice(10);
+    const hours = toISOStringWithLocalTimezone(selectedTime).slice(10);
     const day = dayTimeIso.slice(0, 10);
     return day + hours;
   };
@@ -59,6 +61,7 @@ export default function WorkTimeUpdateCreateAlert({
         setStartTime(newTime);
         if (endTime && new Date(newTime) >= new Date(endTime)) {
           const nextDay = new Date(dayIsoTime);
+          console.log(nextDay);
           nextDay.setDate(nextDay.getDate() + 1);
           const nextDayTime = createFullTimeString(nextDay.toISOString(), date);
           setEndTime(nextDayTime);
@@ -100,6 +103,7 @@ export default function WorkTimeUpdateCreateAlert({
             timeIntervals={30}
             timeCaption="Time"
             dateFormat="HH:mm"
+            locale={pl}
           />
           <DatePicker
             selected={endTime ? new Date(endTime) : null}
@@ -109,6 +113,7 @@ export default function WorkTimeUpdateCreateAlert({
             timeIntervals={30}
             timeCaption="Time"
             dateFormat="HH:mm"
+            locale={pl}
           />
           <Box sx={{ height: '200px', color: 'red' }}>{error}</Box>
         </DialogContent>

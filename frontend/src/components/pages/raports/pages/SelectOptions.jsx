@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { enGB } from 'date-fns/locale';
+import { pl } from 'date-fns/locale';
 import {
   Autocomplete,
   Box,
@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import useAxios from '../../../../hooks/useAxios';
 import baseUrl from '../../../../options/baseUrl';
+import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 
 const styleChoosedOptions = {
   marginLeft: 2,
@@ -51,8 +52,8 @@ function SelectOptions({ handleAllAgencjaGenerate }) {
   };
 
   const handleGenerateRaport = () => {
-    const start = startDate.toISOString();
-    const end = endDate.toISOString();
+    const start = toISOStringWithLocalTimezone(startDate);
+    const end = toISOStringWithLocalTimezone(endDate);
     if (!isSnti && !activeEmployee) {
       handleAllAgencjaGenerate(start, end);
     }
@@ -118,7 +119,7 @@ function SelectOptions({ handleAllAgencjaGenerate }) {
             endDate={endDate}
             selectsRange
             inline
-            locale={enGB}
+            locale={pl}
           />
         </Box>
         <Box>

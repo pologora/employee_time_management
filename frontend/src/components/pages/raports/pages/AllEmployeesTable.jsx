@@ -10,12 +10,7 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
-
-const getTimeFromMinutes = (min) => {
-  const hours = Math.floor(min / 60);
-  const minutes = Math.floor(min % 60);
-  return `${hours}g ${minutes}min`;
-};
+import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
 
 function AllEmployeesTable({ employees }) {
   const [totalWorkTime, setTotalWorkTime] = useState(null);

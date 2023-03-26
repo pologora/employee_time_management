@@ -6,7 +6,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { enGB } from 'date-fns/locale';
+import { pl } from 'date-fns/locale';
 import {
   Box,
   CircularProgress,
@@ -15,6 +15,7 @@ import {
 } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
+import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 import calculateDuration from '../../../../utils/calculateVacationDuration';
 import './customDatePickerStyles.css';
 import vacationTypes from '../../../../options/vacationTypes';
@@ -88,8 +89,8 @@ export default function UpdateVacationAlert({
     const { _id: id } = activeEmployee;
     const typeVacation = type.label === 'inne' ? customVacationType : type.label;
     const newVacationData = {
-      startVacation: startDate?.toISOString(),
-      endVacation: endDate?.toISOString(),
+      startVacation: toISOStringWithLocalTimezone(startDate),
+      endVacation: toISOStringWithLocalTimezone(endDate),
       duration,
       type: typeVacation,
       employeeId: id,
@@ -219,7 +220,7 @@ export default function UpdateVacationAlert({
               endDate={endDate}
               selectsRange
               inline
-              locale={enGB}
+              locale={pl}
               dayClassName={weekendClass}
             />
           </Box>

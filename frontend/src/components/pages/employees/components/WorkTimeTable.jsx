@@ -162,6 +162,7 @@ function WorkTimeTable({
   const workHoursDataArray = workTime?.map((workDocument) => {
     const { _id, startWork, endWork } = workDocument;
     const dayStartWork = new Date(startWork).getDate();
+    console.log('startWork', startWork);
 
     let totalTimeInMinutes;
     if (endWork) {

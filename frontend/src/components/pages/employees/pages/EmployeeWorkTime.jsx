@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import useAxios from '../../../../hooks/useAxios';
 import WorkTimeTable from '../components/WorkTimeTable';
 import baseUrl from '../../../../options/baseUrl';
+import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 
 function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   const { isLoading, error, get } = useAxios();
@@ -13,14 +14,10 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
     endDate,
   } = selectedEmployee;
 
-  function toISODate(date) {
-    return date.toISOString().slice(0, 10);
-  }
-
   const getEmployeeWorkTime = async () => {
-    const url = `${baseUrl}/employee/worktime?id=${id}&startDate=${toISODate(
+    const url = `${baseUrl}/employee/worktime?id=${id}&startDate=${toISOStringWithLocalTimezone(
       startDate,
-    )}&endDate=${toISODate(endDate)}`;
+    )}&endDate=${toISOStringWithLocalTimezone(endDate)}`;
     const data = await get(url);
     if (data) {
       setWorkTime(data);

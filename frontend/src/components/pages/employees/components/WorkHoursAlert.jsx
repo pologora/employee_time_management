@@ -6,7 +6,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Box, DialogContent, DialogContentText } from '@mui/material';
-import { enGB } from 'date-fns/locale';
+import { pl } from 'date-fns/locale';
 
 export default function WorkHoursAlert({
   open,
@@ -77,7 +77,7 @@ export default function WorkHoursAlert({
               endDate={endDate}
               selectsRange
               inline
-              locale={enGB}
+              locale={pl}
             />
             <DialogActions
               sx={{
