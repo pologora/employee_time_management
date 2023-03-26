@@ -1,24 +1,27 @@
+import { Box, Button } from '@mui/material';
 import { useState } from 'react';
 import useAxios from '../../../hooks/useAxios';
 import baseUrl from '../../../options/baseUrl';
-import AllEmployeesTable from './AllEmployeesTable';
-import SelectOptions from './components/SelectOptions';
+import AllEmployeesTable from './pages/AllEmployeesTable';
+import SelectOptions from './pages/SelectOptions';
 
 function Raporty() {
-  const [selectedComponent, setselectedComponent] = useState('home');
+  const [selectedComponent, setSelectedComponent] = useState('home');
   const [allEmployeesAgencja, setAllEmployeesAgencja] = useState(null);
-  const { get } = useAxios();
+  const { get, error } = useAxios();
 
   const getAllEmployeesAgencja = async (startDate, endDate) => {
     const url = `${baseUrl}/raports?startDate=${startDate}&endDate=${endDate}`;
     const data = await get(url);
+    if (error) {
+      alert(error);
+    }
     setAllEmployeesAgencja(data);
-    console.log(data);
   };
 
   const handleAllAgencjaGenerate = (startDate, endDate) => {
     getAllEmployeesAgencja(startDate, endDate);
-    setselectedComponent('home');
+    setSelectedComponent('allEmployeesAgencja');
   };
 
   let componentToRender;
@@ -28,7 +31,7 @@ function Raporty() {
         <SelectOptions handleAllAgencjaGenerate={handleAllAgencjaGenerate} />
       );
       break;
-    case 'allEmloyees':
+    case 'allEmployeesAgencja':
       componentToRender = <AllEmployeesTable employees={allEmployeesAgencja} />;
       break;
     default:
@@ -36,6 +39,13 @@ function Raporty() {
       break;
   }
 
-  return <div>{componentToRender}</div>;
+  return (
+    <div>
+      <Box component="nav" onClick={() => setSelectedComponent('home')}>
+        {selectedComponent !== 'home' && <Button>Wybór raportu</Button>}
+      </Box>
+      {componentToRender}
+    </div>
+  );
 }
 export default Raporty;

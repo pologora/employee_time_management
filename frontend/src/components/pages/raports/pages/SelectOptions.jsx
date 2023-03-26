@@ -76,7 +76,7 @@ function SelectOptions({ handleAllAgencjaGenerate }) {
   }, []);
 
   const propsAutocompl = {
-    options: filteredEmployees,
+    options: filteredEmployees || [],
     getOptionLabel: (option) => `${option.name} ${option.surname}`,
   };
 
