@@ -61,7 +61,6 @@ export default function WorkTimeUpdateCreateAlert({
         setStartTime(newTime);
         if (endTime && new Date(newTime) >= new Date(endTime)) {
           const nextDay = new Date(dayIsoTime);
-          console.log(nextDay);
           nextDay.setDate(nextDay.getDate() + 1);
           const nextDayTime = createFullTimeString(nextDay.toISOString(), date);
           setEndTime(nextDayTime);

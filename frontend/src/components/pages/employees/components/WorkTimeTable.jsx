@@ -162,7 +162,6 @@ function WorkTimeTable({
   const workHoursDataArray = workTime?.map((workDocument) => {
     const { _id, startWork, endWork } = workDocument;
     const dayStartWork = new Date(startWork).getDate();
-    console.log('startWork', startWork);
 
     let totalTimeInMinutes;
     if (endWork) {
@@ -212,20 +211,10 @@ function WorkTimeTable({
       const minutes = Math.floor(totalTimeInMinutes % 60);
       const total = `${hours}h ${minutes}min`;
 
-      const start = new Date(workHoursData[0].startWork).toLocaleTimeString(
-        [],
-        {
-          hour: '2-digit',
-          minute: '2-digit',
-        },
-      );
+      const start = workHoursData[0].startWork.slice(11, 16);
+
       const end = workHoursData[workHoursData.length - 1].endWork
-        ? new Date(
-          workHoursData[workHoursData.length - 1].endWork,
-        ).toLocaleTimeString([], {
-          hour: '2-digit',
-          minute: '2-digit',
-        })
+        ? workHoursData[workHoursData.length - 1].endWork.slice(11, 16)
         : null;
 
       return {
