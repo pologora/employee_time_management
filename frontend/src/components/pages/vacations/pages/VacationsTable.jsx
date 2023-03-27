@@ -93,7 +93,9 @@ function VacationsTable({
   };
 
   useEffect(() => {
-    handlePageChange(null, 1);
+    if (page !== 1) {
+      handlePageChange(null, 1);
+    }
   }, [activeEmployee]);
 
   const handleCloseUpdateAlert = () => {
@@ -180,7 +182,7 @@ function VacationsTable({
               <TableCell>Koniec</TableCell>
               <TableCell>Długość</TableCell>
               <TableCell>Typ</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Akcja</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

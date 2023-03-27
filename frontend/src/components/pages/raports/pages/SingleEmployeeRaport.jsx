@@ -75,7 +75,14 @@ const generateRaport = (data, startDate, endDate) => {
       hoursCount,
     };
   });
-  return { data: reportData, total: totalMonthWorkTime };
+  return {
+    data: reportData,
+    total: totalMonthWorkTime,
+    name: `${data?.name} ${data?.surname}`,
+    period: `${new Date(startDate).toLocaleDateString()} - ${new Date(
+      endDate,
+    ).toLocaleDateString()}`,
+  };
 };
 
 function SingleEmployeeRaport({ employeeRaport, raportRange }) {
@@ -83,6 +90,8 @@ function SingleEmployeeRaport({ employeeRaport, raportRange }) {
   const [startDate, endDate] = raportRange;
 
   const reportData = generateRaport(employee, startDate, endDate);
+
+  console.log(reportData);
 
   return !employeeRaport ? (
     <CircularProgress />
@@ -98,19 +107,11 @@ function SingleEmployeeRaport({ employeeRaport, raportRange }) {
       >
         <Box>
           <Typography variant="h6">Zakres</Typography>
-          <Typography variant="h5">
-            {new Date(raportRange[0])?.toLocaleDateString()}
-            {' - '}
-            {new Date(raportRange[1])?.toLocaleDateString()}
-          </Typography>
+          <Typography variant="h5">{reportData.period}</Typography>
         </Box>
         <Box>
           <Typography variant="h6">Imię i nazwisko</Typography>
-          <Typography variant="h5">
-            {employee?.name}
-            {' '}
-            {employee?.surname}
-          </Typography>
+          <Typography variant="h5">{reportData.name}</Typography>
         </Box>
       </Box>
       <TableContainer component={Paper}>
