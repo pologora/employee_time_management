@@ -106,6 +106,10 @@ function Calendar({
           events={events}
           eventClick={handleEventClick}
           selectable
+          locale="pl"
+          buttonText={{
+            today: 'dziś',
+          }}
           firstDay={1}
           editable={false}
           eventResizableFromStart

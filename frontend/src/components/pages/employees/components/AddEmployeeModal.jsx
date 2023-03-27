@@ -108,7 +108,7 @@ export default function AddEmployee({ employees, getEmployees }) {
   return (
     <div>
       <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpen}>
-        Dodać pracownika
+        Dodaj pracownika
       </Button>
       <Modal
         open={open}

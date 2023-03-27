@@ -8,6 +8,7 @@ import 'react-datepicker/dist/react-datepicker.css';
 import { Box, DialogContent } from '@mui/material';
 import { pl } from 'date-fns/locale';
 import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
+import convertTimeStringISOToObject from '../../../../utils/convertTimeStringISOToObject';
 
 export default function WorkTimeUpdateCreateAlert({
   open,
@@ -59,12 +60,6 @@ export default function WorkTimeUpdateCreateAlert({
       let newTime = createFullTimeString(dayIsoTime, date);
       if (name === 'start') {
         setStartTime(newTime);
-        if (endTime && new Date(newTime) >= new Date(endTime)) {
-          const nextDay = new Date(dayIsoTime);
-          nextDay.setDate(nextDay.getDate() + 1);
-          const nextDayTime = createFullTimeString(nextDay.toISOString(), date);
-          setEndTime(nextDayTime);
-        }
       } else if (name === 'end') {
         if (startTime && new Date(newTime) <= new Date(startTime)) {
           const nextDay = new Date(dayIsoTime);
@@ -95,7 +90,9 @@ export default function WorkTimeUpdateCreateAlert({
         <DialogTitle>Wybierz czas</DialogTitle>
         <DialogContent>
           <DatePicker
-            selected={startTime ? new Date(startTime) : null}
+            selected={
+              startTime ? convertTimeStringISOToObject(startTime) : null
+            }
             onChange={(date) => handleTimeChange('start', date)}
             showTimeSelect
             showTimeSelectOnly
@@ -105,7 +102,7 @@ export default function WorkTimeUpdateCreateAlert({
             locale={pl}
           />
           <DatePicker
-            selected={endTime ? new Date(endTime) : null}
+            selected={endTime ? convertTimeStringISOToObject(endTime) : null}
             onChange={(date) => handleTimeChange('end', date)}
             showTimeSelect
             showTimeSelectOnly

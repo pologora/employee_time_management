@@ -21,7 +21,10 @@ const styleChoosedOptions = {
   fontWeight: 'bold',
 };
 
-function SelectOptions({ handleAllAgencjaGenerate }) {
+function SelectOptions({
+  handleAllAgencjaGenerate,
+  handleSingleEmployeeRaport,
+}) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [isSnti, setIsSnti] = useState(false);
@@ -56,6 +59,10 @@ function SelectOptions({ handleAllAgencjaGenerate }) {
     const end = toISOStringWithLocalTimezone(endDate);
     if (!isSnti && !activeEmployee) {
       handleAllAgencjaGenerate(start, end);
+    }
+    if (activeEmployee) {
+      const { _id: id } = activeEmployee;
+      handleSingleEmployeeRaport(id, start, end);
     }
   };
 

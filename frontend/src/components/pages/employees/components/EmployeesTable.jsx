@@ -159,7 +159,7 @@ function EmployeesTable({
                     color="error"
                     onClick={() => handleOpendDeleteAlert(row)}
                   >
-                    delete
+                    usuń
                   </Button>
                 </TableCell>
               </StyledTableRowEmployees>

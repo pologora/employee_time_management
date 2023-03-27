@@ -142,7 +142,6 @@ function WorkTimeTable({
       const { startWork, endWork } = doc;
       let totalTimeInMinutes;
       if (endWork) {
-        // eslint-disable-next-line max-len
         totalTimeInMinutes = Math.round(
           (new Date(endWork).getTime() - new Date(startWork).getTime())
             / (1000 * 60),
@@ -165,7 +164,6 @@ function WorkTimeTable({
 
     let totalTimeInMinutes;
     if (endWork) {
-      // eslint-disable-next-line max-len
       totalTimeInMinutes = Math.round(
         (new Date(endWork).getTime() - new Date(startWork).getTime())
           / (1000 * 60),

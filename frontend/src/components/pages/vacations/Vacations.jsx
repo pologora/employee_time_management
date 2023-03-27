@@ -161,7 +161,7 @@ function Vacations() {
             variant="contained"
             startIcon={<AddIcon />}
           >
-            Dodać urlop
+            Dodaj urlop
           </Button>
         </Box>
       </Box>

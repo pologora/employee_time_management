@@ -92,6 +92,10 @@ function VacationsTable({
     setIsOpenUpdateAlert(true);
   };
 
+  useEffect(() => {
+    handlePageChange(null, 1);
+  }, [activeEmployee]);
+
   const handleCloseUpdateAlert = () => {
     setIsOpenUpdateAlert(false);
   };
@@ -144,26 +148,28 @@ function VacationsTable({
             <TextField {...params} label="Wybierz pracownika" />
           )}
         />
-        <Box sx={{ paddingTop: 2, paddingBottom: 2, marginRight: 10 }}>
-          <Typography color="#00693E">
-            Dni wakacyjne w roku:
-            <Typography
-              component="span"
-              sx={{ marginLeft: 1, fontWeight: 'bold' }}
-            >
-              {activeEmployee && activeEmployee.vacationDaysPerYear}
+        {activeEmployee && (
+          <Box sx={{ paddingTop: 2, paddingBottom: 2, marginRight: 10 }}>
+            <Typography color="#00693E">
+              Liczba przysługujących dni urlopu:
+              <Typography
+                component="span"
+                sx={{ marginLeft: 1, fontWeight: 'bold' }}
+              >
+                {activeEmployee && activeEmployee.vacationDaysPerYear}
+              </Typography>
             </Typography>
-          </Typography>
-          <Typography color="#00693E">
-            Wykorzystane dni:
-            <Typography
-              component="span"
-              sx={{ marginLeft: 1, fontWeight: 'bold' }}
-            >
-              {activeEmployee && activeEmployee.vacations}
+            <Typography color="#00693E">
+              Wykorzystane dni:
+              <Typography
+                component="span"
+                sx={{ marginLeft: 1, fontWeight: 'bold' }}
+              >
+                {activeEmployee && activeEmployee.vacations}
+              </Typography>
             </Typography>
-          </Typography>
-        </Box>
+          </Box>
+        )}
       </Box>
       <TableContainer component={Paper}>
         <Table aria-label="vacations table">
