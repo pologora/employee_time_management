@@ -27,11 +27,7 @@ const generateRaport = (data, startDate, endDate) => {
   const endD = new Date(endDate);
   const calendar = createCalendarArray(startD, endD);
 
-  const totalMonthWorkInMinutes = data?.workhours.reduce(
-    (acc, item) => acc + item.total,
-    0,
-  );
-  const totalMonthWorkTime = getTimeFromMinutes(totalMonthWorkInMinutes);
+  const totalMonthWorkTime = getTimeFromMinutes(data?.totalWorkHours);
 
   const reportData = calendar.map((item) => {
     const { day, isoTime, dayOfWeek } = item;
@@ -85,8 +81,6 @@ const generateRaport = (data, startDate, endDate) => {
 function SingleEmployeeRaport({ employeeRaport, raportRange }) {
   const [employee] = employeeRaport;
   const [startDate, endDate] = raportRange;
-
-  console.log(employeeRaport);
 
   const reportData = generateRaport(employee, startDate, endDate);
 

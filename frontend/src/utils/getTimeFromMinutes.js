@@ -1,5 +1,6 @@
 export default (min) => {
-  const hours = Math.floor(min / 60);
-  const minutes = Math.floor(min % 60);
+  const minRound = Math.round(min);
+  const hours = Math.floor(minRound / 60);
+  const minutes = Math.floor(minRound % 60);
   return `${hours}h ${minutes}min`;
 };
