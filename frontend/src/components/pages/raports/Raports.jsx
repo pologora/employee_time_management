@@ -15,12 +15,13 @@ function Raporty() {
 
   const getAllEmployeesAgencja = async (startDate, endDate) => {
     const url = `${baseUrl}/raports?startDate=${startDate}&endDate=${endDate}`;
+
     return get(url);
   };
 
   const getEmployeeData = async (id, startDate, endDate) => {
     const url = `${baseUrl}/raports/employeeId?employeeId=${id}&startDate=${startDate}&endDate=${endDate}`;
-    console.log(url);
+
     return get(url);
   };
 

@@ -13,19 +13,21 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useEffect, useState } from 'react';
+import XLSX from 'xlsx';
 import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
+
+const StyledTableRowEmployees = styled(TableRow)(({ theme }) => ({
+  '& > *': {
+    padding: 0,
+    paddingLeft: '10px',
+  },
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
 
 function AllEmployeesTable({ employees, raportRange }) {
   const [totalWorkTime, setTotalWorkTime] = useState(null);
-  const StyledTableRowEmployees = styled(TableRow)(({ theme }) => ({
-    '& > *': {
-      padding: 0,
-      paddingLeft: '10px',
-    },
-    '&:hover': {
-      backgroundColor: theme.palette.action.hover,
-    },
-  }));
 
   const rows = employees?.map((employee) => {
     const { name, surname, totalWorkMinutes } = employee;
@@ -36,8 +38,49 @@ function AllEmployeesTable({ employees, raportRange }) {
     };
   });
 
-  const employeesJson = JSON.stringify(rows);
-  console.log(employeesJson);
+  const reportData = [...rows];
+
+  const generateExcel = (data, title, filename, total) => {
+    const polishData = data.map((item) => ({
+      'Imię i nazwisko': item.name,
+      'Ilość godzin': item.totalWorkTime,
+    }));
+    const titleAndHeaders = [
+      [`${title}`, null, null, null],
+      ['Imię i nazwisko', 'Ilość godzin'],
+    ];
+    const wsTitleAndHeaders = XLSX.utils.aoa_to_sheet(titleAndHeaders);
+
+    wsTitleAndHeaders['!cols'] = [
+      { width: 30 }, // Column A: Dzień
+      { width: 20 }, // Column B: Dzień tygodnia
+    ];
+
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.sheet_add_json(wsTitleAndHeaders, polishData, {
+      skipHeader: true,
+      origin: 'A3',
+    });
+
+    const lastRowNumber = data.length + 3;
+    XLSX.utils.sheet_add_aoa(wsTitleAndHeaders, [['Razem', total]], {
+      origin: `A${lastRowNumber}`,
+    });
+
+    XLSX.utils.book_append_sheet(wb, wsTitleAndHeaders, 'Sheet1');
+    XLSX.writeFile(wb, `${filename}.xlsx`);
+  };
+
+  const handleGenerateExcelClick = () => {
+    const data = reportData;
+    const start = new Date(raportRange[0])?.toLocaleDateString();
+    const end = new Date(raportRange[1])?.toLocaleDateString();
+    const total = totalWorkTime;
+
+    const title = `Wszyscy pracownicy agencja ${start} - ${end}`;
+    const filename = title.replaceAll(' ', '');
+    generateExcel(data, title, filename, total);
+  };
 
   useEffect(() => {
     const totalMinutesAllEmployees = employees?.reduce(
@@ -97,7 +140,11 @@ function AllEmployeesTable({ employees, raportRange }) {
         </Table>
       </TableContainer>
       <Box sx={{ margin: 4, textAlign: 'right' }}>
-        <Button variant="contained" color="success">
+        <Button
+          variant="contained"
+          color="success"
+          onClick={handleGenerateExcelClick}
+        >
           Excel
         </Button>
       </Box>
