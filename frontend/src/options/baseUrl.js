@@ -1,1 +1,1 @@
-export default 'https://eu-central-1.aws.data.mongodb-api.com/app/test-hbegu/endpoint';
+export default process.env.REACT_APP_BASE_URL;

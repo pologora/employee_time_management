@@ -55,7 +55,7 @@ function VacationsTable({
       activeEmployee ? activeEmployee._id : ''
     }`;
     const data = await get(url);
-    setVacations(data.vacationsList);
+    setVacations(data?.vacationsList);
     if (activeEmployee) {
       setTotalPages(Math.ceil(data.vacationsList.length / 25));
     } else {
