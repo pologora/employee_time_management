@@ -15,6 +15,7 @@ import StartWork from './app/pages/StartWork';
 import Greetings from './app/pages/Greetings';
 import {employeeContext} from './app/realm';
 import Login from './app/Login';
+import {APP_ID, BASE_URL} from './options';
 
 const {RealmProvider} = employeeContext;
 
@@ -73,7 +74,7 @@ function AppWrapper() {
   };
 
   return (
-    <AppProvider id="test-hbegu" baseUrl="https://realm.mongodb.com">
+    <AppProvider id={APP_ID} baseUrl={BASE_URL}>
       <UserProvider fallback={Login}>
         <RealmProvider
           sync={{
