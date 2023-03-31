@@ -1,6 +1,11 @@
 import { styled } from '@mui/material/styles';
 import {
-  Table, TableBody, TableCell, TableContainer, TableHead, TableRow,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 
@@ -17,44 +22,24 @@ const StyledTableRowEmployeeActive = styled(TableRow)(({ theme }) => ({
 function EmployeesActiveTable({ employees }) {
   const rows = employees.map((employee) => {
     const { name, surname, startWork } = employee;
-    const start = new Date(startWork);
+    const start = new Date(startWork).toISOString().slice(11, 16);
+
+    const startWorkLocal = new Date(startWork);
+    startWorkLocal.setMinutes(
+      startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
+    );
+    console.log(startWorkLocal);
 
     const now = new Date();
-    const diff = now - start;
-    const minutes = Math.floor(diff / 1000 / 60);
-    const hours = Math.floor(minutes / 60);
-    const remainingMinutes = minutes % 60;
-    const getTimePassed = () => {
-      const formatHours = (hoursPassed) => {
-        if (hoursPassed === 1) {
-          return `${hoursPassed} godzina`;
-        }
-        if (hoursPassed > 1 && hoursPassed < 5) {
-          return `${hoursPassed} godziny`;
-        }
-        return `${hoursPassed} godzin`;
-      };
 
-      const formatMinutes = (minutesPassed) => {
-        if (minutesPassed === 1) {
-          return `${minutesPassed} minuta`;
-        }
-        if (minutesPassed > 1 && minutesPassed < 5) {
-          return `${minutesPassed} minuty`;
-        }
-        return `${minutesPassed} minut`;
-      };
-
-      const hoursString = formatHours(hours);
-      const minutesString = formatMinutes(remainingMinutes);
-
-      return `${hoursString} ${minutesString}`;
-    };
+    const minutesWork = (now.getTime() - startWorkLocal.getTime()) / (1000 * 60);
+    const hours = Math.floor(minutesWork / 60);
+    const minutes = Math.round(minutesWork % 60);
 
     return {
       name: `${name} ${surname}`,
-      startWorkTime: start.toLocaleString(),
-      hoursWorked: getTimePassed(),
+      startWorkTime: start,
+      hoursWorked: `${hours}h ${minutes}min`,
       longWorkHours: hours > 10,
     };
   });
@@ -76,7 +61,10 @@ function EmployeesActiveTable({ employees }) {
                 {row.name}
               </TableCell>
               <TableCell align="left">{row.startWorkTime}</TableCell>
-              <TableCell align="left" sx={row.longWorkHours ? { color: 'red' } : {}}>
+              <TableCell
+                align="left"
+                sx={row.longWorkHours ? { color: 'red' } : {}}
+              >
                 {row.hoursWorked}
               </TableCell>
             </StyledTableRowEmployeeActive>
