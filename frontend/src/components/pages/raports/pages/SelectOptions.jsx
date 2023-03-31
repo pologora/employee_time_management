@@ -24,6 +24,7 @@ const styleChoosedOptions = {
 function SelectOptions({
   handleAllAgencjaGenerate,
   handleSingleEmployeeRaport,
+  handleAllSntiRaport,
 }) {
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -63,6 +64,9 @@ function SelectOptions({
     if (activeEmployee) {
       const { _id: id } = activeEmployee;
       handleSingleEmployeeRaport(id, start, end);
+    }
+    if (!activeEmployee && isSnti) {
+      handleAllSntiRaport(start, end);
     }
   };
 

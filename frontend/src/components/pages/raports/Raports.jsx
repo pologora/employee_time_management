@@ -3,6 +3,7 @@ import { useState } from 'react';
 import useAxios from '../../../hooks/useAxios';
 import baseUrl from '../../../options/baseUrl';
 import AllEmployeesTable from './pages/AllEmployeesTable';
+import AllSntiRaport from './pages/AllSntiRaport';
 import SelectOptions from './pages/SelectOptions';
 import SingleEmployeeRaport from './pages/SingleEmployeeRaport';
 
@@ -21,6 +22,12 @@ function Raporty() {
 
   const getEmployeeData = async (id, startDate, endDate) => {
     const url = `${baseUrl}/raports/employeeId?employeeId=${id}&startDate=${startDate}&endDate=${endDate}`;
+
+    return get(url);
+  };
+
+  const getAllSntiRaport = async (startDate, endDate) => {
+    const url = `${baseUrl}/raports/snti?startDate=${startDate}&endDate=${endDate}`;
 
     return get(url);
   };
@@ -46,6 +53,17 @@ function Raporty() {
     setSelectedComponent('allEmployeesAgencja');
   };
 
+  const handleAllSntiRaport = async (startDate, endDate) => {
+    try {
+      const data = await getAllSntiRaport(startDate, endDate);
+      setAllEmployeesAgencja(data);
+      setRaportRange([startDate, endDate]);
+      setSelectedComponent('allSntiRaport');
+    } catch (err) {
+      alert(err);
+    }
+  };
+
   let componentToRender;
   switch (selectedComponent) {
     case 'home':
@@ -53,6 +71,7 @@ function Raporty() {
         <SelectOptions
           handleAllAgencjaGenerate={handleAllAgencjaGenerate}
           handleSingleEmployeeRaport={handleSingleEmployeeRaport}
+          handleAllSntiRaport={handleAllSntiRaport}
         />
       );
       break;
@@ -72,8 +91,17 @@ function Raporty() {
         />
       );
       break;
+    case 'allSntiRaport':
+      componentToRender = <AllSntiRaport raportRange={raportRange} />;
+      break;
     default:
-      componentToRender = <SelectOptions />;
+      componentToRender = (
+        <SelectOptions
+          handleAllAgencjaGenerate={handleAllAgencjaGenerate}
+          handleSingleEmployeeRaport={handleSingleEmployeeRaport}
+          handleAllSntiRaport={handleAllSntiRaport}
+        />
+      );
       break;
   }
 

@@ -77,6 +77,7 @@ const generateRaport = (data, startDate, endDate) => {
       hoursCount,
     };
   });
+
   return {
     data: reportData,
     total: totalMonthWorkTime,
