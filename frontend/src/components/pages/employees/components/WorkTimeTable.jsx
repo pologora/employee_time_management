@@ -147,12 +147,18 @@ function WorkTimeTable({
             / (1000 * 60),
         );
       } else {
+        const startWorkLocal = new Date(startWork);
+        startWorkLocal.setMinutes(
+          startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
+        );
+        const now = new Date();
         totalTimeInMinutes = Math.round(
-          (new Date().getTime() - new Date(startWork).getTime()) / (1000 * 60),
+          (now.getTime() - startWorkLocal.getTime()) / (1000 * 60),
         );
       }
       return acc + totalTimeInMinutes;
     }, 0);
+
     const hours = Math.floor(totalWorkMinutes / 60);
     const minutes = Math.floor(totalWorkMinutes % 60);
     return `${hours}h ${minutes}min`;
@@ -169,8 +175,14 @@ function WorkTimeTable({
           / (1000 * 60),
       );
     } else {
+      const startWorkLocal = new Date(startWork);
+      startWorkLocal.setMinutes(
+        startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
+      );
+      const now = new Date();
+
       totalTimeInMinutes = Math.round(
-        (new Date().getTime() - new Date(startWork).getTime()) / (1000 * 60),
+        (now.getTime() - startWorkLocal.getTime()) / (1000 * 60),
       );
     }
 
@@ -192,14 +204,26 @@ function WorkTimeTable({
       (workHours) => workHours.day === dayData.day,
     );
     const { isoTime } = dayData;
+
     if (workHoursData && workHoursData.length > 0) {
       const totalTimeInMinutes = workHoursData.reduce((acc, curr) => {
         const { startWork } = curr;
-        const endWork = curr.endWork ? curr.endWork : new Date();
+
+        if (!curr.endWork) {
+          const startWorkLocal = new Date(startWork);
+          startWorkLocal.setMinutes(
+            startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
+          );
+          const now = new Date();
+          const minutesWork = (now.getTime() - startWorkLocal.getTime()) / (1000 * 60);
+
+          return acc + Math.round(minutesWork);
+        }
+
         return (
           acc
           + Math.round(
-            (new Date(endWork).getTime() - new Date(startWork).getTime())
+            (new Date(curr.endWork).getTime() - new Date(startWork).getTime())
               / (1000 * 60),
           )
         );

@@ -28,7 +28,6 @@ function EmployeesActiveTable({ employees }) {
     startWorkLocal.setMinutes(
       startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
     );
-    console.log(startWorkLocal);
 
     const now = new Date();
 
