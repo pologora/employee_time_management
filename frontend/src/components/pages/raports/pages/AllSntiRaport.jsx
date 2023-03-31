@@ -4,9 +4,8 @@ import SingleEmployeeRaport from './SingleEmployeeRaport';
 import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport';
 
 function AllSntiRaport({ raport, raportRange }) {
-  //   console.log('raport range:', raportRange);
-  //   console.log(raport);
   const [start, end] = raportRange;
+  console.log(raportRange);
 
   const raports = raport.map((item) => generateSingleEmplRaport(item, start, end));
 
@@ -57,8 +56,7 @@ function AllSntiRaport({ raport, raportRange }) {
   };
 
   const handleGenerateExcelClick = () => {
-    // Assuming raports is an array of employee data
-    const filename = 'Employee_Report';
+    const filename = `SNTI${start.slice(0, 10)}_${end.slice(0, 10)}`;
     generateExcel(raports, filename);
   };
 
