@@ -14,6 +14,7 @@ import Home from './pages/home/Home';
 import Employees from './pages/employees/Employees';
 import Raporty from './pages/raports/Raports';
 import Urlop from './pages/vacations/Vacations';
+import Logo from './Logo';
 
 const drawerWidth = 240;
 
@@ -43,6 +44,8 @@ const nav = [
 const activeMenuSxStyle = {
   borderRight: '2px solid black',
 };
+
+const logoSrc = process.env.REACT_APP_LOGO_PATH;
 
 export default function PermanentDrawerLeft() {
   const [selectedMenuItem, setSelectedMenuItem] = useState('home');
@@ -86,11 +89,17 @@ export default function PermanentDrawerLeft() {
         variant="permanent"
         anchor="left"
       >
+        <Box sx={{ marginTop: 4, backgroundColor: '#36454F' }}>
+          <Logo src={logoSrc} alt="Logo firmy SNTI" />
+        </Box>
+
         <List sx={{ marginTop: 10 }}>
           {nav.map(({ title, icon, link }) => (
             <ListItem key={title} disablePadding>
               <ListItemButton onClick={() => handleMenuClick(link)}>
-                <ListItemIcon sx={selectedMenuItem === link ? { color: '#2196f3' } : {}}>
+                <ListItemIcon
+                  sx={selectedMenuItem === link ? { color: '#2196f3' } : {}}
+                >
                   {icon}
                 </ListItemIcon>
                 <ListItemText
@@ -102,7 +111,10 @@ export default function PermanentDrawerLeft() {
           ))}
         </List>
       </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}>
+      <Box
+        component="main"
+        sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
+      >
         {componentToRender}
       </Box>
     </Box>
