@@ -44,9 +44,10 @@ const generateRaport = (data, startDate, endDate) => {
     );
 
     if (workingDay) {
-      const { startWork, endWork, total } = workingDay;
+      const { startWork, endWork, total = 0 } = workingDay;
+
       start += startWork.slice(11, 16);
-      end += endWork.slice(11, 16);
+      end += endWork ? endWork.slice(11, 16) : '';
       workHoursOrVacation = `${start} - ${end}`;
       hoursCount = getTimeFromMinutes(total);
     }
