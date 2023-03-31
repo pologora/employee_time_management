@@ -166,7 +166,11 @@ function WorkTimeTable({
 
   const workHoursDataArray = workTime?.map((workDocument) => {
     const { _id, startWork, endWork } = workDocument;
-    const dayStartWork = new Date(startWork).getDate();
+    const localTime = new Date(startWork);
+    localTime.setMinutes(
+      localTime.getMinutes() + localTime.getTimezoneOffset(),
+    );
+    const dayStartWork = localTime.getDate();
 
     let totalTimeInMinutes;
     if (endWork) {
@@ -200,9 +204,7 @@ function WorkTimeTable({
   });
 
   const workTimeTableRows = emptyErray.map((dayData) => {
-    const workHoursData = workHoursDataArray?.filter(
-      (workHours) => workHours.day === dayData.day,
-    );
+    const workHoursData = workHoursDataArray?.filter((workHours) => workHours.day === dayData.day);
     const { isoTime } = dayData;
 
     if (workHoursData && workHoursData.length > 0) {
