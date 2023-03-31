@@ -33,11 +33,11 @@ function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
       Dzień: item.day,
       'Dzień tygodnia': item.dayOfWeek,
       'Godziny pracy': item.workHours,
-      'Suma godzin': item.hoursCount,
+      'Łączny czas': item.hoursCount,
     }));
     const titleAndHeaders = [
       [`${title}`, null, null, null],
-      ['Dzień', 'Dzień tygodnia', 'Godziny pracy', 'Suma godzin'],
+      ['Dzień', 'Dzień tygodnia', 'Godziny pracy', 'Łączny czas'],
     ];
     const wsTitleAndHeaders = XLSX.utils.aoa_to_sheet(titleAndHeaders);
 
@@ -45,7 +45,7 @@ function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
       { width: 10 }, // Column A: Dzień
       { width: 20 }, // Column B: Dzień tygodnia
       { width: 20 }, // Column C: Godziny pracy
-      { width: 15 }, // Column D: Suma godzin
+      { width: 15 }, // Column D: Łączny czas
     ];
 
     const wb = XLSX.utils.book_new();

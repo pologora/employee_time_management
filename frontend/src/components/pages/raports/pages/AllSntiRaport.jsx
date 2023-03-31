@@ -28,7 +28,7 @@ function AllSntiRaport({ raport, raportRange }) {
         ['Zakres', 'Imię i nazwisko', 'Stanowisko', null],
         [`${period}`, `${name}`, 'Specjalista ds. Logistyki', null],
         [null],
-        ['Dzień', 'Dzień tygodnia', 'Godziny pracy', 'Suma godzin'],
+        ['Dzień', 'Dzień tygodnia', 'Godziny pracy', 'Łączny czas'],
       ];
       const wsTitleAndHeaders = XLSX.utils.aoa_to_sheet(titleAndHeaders);
 
@@ -36,7 +36,7 @@ function AllSntiRaport({ raport, raportRange }) {
         { width: 30 }, // Column A: Dzień
         { width: 30 }, // Column B: Dzień tygodnia
         { width: 30 }, // Column C: Godziny pracy
-        { width: 30 }, // Column D: Suma godzin
+        { width: 30 }, // Column D: Łączny czas
       ];
 
       XLSX.utils.sheet_add_json(wsTitleAndHeaders, polishData, {

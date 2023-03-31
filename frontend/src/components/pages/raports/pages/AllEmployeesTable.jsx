@@ -53,7 +53,7 @@ function AllEmployeesTable({ employees, raportRange }) {
 
     wsTitleAndHeaders['!cols'] = [
       { width: 30 }, // Column A: Dzień
-      { width: 20 }, // Column B: Dzień tygodnia
+      { width: 30 }, // Column B: Dzień tygodnia
     ];
 
     const wb = XLSX.utils.book_new();
