@@ -13,8 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 import XLSX from 'xlsx';
-import createCalendarArray from '../../../../utils/createCalendarArray';
-import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
+import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport';
 
 const StyledTableRow = styled(TableRow)(() => ({
   '& > *': {
@@ -23,76 +22,11 @@ const StyledTableRow = styled(TableRow)(() => ({
   },
 }));
 
-const generateRaport = (data, startDate, endDate) => {
-  const startD = new Date(startDate);
-  const endD = new Date(endDate);
-  const calendar = createCalendarArray(startD, endD);
-
-  const totalMonthWorkTime = getTimeFromMinutes(data?.totalWorkHours);
-
-  const reportData = calendar.map((item) => {
-    const { day, isoTime, dayOfWeek } = item;
-    const dayIso = isoTime.slice(0, 10);
-
-    let start = '';
-    let end = '';
-    let hoursCount = null;
-    let workHoursOrVacation = '--------';
-
-    const workingDay = data?.workhours.find(
-      (workDoc) => workDoc.startWork.slice(0, 10) === dayIso,
-    );
-
-    if (workingDay) {
-      const { startWork, endWork, total = 0 } = workingDay;
-
-      start += startWork.slice(11, 16);
-      end += endWork ? endWork.slice(11, 16) : '';
-      workHoursOrVacation = `${start} - ${end}`;
-      hoursCount = getTimeFromMinutes(total);
-    }
-
-    const vacationDay = data?.vacations.find((vacation) => {
-      const startVacation = new Date(vacation.startVacation);
-      const endVacation = new Date(vacation.endVacation);
-      const currentDay = new Date(dayIso);
-
-      return currentDay >= startVacation && currentDay <= endVacation;
-    });
-
-    if (vacationDay) {
-      if (dayOfWeek !== 'sob.' && dayOfWeek !== 'niedz.') {
-        if (workingDay) {
-          workHoursOrVacation += ` !! ${vacationDay.type}`;
-        } else {
-          workHoursOrVacation = vacationDay.type;
-        }
-      }
-    }
-
-    return {
-      day,
-      dayOfWeek,
-      workHours: workHoursOrVacation,
-      hoursCount,
-    };
-  });
-
-  return {
-    data: reportData,
-    total: totalMonthWorkTime,
-    name: `${data?.name} ${data?.surname}`,
-    period: `${new Date(startDate).toLocaleDateString()} - ${new Date(
-      endDate,
-    ).toLocaleDateString()}`,
-  };
-};
-
-function SingleEmployeeRaport({ employeeRaport, raportRange }) {
+function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
   const [employee] = employeeRaport;
   const [startDate, endDate] = raportRange;
 
-  const reportData = generateRaport(employee, startDate, endDate);
+  const reportData = generateSingleEmplRaport(employee, startDate, endDate);
 
   const generateExcel = (data, title, filename, total) => {
     const polishData = data.map((item) => ({
@@ -190,15 +124,17 @@ function SingleEmployeeRaport({ employeeRaport, raportRange }) {
           </TableBody>
         </Table>
       </TableContainer>
-      <Box sx={{ margin: 4, textAlign: 'right' }}>
-        <Button
-          variant="contained"
-          color="success"
-          onClick={handleGenerateExcelClick}
-        >
-          Excel
-        </Button>
-      </Box>
+      {isButton && (
+        <Box sx={{ margin: 4, textAlign: 'right' }}>
+          <Button
+            variant="contained"
+            color="success"
+            onClick={handleGenerateExcelClick}
+          >
+            Excel
+          </Button>
+        </Box>
+      )}
     </div>
   );
 }

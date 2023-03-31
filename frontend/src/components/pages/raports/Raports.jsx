@@ -9,8 +9,7 @@ import SingleEmployeeRaport from './pages/SingleEmployeeRaport';
 
 function Raporty() {
   const [selectedComponent, setSelectedComponent] = useState('home');
-  const [allEmployeesAgencja, setAllEmployeesAgencja] = useState(null);
-  const [employeeRaport, setEmployeeRaport] = useState(null);
+  const [raportData, setRaportData] = useState(null);
   const [raportRange, setRaportRange] = useState([]);
   const { get, error } = useAxios();
 
@@ -35,7 +34,7 @@ function Raporty() {
   const handleSingleEmployeeRaport = async (id, startDate, endDate) => {
     const data = await getEmployeeData(id, startDate, endDate);
     try {
-      setEmployeeRaport(data);
+      setRaportData(data);
     } catch (err) {
       alert(err);
     }
@@ -48,7 +47,7 @@ function Raporty() {
     if (error) {
       alert(error);
     }
-    setAllEmployeesAgencja(data);
+    setRaportData(data);
     setRaportRange([startDate, endDate]);
     setSelectedComponent('allEmployeesAgencja');
   };
@@ -56,7 +55,7 @@ function Raporty() {
   const handleAllSntiRaport = async (startDate, endDate) => {
     try {
       const data = await getAllSntiRaport(startDate, endDate);
-      setAllEmployeesAgencja(data);
+      setRaportData(data);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('allSntiRaport');
     } catch (err) {
@@ -77,22 +76,22 @@ function Raporty() {
       break;
     case 'allEmployeesAgencja':
       componentToRender = (
-        <AllEmployeesTable
-          employees={allEmployeesAgencja}
-          raportRange={raportRange}
-        />
+        <AllEmployeesTable employees={raportData} raportRange={raportRange} />
       );
       break;
     case 'singleEmployee':
       componentToRender = (
         <SingleEmployeeRaport
-          employeeRaport={employeeRaport}
+          employeeRaport={raportData}
           raportRange={raportRange}
+          isButton
         />
       );
       break;
     case 'allSntiRaport':
-      componentToRender = <AllSntiRaport raportRange={raportRange} />;
+      componentToRender = (
+        <AllSntiRaport raportRange={raportRange} raport={raportData} />
+      );
       break;
     default:
       componentToRender = (
