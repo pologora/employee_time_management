@@ -32,10 +32,13 @@ export default function StartWork({
   const actionButtonBackgroundColor = isWorking ? actionDanger : actionPositive;
 
   const startWork = useCallback(() => {
+    const now = new Date();
+    const timezoneOffset = now.getTimezoneOffset();
+    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
     const newStartWorkTime = {
       _id: new Realm.BSON.ObjectId(),
       employeeId: id,
-      startWork: new Date(),
+      startWork: localDateTime,
       endWork: null,
     };
     realm.write(() => {
@@ -49,9 +52,12 @@ export default function StartWork({
       'employeeId = $0 AND endWork = null',
       id,
     )[0];
+    const now = new Date();
+    const timezoneOffset = now.getTimezoneOffset();
+    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
     if (currentWorkday) {
       realm.write(() => {
-        currentWorkday.endWork = new Date();
+        currentWorkday.endWork = localDateTime;
         employee.isWorking = false;
       });
     }
