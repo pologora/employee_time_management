@@ -70,7 +70,7 @@ function EmployeesTable({
 
   const StyledTableRowEmployees = styled(TableRow)(({ theme }) => ({
     '& > *': {
-      padding: '0 0 0 10px',
+      padding: '0 0 0 5px !important',
     },
     '&:hover': {
       backgroundColor: theme.palette.action.hover,
