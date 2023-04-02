@@ -61,6 +61,7 @@ function VacationsAllEmployees({ reload, employees }) {
   }, [reload]);
 
   const processData = (vacationsD) => {
+    const currentYear = new Date().getFullYear();
     const employeesVacations = {};
 
     vacationsD?.forEach((vacation) => {
@@ -80,7 +81,7 @@ function VacationsAllEmployees({ reload, employees }) {
         };
       }
 
-      if (startDate.getFullYear() === 2023) {
+      if (startDate.getFullYear() === currentYear) {
         const month = startDate.getMonth();
         const days = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
         employeesVacations[employeeId].months[month] += days;
