@@ -10,6 +10,7 @@ import Calendar from './pages/Calendar';
 import VacationsTable from './pages/VacationsTable';
 import baseUrl from '../../../options/baseUrl';
 import severityOptions from '../../../options/severityOptions';
+import VacationsAllEmployees from './pages/VacationsAllEmployees';
 
 function Vacations() {
   const [selectedComponent, setSelectedComponent] = useState('home');
@@ -109,6 +110,11 @@ function Vacations() {
         />
       );
       break;
+    case 'table':
+      componentToRender = (
+        <VacationsAllEmployees reload={reload} employees={employees} />
+      );
+      break;
     default:
       componentToRender = (
         <VacationsTable
@@ -154,6 +160,7 @@ function Vacations() {
           <Button onClick={() => setSelectedComponent('calendar')}>
             Kalendarz
           </Button>
+          <Button onClick={() => setSelectedComponent('table')}>Tablica</Button>
         </Box>
         <Box>
           <Button

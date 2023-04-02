@@ -84,6 +84,7 @@ export default function AddVacatonAlert({
   const propsAutocompl = {
     options: employees,
     getOptionLabel: (option) => `${option.name} ${option.surname}`,
+    isOptionEqualToValue: (option, value) => option._id === value._id,
   };
 
   const propsTypeVacation = {
