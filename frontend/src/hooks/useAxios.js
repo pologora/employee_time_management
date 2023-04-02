@@ -1,9 +1,11 @@
 import axios from 'axios';
 import { useState } from 'react';
+import { useUser } from '../components/auth/UserContext';
 
 const useAxios = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const { user } = useUser();
 
   const fetchData = async (url, method, data = null, headers = {}) => {
     setIsLoading(true);
@@ -13,7 +15,11 @@ const useAxios = () => {
         method,
         url,
         data: data ? JSON.stringify(data) : null,
-        headers: { ...headers, 'Content-Type': 'application/json' },
+        headers: {
+          ...headers,
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${user._accessToken}`,
+        },
       });
       return response.data;
     } catch (err) {

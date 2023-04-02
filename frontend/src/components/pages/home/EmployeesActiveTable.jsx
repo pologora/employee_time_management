@@ -20,7 +20,7 @@ const StyledTableRowEmployeeActive = styled(TableRow)(({ theme }) => ({
 }));
 
 function EmployeesActiveTable({ employees }) {
-  const rows = employees.map((employee) => {
+  const rows = employees?.map((employee) => {
     const { name, surname, startWork } = employee;
     const start = new Date(startWork).toISOString().slice(11, 16);
 
@@ -54,7 +54,7 @@ function EmployeesActiveTable({ employees }) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows?.map((row) => (
             <StyledTableRowEmployeeActive key={row.startWorkTime}>
               <TableCell component="th" scope="row">
                 {row.name}

@@ -10,6 +10,7 @@ import Calendar from './pages/Calendar';
 import VacationsTable from './pages/VacationsTable';
 import baseUrl from '../../../options/baseUrl';
 import severityOptions from '../../../options/severityOptions';
+import { useUser } from '../../auth/UserContext';
 
 function Vacations() {
   const [selectedComponent, setSelectedComponent] = useState('home');
@@ -20,6 +21,8 @@ function Vacations() {
   const [alertMessage, setAlertMessage] = useState('');
   const [severity, setSeverity] = useState(severityOptions.SUCCESS);
   const [reload, setReload] = useState(false);
+  const { user } = useUser();
+  console.log(user);
 
   const showAlert = (message, severityOp) => {
     setSeverity(severityOp);
