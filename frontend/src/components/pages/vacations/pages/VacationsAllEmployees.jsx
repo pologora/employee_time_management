@@ -10,7 +10,7 @@ import {
   TableRow,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { tableCellClasses } from '@mui/material/TableCell';
 import useAxios from '../../../../hooks/useAxios';
 import baseUrl from '../../../../options/baseUrl';
@@ -42,9 +42,6 @@ function VacationsAllEmployees({ reload, employees }) {
   } = useAxios();
   const [vacationsData, setVacationsData] = useState(null);
   const [lastYearVacationLeftDays, setLastYearVacationLeftDays] = useState(null);
-
-  console.log(lastYearVacationLeftDays);
-  console.log(employees);
 
   const getAllVacations = async () => {
     const url = `${baseUrl}/vacations/time?type=Wypoczynkowy`;
@@ -89,7 +86,8 @@ function VacationsAllEmployees({ reload, employees }) {
         employeesVacations[employeeId].months[month] += days;
         employeesVacations[employeeId].tookedInThisYear += days;
         employeesVacations[employeeId].daysLeft = employeesVacations[employeeId].vacationsThisYear
-          - employeesVacations[employeeId].tookedInThisYear;
+          - employeesVacations[employeeId].tookedInThisYear
+          + employeesVacations[employeeId].lastYearLeft;
       }
     });
 
@@ -170,13 +168,18 @@ function VacationsAllEmployees({ reload, employees }) {
     }
   };
 
-  const onValueChange = async (value, employeeId) => {
-    await updateLastYearVacationLeftDays(value, employeeId);
-    handleGetLastYearVacationDaysLeft();
-    if (error) {
-      alert(error);
-    }
-  };
+  const onValueChange = useCallback(
+    async (value, employeeId) => {
+      console.log(value, employeeId);
+      const data = await updateLastYearVacationLeftDays(value, employeeId);
+      console.log(data);
+      handleGetLastYearVacationDaysLeft();
+      if (error) {
+        alert(error);
+      }
+    },
+    [error, handleGetLastYearVacationDaysLeft, updateLastYearVacationLeftDays],
+  );
 
   useEffect(() => {
     handleGetLastYearVacationDaysLeft();
@@ -213,7 +216,11 @@ function VacationsAllEmployees({ reload, employees }) {
         </TableHead>
         <TableBody>
           {isLoading ? (
-            <CircularProgress />
+            <StyledTableRowVacations align="center">
+              <CircularProgress
+                sx={{ display: 'absolute', top: '50%', left: '50%' }}
+              />
+            </StyledTableRowVacations>
           ) : (
             rows?.map((row) => (
               <StyledTableRowVacations key={row.id}>
@@ -226,7 +233,9 @@ function VacationsAllEmployees({ reload, employees }) {
                   employeeId={row.id}
                   onValueChange={onValueChange}
                 />
-                <TableCell align="center">{row.vacationsThisYear}</TableCell>
+                <TableCell align="center" sx={{ color: '#0070BB' }}>
+                  {row.vacationsThisYear}
+                </TableCell>
                 <TableCell align="center">{row[1]}</TableCell>
                 <TableCell align="center">{row[2]}</TableCell>
                 <TableCell align="center">{row[3]}</TableCell>
@@ -239,11 +248,10 @@ function VacationsAllEmployees({ reload, employees }) {
                 <TableCell align="center">{row[10]}</TableCell>
                 <TableCell align="center">{row[11]}</TableCell>
                 <TableCell align="center">{row[12]}</TableCell>
-                <TableCell align="center">{row.tookedInThisYear}</TableCell>
-                <TableCell
-                  align="center"
-                  sx={{ color: `${!row.daysLeft && 'green'}` }}
-                >
+                <TableCell align="center" sx={{ color: 'red' }}>
+                  {row.tookedInThisYear}
+                </TableCell>
+                <TableCell align="center" sx={{ color: 'green' }}>
                   {row.daysLeft}
                 </TableCell>
               </StyledTableRowVacations>
