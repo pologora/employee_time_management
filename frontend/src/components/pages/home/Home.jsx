@@ -12,7 +12,6 @@ function Home() {
   const { error, get, isLoading } = useAxios();
   const { user } = useUser();
   const [err, setErr] = useState(error);
-  console.log(user);
 
   const getEmployees = async () => {
     if (user) {

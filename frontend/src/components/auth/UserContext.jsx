@@ -1,6 +1,7 @@
 import {
   createContext, useState, useContext, useMemo, useEffect,
 } from 'react';
+import app from '../../options/realmConfig';
 
 const UserContext = createContext(null);
 
@@ -8,23 +9,19 @@ export const useUser = () => useContext(UserContext);
 
 export function UserProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const restoreUser = () => {
+      const { currentUser } = app;
+      setUser(currentUser);
+      setLoading(false);
+    };
+
+    restoreUser();
   }, []);
 
-  useEffect(() => {
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-    } else {
-      localStorage.removeItem('user');
-    }
-  }, [user]);
-
-  const value = useMemo(() => ({ user, setUser }), [user]);
+  const value = useMemo(() => ({ user, setUser, loading }), [user]);
 
   return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
 }
