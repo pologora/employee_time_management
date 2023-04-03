@@ -12,7 +12,7 @@ function LogoutButton() {
     navigate('/login');
   };
 
-  return <Button onClick={handleLogout}>Log Out</Button>;
+  return <Button onClick={handleLogout}>Wyloguj</Button>;
 }
 
 export default LogoutButton;

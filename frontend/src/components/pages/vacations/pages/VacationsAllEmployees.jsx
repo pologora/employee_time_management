@@ -191,8 +191,10 @@ function VacationsAllEmployees({ reload, employees }) {
         <TableHead>
           <TableRow>
             <StyledTableCell>Imię i nazwisko</StyledTableCell>
-            <StyledTableCell align="center">Urlop zaległy</StyledTableCell>
-            <StyledTableCell align="center">
+            <StyledTableCell align="center" style={{ width: 2 }}>
+              Urlop zaległy
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ width: 2 }}>
               Urlop przysługujący
             </StyledTableCell>
             <StyledTableCell align="center">1</StyledTableCell>
@@ -207,8 +209,12 @@ function VacationsAllEmployees({ reload, employees }) {
             <StyledTableCell align="center">10</StyledTableCell>
             <StyledTableCell align="center">11</StyledTableCell>
             <StyledTableCell align="center">12</StyledTableCell>
-            <StyledTableCell align="center">Wybrano</StyledTableCell>
-            <StyledTableCell align="center">Pozostało</StyledTableCell>
+            <StyledTableCell align="center" style={{ width: 2 }}>
+              Wybrano
+            </StyledTableCell>
+            <StyledTableCell align="center" style={{ Width: 2 }}>
+              Pozostało
+            </StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>

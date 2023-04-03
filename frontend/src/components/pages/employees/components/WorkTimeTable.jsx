@@ -204,7 +204,9 @@ function WorkTimeTable({
   });
 
   const workTimeTableRows = emptyErray.map((dayData) => {
-    const workHoursData = workHoursDataArray?.filter((workHours) => workHours.day === dayData.day);
+    const workHoursData = workHoursDataArray?.filter(
+      (workHours) => workHours.day === dayData.day,
+    );
     const { isoTime } = dayData;
 
     if (workHoursData && workHoursData.length > 0) {
@@ -288,7 +290,7 @@ function WorkTimeTable({
                 <TableCell align="center">Początek pracy</TableCell>
                 <TableCell align="center">Koniec pracy</TableCell>
                 <TableCell align="center">Ilość godzin</TableCell>
-                <TableCell align="center">Redagowanie</TableCell>
+                <TableCell align="center">Edytuj</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -302,7 +304,7 @@ function WorkTimeTable({
                   <TableCell align="center">
                     <IconButton
                       color="primary"
-                      aria-label="redagowanie czasu pracy"
+                      aria-label="edycja czasu pracy"
                       sx={{ width: '7px', height: '7px' }}
                       onClick={() => handleTimeUpdateClick(row.id, row.isoTime)}
                     >

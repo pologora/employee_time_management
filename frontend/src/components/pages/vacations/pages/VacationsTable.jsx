@@ -181,7 +181,7 @@ function VacationsTable({
               <TableCell>Początek</TableCell>
               <TableCell>Koniec</TableCell>
               <TableCell>Długość</TableCell>
-              <TableCell>Typ</TableCell>
+              <TableCell>Rodzaj</TableCell>
               <TableCell>Akcja</TableCell>
             </TableRow>
           </TableHead>
