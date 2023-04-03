@@ -171,9 +171,8 @@ function VacationsAllEmployees({ reload, employees }) {
 
   const onValueChange = useCallback(
     async (value, employeeId) => {
-      console.log(value, employeeId);
-      const data = await updateLastYearVacationLeftDays(value, employeeId);
-      console.log(data);
+      await updateLastYearVacationLeftDays(value, employeeId);
+
       handleGetLastYearVacationDaysLeft();
       if (error) {
         alert(error);
@@ -187,11 +186,8 @@ function VacationsAllEmployees({ reload, employees }) {
   }, []);
 
   return (
-    <TableContainer component={Paper}>
-      <Table
-        sx={{ minWidth: 650, marginTop: 10 }}
-        aria-label="Pracownicy table"
-      >
+    <TableContainer component={Paper} sx={{ marginTop: 10 }}>
+      <Table sx={{ minWidth: 650 }} aria-label="Pracownicy table">
         <TableHead>
           <TableRow>
             <StyledTableCell>Imię i nazwisko</StyledTableCell>
@@ -218,9 +214,11 @@ function VacationsAllEmployees({ reload, employees }) {
         <TableBody>
           {isLoading ? (
             <StyledTableRowVacations align="center">
-              <CircularProgress
-                sx={{ display: 'absolute', top: '50%', left: '50%' }}
-              />
+              <TableCell>
+                <CircularProgress
+                  sx={{ display: 'absolute', top: '50%', left: '50%' }}
+                />
+              </TableCell>
             </StyledTableRowVacations>
           ) : (
             rows?.map((row) => (

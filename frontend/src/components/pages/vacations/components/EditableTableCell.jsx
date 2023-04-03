@@ -34,6 +34,13 @@ export default function EditableTableCell({
           autoFocus
           fullWidth
           type="number"
+          style={{
+            width: '60px',
+            height: '20px',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
         />
       ) : (
         value
