@@ -18,12 +18,14 @@ import {
 } from '../styles/styles';
 import {employeeContext, EmployeeModel} from '../realm';
 import Clock from '../Clock';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 type HomeProps = {
   navigation: any;
+  syncStatus: string;
 };
 
-export default function Home({navigation}: HomeProps): JSX.Element {
+export default function Home({navigation, syncStatus}: HomeProps): JSX.Element {
   const {useQuery} = employeeContext;
   const [pin, setPin] = useState<string>('');
   const [employee, setEmployee] = useState<EmployeeModel | undefined>(
@@ -63,6 +65,21 @@ export default function Home({navigation}: HomeProps): JSX.Element {
   return (
     <>
       <SafeAreaView style={styles.container}>
+        <View style={styles.syncStatus}>
+          <Icon
+            name="ellipse"
+            size={15}
+            color={
+              syncStatus === 'success'
+                ? 'green'
+                : syncStatus === 'retrying'
+                ? 'yellow'
+                : syncStatus === 'failed'
+                ? 'red'
+                : 'gray'
+            }
+          />
+        </View>
         <StatusBar
           animated={true}
           backgroundColor="black"
@@ -99,6 +116,11 @@ const styles = StyleSheet.create({
     backgroundColor: backgroundDark,
     alignItems: 'center',
     justifyContent: 'flex-end',
+  },
+  syncStatus: {
+    position: 'absolute',
+    top: '3%',
+    left: '3%',
   },
   iconContainer: {
     position: 'absolute',

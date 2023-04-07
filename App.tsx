@@ -21,14 +21,14 @@ const {RealmProvider} = employeeContext;
 
 function App(): JSX.Element {
   const [internetConnected, setInternetConnected] = useState(false);
+  const [syncStatus, setSyncStatus] = useState('idle');
   const {useRealm} = employeeContext;
   const realm = useRealm();
 
   useEffect(() => {
     const unsubscribe = NetInfo.addEventListener(state => {
-      const offline = !!(state.isConnected && state.isInternetReachable);
-      setInternetConnected(offline);
-      console.log(offline);
+      const offline = !(state.isConnected && state.isInternetReachable);
+      setInternetConnected(!offline);
     });
     return () => {
       unsubscribe();
@@ -36,13 +36,31 @@ function App(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (internetConnected) {
-      realm.syncSession?.resume();
-      console.log('start internet');
-    } else {
-      realm.syncSession?.pause();
-      console.log('stop internet');
-    }
+    const handleConnectionChange = () => {
+      if (internetConnected) {
+        let retries = 0;
+        const retryResume = () => {
+          if (retries < 5) {
+            try {
+              realm.syncSession?.resume();
+              setSyncStatus('success');
+            } catch (error) {
+              setSyncStatus('retrying');
+              retries++;
+              setTimeout(retryResume, 2000);
+            }
+          } else {
+            setSyncStatus('failed');
+          }
+        };
+        retryResume();
+      } else {
+        realm.syncSession?.pause();
+        setSyncStatus('paused');
+      }
+    };
+
+    handleConnectionChange();
   }, [internetConnected, realm.syncSession]);
 
   realm.subscriptions.update(subs => {
@@ -58,8 +76,12 @@ function App(): JSX.Element {
   return (
     <NavigationContainer>
       <StatusBar backgroundColor="white" />
+
       <Stack.Navigator screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen name="Home">
+          {props => <Home {...props} syncStatus={syncStatus} />}
+        </Stack.Screen>
+
         <Stack.Screen name="StartWork" component={StartWork} />
         <Stack.Screen name="EmployeesList" component={EmployeesList} />
         <Stack.Screen name="Greetings" component={Greetings} />
