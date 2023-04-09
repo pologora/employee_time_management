@@ -20,7 +20,7 @@ The Employee Time Management System is a comprehensive solution for managing emp
 ![Mobile app employee identification by pin](https://ibb.co/WG8tBV4)
 ![Mobile app start work](https://ibb.co/10FGQQH)
 ![Mobile app start work greetings](https://ibb.co/10FGQQH)
-![Mobile app end work](https://ibb.co/qx9MqMV)
+![Mobile app end work](https://i.ibb.co/JC2R6Rg/android-end.jpg)
 ![Mobile app end work greetings](https://ibb.co/DtsG1Cf)
 ![Mobile app currently working employees](https://ibb.co/4PYY06x)
 
