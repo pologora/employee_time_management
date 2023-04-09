@@ -22,16 +22,16 @@ https://i.ibb.co/kMv0gFw/android-start.jpg
 
 - Employees can log in and start or end their work shifts using the mobile app.
 
-![Mobile app employee identification by pin]()
-<img src="https://i.ibb.co/PFXQ1Dv/android-main.jpg" alt="Mobile app employee identification by pin" width="100" />
 
-![Mobile app start work](https://i.ibb.co/kMv0gFw/android-start.jpg)
-![Mobile app start work greetings](https://i.ibb.co/0nHy22P/android-greetings-start.jpg)
-![Mobile app end work](https://i.ibb.co/JC2R6Rg/android-end.jpg)
-![Mobile app end work greetings](https://i.ibb.co/MsW8gVk/android-greetings-end.jpg)
-![Mobile app currently working employees](https://i.ibb.co/Pw99V78/android-list.jpg)
-
-
+<img src="https://i.ibb.co/PFXQ1Dv/android-main.jpg" alt="Mobile app employee identification by pin" width="200" />
+- Start work
+<img src="https://i.ibb.co/kMv0gFw/android-start.jpg" alt="Mobile app start work" width="100" />
+<img src="https://i.ibb.co/0nHy22P/android-greetings-start.jpg" alt="Mobile app start work greetings" width="100" />
+- End work
+<img src="https://i.ibb.co/JC2R6Rg/android-end.jpg" alt="Mobile app employee end work" width="100" />
+<img src="https://i.ibb.co/MsW8gVk/android-greetings-end.jpg" alt="Mobile app end work greetings" width="100" />
+- Working employees
+<img src="https://i.ibb.co/Pw99V78/android-list.jpg" alt="Mobile app working employees list" width="100" />
 
 ### Admin Web Application
 
