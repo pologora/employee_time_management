@@ -44,10 +44,10 @@ Development version:
 
 
 
-## Technologies
+## Technologies and tools
 
 
 
 - Mobile app: React Native, MongoDB Realm
-- Admin web application: React, MongoDB Serverless Functions, Material UI
+- Admin web application: React, MongoDB Serverless Functions, Material UI, Realm Web, FullCalendar, Axios
 
