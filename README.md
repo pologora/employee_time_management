@@ -28,7 +28,6 @@ The Employee Time Management System is a comprehensive solution for managing emp
 ### End work
 
 <img src="https://i.ibb.co/JC2R6Rg/android-end.jpg" alt="Mobile app employee end work" width="200" />
-<img src="https://i.ibb.co/MsW8gVk/android-greetings-end.jpg" alt="Mobile app end work greetings" width="200" />
 
 ### Working employees
 
@@ -40,7 +39,7 @@ The Employee Time Management System is a comprehensive solution for managing emp
 - Managers can generate reports on employee work times for a selected period.
 - Managers can export reports to Excel files.
 
-Development version of the website: 
+Development version: 
 [Check live](https://best-ever-magazyn.netlify.app/)
 
 
