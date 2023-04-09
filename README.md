@@ -22,7 +22,9 @@ https://i.ibb.co/kMv0gFw/android-start.jpg
 
 - Employees can log in and start or end their work shifts using the mobile app.
 
-![Mobile app employee identification by pin](https://i.ibb.co/PFXQ1Dv/android-main.jpg)
+![Mobile app employee identification by pin]()
+<img src="https://i.ibb.co/PFXQ1Dv/android-main.jpg" alt="Mobile app employee identification by pin" width="100" />
+
 ![Mobile app start work](https://i.ibb.co/kMv0gFw/android-start.jpg)
 ![Mobile app start work greetings](https://i.ibb.co/0nHy22P/android-greetings-start.jpg)
 ![Mobile app end work](https://i.ibb.co/JC2R6Rg/android-end.jpg)
