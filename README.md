@@ -40,15 +40,14 @@ The Employee Time Management System is a comprehensive solution for managing emp
 - Managers can generate reports on employee work times for a selected period.
 - Managers can export reports to Excel files.
 
-
-![Admin web application dashboard](https://your-dashboard-image-url.png)
-![Admin web application reports](https://your-reports-image-url.png)
+Development version of the website: 
+[Check live](https://best-ever-magazyn.netlify.app/)
 
 
 
 ## Technologies
 
-<img src="https://your-react-icon-url.png" alt="React" width="50" /> <img src="https://your-react-native-icon-url.png" alt="React Native" width="50" /> <img src="https://your-mongodb-icon-url.png" alt="MongoDB" width="50" /> <img src="https://your-material-ui-icon-url.png" alt="Material UI" width="50" />
+
 
 - Mobile app: React Native, MongoDB Realm
 - Admin web application: React, MongoDB Serverless Functions, Material UI
