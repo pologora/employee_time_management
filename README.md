@@ -11,16 +11,11 @@ The Employee Time Management System is a comprehensive solution for managing emp
 - **Export of reports** to Excel files.
 
 ## Usage
-https://i.ibb.co/JC2R6Rg/android-end.jpg
-https://i.ibb.co/MsW8gVk/android-greetings-end.jpg
-https://i.ibb.co/0nHy22P/android-greetings-start.jpg
-https://i.ibb.co/Pw99V78/android-list.jpg
-https://i.ibb.co/PFXQ1Dv/android-main.jpg
-https://i.ibb.co/kMv0gFw/android-start.jpg
+
 ### Mobile App
 
 
-- Employees can log in and start or end their work shifts using the mobile app.
+ #### Employees can log in and start or end their work shifts using the mobile app.
 
 
 <img src="https://i.ibb.co/PFXQ1Dv/android-main.jpg" alt="Mobile app employee identification by pin" width="200" />
