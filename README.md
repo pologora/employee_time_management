@@ -24,13 +24,18 @@ https://i.ibb.co/kMv0gFw/android-start.jpg
 
 
 <img src="https://i.ibb.co/PFXQ1Dv/android-main.jpg" alt="Mobile app employee identification by pin" width="200" />
-- Start work
+### Start work
+
 <img src="https://i.ibb.co/kMv0gFw/android-start.jpg" alt="Mobile app start work" width="200" />
 <img src="https://i.ibb.co/0nHy22P/android-greetings-start.jpg" alt="Mobile app start work greetings" width="200" />
-- End work
+
+### End work
+
 <img src="https://i.ibb.co/JC2R6Rg/android-end.jpg" alt="Mobile app employee end work" width="200" />
 <img src="https://i.ibb.co/MsW8gVk/android-greetings-end.jpg" alt="Mobile app end work greetings" width="200" />
-- Working employees
+
+### Working employees
+
 <img src="https://i.ibb.co/Pw99V78/android-list.jpg" alt="Mobile app working employees list" width="200" />
 
 ### Admin Web Application
