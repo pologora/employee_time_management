@@ -14,9 +14,16 @@ The Employee Time Management System is a comprehensive solution for managing emp
 
 ### Mobile App
 
+
 - Employees can log in and start or end their work shifts using the mobile app.
-![Mobile app login screen](https://your-login-image-url.png)
-![Mobile app main screen](https://your-main-screen-image-url.png)
+
+![Mobile app employee identification by pin](https://ibb.co/WG8tBV4)
+![Mobile app start work](https://ibb.co/10FGQQH)
+![Mobile app start work greetings](https://ibb.co/10FGQQH)
+![Mobile app end work](https://ibb.co/qx9MqMV)
+![Mobile app end work greetings](https://ibb.co/DtsG1Cf)
+![Mobile app currently working employees](https://ibb.co/4PYY06x)
+
 
 
 ### Admin Web Application
@@ -30,8 +37,6 @@ The Employee Time Management System is a comprehensive solution for managing emp
 ![Admin web application reports](https://your-reports-image-url.png)
 
 
-
-## Screenshots
 
 ## Technologies
 
