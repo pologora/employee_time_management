@@ -11,18 +11,23 @@ The Employee Time Management System is a comprehensive solution for managing emp
 - **Export of reports** to Excel files.
 
 ## Usage
-
+https://i.ibb.co/JC2R6Rg/android-end.jpg
+https://i.ibb.co/MsW8gVk/android-greetings-end.jpg
+https://i.ibb.co/0nHy22P/android-greetings-start.jpg
+https://i.ibb.co/Pw99V78/android-list.jpg
+https://i.ibb.co/PFXQ1Dv/android-main.jpg
+https://i.ibb.co/kMv0gFw/android-start.jpg
 ### Mobile App
 
 
 - Employees can log in and start or end their work shifts using the mobile app.
 
-![Mobile app employee identification by pin](https://ibb.co/WG8tBV4)
-![Mobile app start work](https://ibb.co/10FGQQH)
-![Mobile app start work greetings](https://ibb.co/10FGQQH)
+![Mobile app employee identification by pin](https://i.ibb.co/PFXQ1Dv/android-main.jpg)
+![Mobile app start work](https://i.ibb.co/kMv0gFw/android-start.jpg)
+![Mobile app start work greetings](https://i.ibb.co/0nHy22P/android-greetings-start.jpg)
 ![Mobile app end work](https://i.ibb.co/JC2R6Rg/android-end.jpg)
-![Mobile app end work greetings](https://ibb.co/DtsG1Cf)
-![Mobile app currently working employees](https://ibb.co/4PYY06x)
+![Mobile app end work greetings](https://i.ibb.co/MsW8gVk/android-greetings-end.jpg)
+![Mobile app currently working employees](https://i.ibb.co/Pw99V78/android-list.jpg)
 
 
 
