@@ -45,14 +45,3 @@ The Employee Time Management System is a comprehensive solution for managing emp
 - Mobile app: React Native, MongoDB Realm
 - Admin web application: React, MongoDB Serverless Functions, Material UI
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
-## Contributing
-
-Please read [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Authors
-
-- **Your Name** - *Initial work* - [yourusername](https://github.com/yourusername)
