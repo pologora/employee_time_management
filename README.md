@@ -4,7 +4,7 @@ This is a commercial project that was developed based on client needs and is now
 
 ## Features
 
-- **Mobile app for employees** to start and end work.
+- **Mobile app for employees** to start and end work, "offline first".
 - **Admin web application** for managing employees, work times, and vacations.
 - **CRUD operations** for employees, work times, and vacations.
 - **Reporting** on employee work times for a selected period.
