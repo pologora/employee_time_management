@@ -1,10 +1,10 @@
 # Employee Time Management System
 
-The Employee Time Management System is a comprehensive solution for managing employee work times, vacations, and attendance in various work environments. The system includes a mobile app for employees and an admin web application for managers. It is built using React Native, MongoDB Realm, React, and Material UI.
+This is a commercial project that was developed based on client needs and is now being used by a warehouse company to manage employee work times, vacations, and attendance in various work environments. The system includes a mobile app for employees and an admin web application for managers, and is built using React Native, MongoDB Realm, React, and Material UI.
 
 ## Features
 
-- **Mobile app for employees** to start and end work.
+- **Mobile app for employees** to start and end work, "offline first".
 - **Admin web application** for managing employees, work times, and vacations.
 - **CRUD operations** for employees, work times, and vacations.
 - **Reporting** on employee work times for a selected period.
