@@ -5,7 +5,6 @@ import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport
 
 function AllSntiRaport({ raport, raportRange }) {
   const [start, end] = raportRange;
-  console.log(raportRange);
 
   const raports = raport.map((item) => generateSingleEmplRaport(item, start, end));
 
@@ -67,6 +66,7 @@ function AllSntiRaport({ raport, raportRange }) {
       isButton={false}
     />
   ));
+
   return (
     <div>
       <Box sx={{ margin: 4, textAlign: 'right' }}>

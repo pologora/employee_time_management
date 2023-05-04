@@ -28,6 +28,15 @@ function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
 
   const reportData = generateSingleEmplRaport(employee, startDate, endDate);
 
+  function getHours(hoursCount) {
+    if (hoursCount) {
+      const [hoursStr] = hoursCount.split(' ');
+      const hours = parseInt(hoursStr, 10);
+      return hours;
+    }
+    return null;
+  }
+
   const generateExcel = (data, title, filename, total) => {
     const polishData = data.map((item) => ({
       Dzień: item.day,
@@ -109,7 +118,13 @@ function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
                 <TableCell>{row.day}</TableCell>
                 <TableCell>{row.dayOfWeek}</TableCell>
                 <TableCell>{row.workHours}</TableCell>
-                <TableCell>{row.hoursCount}</TableCell>
+                <TableCell
+                  style={{
+                    color: `${getHours(row?.hoursCount) > 10 && 'red'}`,
+                  }}
+                >
+                  {row.hoursCount}
+                </TableCell>
               </StyledTableRow>
             ))}
             <TableRow>
