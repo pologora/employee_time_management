@@ -64,7 +64,6 @@ function WorkTimeTable({
       const workDocument = await getTimeById(id);
       setSelectedWorkTimeDocument(workDocument);
     } catch (error) {
-      console.log(error);
       alert(error.message);
     } finally {
       setIsLoading(false);
@@ -94,7 +93,6 @@ function WorkTimeTable({
         await updateTime(id, startWork, endWork);
       }
     } catch (error) {
-      console.log(error);
       alert(error.message);
     } finally {
       setIsLoading(false);
@@ -108,7 +106,6 @@ function WorkTimeTable({
       await deleteTime(id);
       getEmployeeWorkTime();
     } catch (error) {
-      console.log(error);
       alert(error.message);
     }
   };
