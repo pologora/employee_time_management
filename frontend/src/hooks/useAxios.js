@@ -1,15 +1,7 @@
 import axios from 'axios';
-import { useState } from 'react';
-import { useUser } from '../components/auth/UserContext';
 
 const useAxios = () => {
-  const [error, setError] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const { user } = useUser();
-
   const fetchData = async (url, method, data = null, headers = {}) => {
-    setIsLoading(true);
-    setError(null);
     try {
       const response = await axios({
         method,
@@ -18,14 +10,12 @@ const useAxios = () => {
         headers: {
           ...headers,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${user._accessToken}`,
         },
       });
       return response.data;
     } catch (err) {
-      return setError(err);
-    } finally {
-      setIsLoading(false);
+      console.error(err);
+      throw err;
     }
   };
 
@@ -42,8 +32,6 @@ const useAxios = () => {
     patch,
     post,
     get,
-    isLoading,
-    error,
   };
 };
 export default useAxios;

@@ -1,13 +1,11 @@
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import useAxios from '../../../../hooks/useAxios';
 import WorkTimeTable from '../components/WorkTimeTable';
-import baseUrl from '../../../../options/baseUrl';
-import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
+import { getEmployeeWorkTimeByDate } from '../../../../api/workTimeApi';
 
 function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
-  const { isLoading, error, get } = useAxios();
   const [workTime, setWorkTime] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
   const {
     employee: { id },
     startDate,
@@ -15,15 +13,14 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   } = selectedEmployee;
 
   const getEmployeeWorkTime = async () => {
-    const url = `${baseUrl}/employee/worktime?id=${id}&startDate=${toISOStringWithLocalTimezone(
-      startDate,
-    )}&endDate=${toISOStringWithLocalTimezone(endDate)}`;
-    const data = await get(url);
-    if (data) {
+    setIsLoading(true);
+    try {
+      const data = await getEmployeeWorkTimeByDate(id, startDate, endDate);
       setWorkTime(data);
-    }
-    if (error) {
+    } catch (error) {
       alert(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 

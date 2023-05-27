@@ -9,7 +9,6 @@ import LoginForm from './components/auth/LoginForm';
 import Dashboard from './components/Dashboard';
 import { UserProvider } from './components/auth/UserContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
-// import ProtectedRoute from './components/auth/ProtectedRoute';
 
 function App() {
   return (
@@ -27,7 +26,6 @@ function App() {
                 </ProtectedRoute>
               )}
             />
-            {/* <Route path="/app" element={<Dashboard />} /> */}
             <Route path="/" element={<Navigate to="/login" />} />
           </Routes>
         </Router>

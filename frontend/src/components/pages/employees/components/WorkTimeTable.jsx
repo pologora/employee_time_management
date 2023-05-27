@@ -1,6 +1,5 @@
 import { styled } from '@mui/material/styles';
 import {
-  Alert,
   Box,
   Button,
   CircularProgress,
@@ -19,9 +18,15 @@ import AlarmIcon from '@mui/icons-material/Alarm';
 import { useState } from 'react';
 import createCalendarArray from '../../../../utils/createCalendarArray';
 import WorkTimeUpdateCreateAlert from './WorkTimeUpdateCreateAlert';
-import useAxios from '../../../../hooks/useAxios';
-import baseUrl from '../../../../options/baseUrl';
-import severityOptions from '../../../../options/severityOptions';
+import {
+  createTime,
+  deleteTime,
+  updateTime,
+  getTimeById,
+} from '../../../../api/workTimeApi';
+import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
+import totalWorkTimeInMinutes from '../../../../utils/timeOperation/totalWorkTimeInMinutes';
+import oneDocumentTotalTimeInMinutes from '../../../../utils/timeOperation/oneDocumentTotalTimeInMinutes';
 
 const StyledTableRowWorkTime = styled(TableRow)(({ theme }) => ({
   '& > *': {
@@ -42,53 +47,20 @@ function WorkTimeTable({
   const [selectedWorkTimeDocument, setSelectedWorkTimeDocument] = useState(null);
   const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
   const {
-    get, post, isLoading, deleteItem,
-  } = useAxios();
-  const {
     employee: { name, id: employeeId },
     startDate,
     endDate,
   } = selectedEmployee;
   const [openAlert, setOpenAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [severity, setSeverity] = useState(severityOptions.SUCCESS);
-
-  const showAlert = (message, severityOption) => {
-    setAlertMessage(message);
-    setSeverity(severityOption);
-    setOpenAlert(true);
-  };
 
   const handleAllEmployeesClick = () => {
     handleChangeComponentToRender('home');
   };
 
   const getSelectedTimeDocument = async (id) => {
-    const url = `${baseUrl}/worktime?id=${id}`;
-    const workDocument = await get(url);
-    if (!(workDocument instanceof Error)) {
-      setSelectedWorkTimeDocument(workDocument);
-    } else {
-      showAlert(workDocument.message, severityOptions.ERROR);
-    }
-  };
+    const workDocument = await getTimeById(id);
 
-  const createTime = async (id, startWork, endWork) => {
-    const url = `${baseUrl}/worktime?id=${id}&startWork=${startWork}&endWork=${endWork}`;
-
-    return post(url);
-  };
-
-  const updateTime = async (id, startWork, endWork) => {
-    const url = `${baseUrl}/worktime/update?id=${id}&startWork=${startWork}&endWork=${endWork}`;
-
-    return post(url);
-  };
-
-  const deleteTime = async (id) => {
-    const url = `${baseUrl}/worktime?id=${id}`;
-
-    return deleteItem(url);
+    setSelectedWorkTimeDocument(workDocument);
   };
 
   const handleTimeUpdateClick = (id, isoTime) => {
@@ -107,62 +79,20 @@ function WorkTimeTable({
 
   const handleTimeUpdate = async (id, startWork, endWork) => {
     if (!id) {
-      const result = await createTime(employeeId, startWork, endWork);
-      if (!(result instanceof Error)) {
-        showAlert('Dodałeś czas', severityOptions.SUCCESS);
-      } else {
-        showAlert(result.message, severityOptions.ERROR);
-      }
+      await createTime(employeeId, startWork, endWork);
     } else {
-      const result = await updateTime(id, startWork, endWork);
-      if (!(result instanceof Error)) {
-        setAlertMessage();
-        showAlert('Czas zaktualizowany', severityOptions.SUCCESS);
-      } else {
-        showAlert(result.message, severityOptions.ERROR);
-      }
+      await updateTime(id, startWork, endWork);
     }
     getEmployeeWorkTime();
   };
 
   const handleTimeDelete = async (id) => {
-    const result = await deleteTime(id);
-    if (!(result instanceof Error)) {
-      showAlert('Czas usunięty', severityOptions.SUCCESS);
-    } else {
-      showAlert(result.message, severityOptions.ERROR);
-    }
+    await deleteTime(id);
+
     getEmployeeWorkTime();
   };
 
   const emptyErray = createCalendarArray(startDate, endDate);
-
-  const calculateTotalWorkTime = (workTimeData) => {
-    const totalWorkMinutes = workTimeData?.reduce((acc, doc) => {
-      const { startWork, endWork } = doc;
-      let totalTimeInMinutes;
-      if (endWork) {
-        totalTimeInMinutes = Math.round(
-          (new Date(endWork).getTime() - new Date(startWork).getTime())
-            / (1000 * 60),
-        );
-      } else {
-        const startWorkLocal = new Date(startWork);
-        startWorkLocal.setMinutes(
-          startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
-        );
-        const now = new Date();
-        totalTimeInMinutes = Math.round(
-          (now.getTime() - startWorkLocal.getTime()) / (1000 * 60),
-        );
-      }
-      return acc + totalTimeInMinutes;
-    }, 0);
-
-    const hours = Math.floor(totalWorkMinutes / 60);
-    const minutes = Math.floor(totalWorkMinutes % 60);
-    return `${hours}h ${minutes}min`;
-  };
 
   const workHoursDataArray = workTime?.map((workDocument) => {
     const { _id, startWork, endWork } = workDocument;
@@ -172,24 +102,10 @@ function WorkTimeTable({
     );
     const dayStartWork = localTime.getDate();
 
-    let totalTimeInMinutes;
-    if (endWork) {
-      totalTimeInMinutes = Math.round(
-        (new Date(endWork).getTime() - new Date(startWork).getTime())
-          / (1000 * 60),
-      );
-    } else {
-      const startWorkLocal = new Date(startWork);
-      startWorkLocal.setMinutes(
-        startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
-      );
-      const now = new Date();
-
-      totalTimeInMinutes = Math.round(
-        (now.getTime() - startWorkLocal.getTime()) / (1000 * 60),
-      );
-    }
-
+    const totalTimeInMinutes = oneDocumentTotalTimeInMinutes(
+      startWork,
+      endWork,
+    );
     const hours = Math.floor(totalTimeInMinutes / 60);
     const minutes = Math.floor(totalTimeInMinutes % 60);
     const totalWorkTime = `${hours}g ${minutes}m`;
@@ -204,33 +120,16 @@ function WorkTimeTable({
   });
 
   const workTimeTableRows = emptyErray.map((dayData) => {
+    const { day, isoTime } = dayData;
     const workHoursData = workHoursDataArray?.filter(
-      (workHours) => workHours.day === dayData.day,
+      (workHours) => workHours.day === day,
     );
-    const { isoTime } = dayData;
 
     if (workHoursData && workHoursData.length > 0) {
       const totalTimeInMinutes = workHoursData.reduce((acc, curr) => {
-        const { startWork } = curr;
-
-        if (!curr.endWork) {
-          const startWorkLocal = new Date(startWork);
-          startWorkLocal.setMinutes(
-            startWorkLocal.getMinutes() + startWorkLocal.getTimezoneOffset(),
-          );
-          const now = new Date();
-          const minutesWork = (now.getTime() - startWorkLocal.getTime()) / (1000 * 60);
-
-          return acc + Math.round(minutesWork);
-        }
-
-        return (
-          acc
-          + Math.round(
-            (new Date(curr.endWork).getTime() - new Date(startWork).getTime())
-              / (1000 * 60),
-          )
-        );
+        const { startWork, endWork } = curr;
+        const minutesWork = oneDocumentTotalTimeInMinutes(startWork, endWork);
+        return acc + Math.round(minutesWork);
       }, 0);
 
       const hours = Math.floor(totalTimeInMinutes / 60);
@@ -238,17 +137,14 @@ function WorkTimeTable({
       const total = `${hours}h ${minutes}min`;
 
       const start = workHoursData[0].startWork.slice(11, 16);
-
-      const end = workHoursData[workHoursData.length - 1].endWork
-        ? workHoursData[workHoursData.length - 1].endWork.slice(11, 16)
-        : null;
+      const end = workHoursData[workHoursData.length - 1].endWork?.slice(11, 16) || null;
 
       return {
         id: workHoursData[0].id,
         startWork: start,
         endWork: end,
         total,
-        day: workHoursData[0].day,
+        day,
         dayOfWeek: dayData.dayOfWeek,
         isoTime,
       };
@@ -256,6 +152,7 @@ function WorkTimeTable({
 
     return dayData;
   });
+
   return (
     <Box>
       <Snackbar
@@ -263,11 +160,7 @@ function WorkTimeTable({
         open={openAlert}
         autoHideDuration={2000}
         onClose={() => setOpenAlert(false)}
-      >
-        <Alert severity={severity} sx={{ width: '100%' }}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
+      />
       <WorkTimeUpdateCreateAlert
         open={isOpenUpdateCreateWorkTime}
         onClose={handleUpdateTimeAlertClose}
@@ -278,7 +171,7 @@ function WorkTimeTable({
       />
       <Button onClick={handleAllEmployeesClick}>Wszyscy pracownicy</Button>
       <Typography variant="h4">{`${name}`}</Typography>
-      {isLoading ? (
+      {false ? (
         <CircularProgress />
       ) : (
         <TableContainer component={Paper} sx={{ marginTop: 2 }}>
@@ -316,7 +209,8 @@ function WorkTimeTable({
               <TableRow>
                 <TableCell colSpan={4} align="right" />
                 <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                  {calculateTotalWorkTime(workTime)}
+                  {workTime
+                    && getTimeFromMinutes(totalWorkTimeInMinutes(workTime))}
                 </TableCell>
                 <TableCell />
               </TableRow>
