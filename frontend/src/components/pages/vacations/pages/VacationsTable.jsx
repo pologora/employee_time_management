@@ -19,10 +19,9 @@ import {
 } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import SettingsIcon from '@mui/icons-material/Settings';
-import baseUrl from '../../../../options/baseUrl';
-import useAxios from '../../../../hooks/useAxios';
 import vacationTypes from '../../../../options/vacationTypes';
 import UpdateVacationAlert from '../components/UpdateVacationAlert';
+import { getAllVacationsOrByEmloyee } from '../../../../api/vacationsApi';
 
 const StyledTableRowVacations = styled(TableRow)(({ theme }) => ({
   '& > *': {
@@ -48,33 +47,38 @@ function VacationsTable({
   const [isOpenUpdateeAlert, setIsOpenUpdateAlert] = useState(false);
   const [activeVacation, setActiveVacation] = useState(null);
   const [activeEmployee, setActiveEmployee] = useState(null);
-  const { get, isLoading } = useAxios();
+  const [isLoading, setIsLoading] = useState(false);
 
-  async function getVacations() {
-    const url = `${baseUrl}/vacations?page=${page}&employeeId=${
-      activeEmployee ? activeEmployee._id : ''
-    }`;
-    const data = await get(url);
-    setVacations(data?.vacationsList);
-    if (activeEmployee) {
-      setTotalPages(Math.ceil(data.vacationsList.length / 25));
-    } else {
-      setTotalPages(Math.ceil(data.vacationSize / 25));
+  async function handleGetVacations() {
+    setIsLoading(true);
+    const employeeId = activeEmployee ? activeEmployee._id : '';
+    try {
+      const data = await getAllVacationsOrByEmloyee(page, employeeId);
+      setVacations(data.vacationsList);
+      if (activeEmployee) {
+        setTotalPages(Math.ceil(data.vacationsList.length / 25));
+      } else {
+        setTotalPages(Math.ceil(data.vacationSize / 25));
+      }
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   const handleDeleteVacation = async (vacation) => {
     deleteVacation(vacation);
-    getVacations();
+    handleGetVacations();
   };
 
   const handleUpdateVacation = async (vacation) => {
     updateVacation(vacation);
-    getVacations();
+    handleGetVacations();
   };
 
   useEffect(() => {
-    getVacations();
+    handleGetVacations();
   }, [page, reload, activeEmployee]);
 
   useEffect(() => {
@@ -128,14 +132,16 @@ function VacationsTable({
     <CircularProgress />
   ) : (
     <div>
-      <UpdateVacationAlert
-        onClose={handleCloseUpdateAlert}
-        open={isOpenUpdateeAlert}
-        onDelete={handleDeleteVacation}
-        vacation={activeVacation}
-        onUpdate={handleUpdateVacation}
-        employees={employees}
-      />
+      {isOpenUpdateeAlert && (
+        <UpdateVacationAlert
+          onClose={handleCloseUpdateAlert}
+          open={isOpenUpdateeAlert}
+          onDelete={handleDeleteVacation}
+          vacation={activeVacation}
+          onUpdate={handleUpdateVacation}
+          employees={employees}
+        />
+      )}
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Autocomplete
           value={activeEmployee}

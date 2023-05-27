@@ -38,3 +38,15 @@ export const getEmployees = async () => {
   const response = await get(url);
   return response;
 };
+
+export const getSntiEmployees = async () => {
+  const url = `${baseUrl}/employees?isSnti=true`;
+  const response = await get(url);
+  return response;
+};
+
+export const getEmployeesNames = async () => {
+  const url = `${baseUrl}/employee/short`;
+  const response = await get(url);
+  return response;
+};

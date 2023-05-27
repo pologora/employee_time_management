@@ -10,11 +10,14 @@ import {
   TableRow,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { tableCellClasses } from '@mui/material/TableCell';
-import useAxios from '../../../../hooks/useAxios';
-import baseUrl from '../../../../options/baseUrl';
 import EditableTableCell from '../components/EditableTableCell';
+import {
+  getAllVacationsByTimeAndType,
+  getLastYearVacationDaysLeft,
+  updateLastYearVacationLeftDays,
+} from '../../../../api/vacationsApi';
 
 const StyledTableRowVacations = styled(TableRow)(({ theme }) => ({
   '& > *': {
@@ -37,27 +40,25 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
 }));
 
 function VacationsAllEmployees({ reload, employees }) {
-  const {
-    get, post, error, isLoading,
-  } = useAxios();
   const [vacationsData, setVacationsData] = useState(null);
   const [lastYearVacationLeftDays, setLastYearVacationLeftDays] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const getAllVacations = async () => {
-    const url = `${baseUrl}/vacations/time?type=Wypoczynkowy`;
-    return get(url);
-  };
-
-  const setVacations = async () => {
-    const vacatons = await getAllVacations();
-    setVacationsData(vacatons);
-    if (error) {
+  const handleGetAllVacations = async () => {
+    setIsLoading(true);
+    try {
+      const data = { type: 'Wypoczynkowy' };
+      const vacatons = await getAllVacationsByTimeAndType(data);
+      setVacationsData(vacatons);
+    } catch (error) {
       alert(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    setVacations();
+    handleGetAllVacations();
   }, [reload]);
 
   const processData = (vacationsD) => {
@@ -151,35 +152,23 @@ function VacationsAllEmployees({ reload, employees }) {
 
   const rows = processData(vacationsData);
 
-  const updateLastYearVacationLeftDays = async (days, id) => {
-    const url = `${baseUrl}/vacationsLastYear?employeeId=${id}&daysLeft=${days}`;
-    return post(url);
-  };
-
-  const getLastYearVacationDaysLeft = async () => {
-    const url = `${baseUrl}/vacationsLastYear`;
-    return get(url);
+  const handleUpdateLastYearVacationLeftDays = async (days, id) => {
+    try {
+      return updateLastYearVacationLeftDays(days, id);
+    } catch (error) {
+      return alert(error);
+    }
   };
 
   const handleGetLastYearVacationDaysLeft = async () => {
     const data = await getLastYearVacationDaysLeft();
     setLastYearVacationLeftDays(data);
-    if (error) {
-      console.error(error);
-    }
   };
 
-  const onValueChange = useCallback(
-    async (value, employeeId) => {
-      await updateLastYearVacationLeftDays(value, employeeId);
-
-      handleGetLastYearVacationDaysLeft();
-      if (error) {
-        alert(error);
-      }
-    },
-    [error, handleGetLastYearVacationDaysLeft, updateLastYearVacationLeftDays],
-  );
+  const onValueChange = async (value, employeeId) => {
+    await handleUpdateLastYearVacationLeftDays(value, employeeId);
+    handleGetLastYearVacationDaysLeft();
+  };
 
   useEffect(() => {
     handleGetLastYearVacationDaysLeft();

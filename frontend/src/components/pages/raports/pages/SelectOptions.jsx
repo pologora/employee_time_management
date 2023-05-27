@@ -12,9 +12,8 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import useAxios from '../../../../hooks/useAxios';
-import baseUrl from '../../../../options/baseUrl';
 import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
+import { getEmployeesNames } from '../../../../api/employeesApi';
 
 const styleChoosedOptions = {
   marginLeft: 2,
@@ -32,15 +31,11 @@ function SelectOptions({
   const [activeEmployee, setActiveEmployee] = useState(null);
   const [employees, setEmployees] = useState(null);
   const [filteredEmployees, setFilteredEmployees] = useState(null);
-  const { get, error } = useAxios();
   const isAcceptButton = startDate && endDate;
 
-  const getEmployeesNames = async () => {
-    const url = `${baseUrl}/employee/short`;
-    const data = await get(url);
-    if (!error) {
-      setEmployees(data);
-    }
+  const handleGetEmployeesNames = async () => {
+    const data = await getEmployeesNames();
+    setEmployees(data);
   };
 
   const onChange = (dates) => {
@@ -84,7 +79,7 @@ function SelectOptions({
   }, [isSnti, employees]);
 
   useEffect(() => {
-    getEmployeesNames();
+    handleGetEmployeesNames();
   }, []);
 
   const propsAutocompl = {

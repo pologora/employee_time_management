@@ -1,82 +1,72 @@
 /* eslint-disable no-underscore-dangle */
-import {
-  Alert, Box, Button, Snackbar,
-} from '@mui/material';
+import { Box, Button, CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import useAxios from '../../../hooks/useAxios';
 import AddVacatonAlert from './components/AddVacationAlert';
 import Calendar from './pages/Calendar';
 import VacationsTable from './pages/VacationsTable';
-import baseUrl from '../../../options/baseUrl';
-import severityOptions from '../../../options/severityOptions';
 import VacationsAllEmployees from './pages/VacationsAllEmployees';
+import { getSntiEmployees } from '../../../api/employeesApi';
+import {
+  createVacation,
+  deleteVacation,
+  updateVacation,
+} from '../../../api/vacationsApi';
 
 function Vacations() {
   const [selectedComponent, setSelectedComponent] = useState('home');
   const [isOpenAddVacationAlert, setIsOpenAddVacationAlert] = useState(false);
-  const { get, post, deleteItem } = useAxios();
   const [employees, setEmployees] = useState(null);
-  const [openAlert, setOpenAlert] = useState(false);
-  const [alertMessage, setAlertMessage] = useState('');
-  const [severity, setSeverity] = useState(severityOptions.SUCCESS);
   const [reload, setReload] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const showAlert = (message, severityOp) => {
-    setSeverity(severityOp);
-    setAlertMessage(message);
-    setOpenAlert(true);
-  };
-
-  const getEmployees = async () => {
-    const url = `${baseUrl}/employees?isSnti=true`;
-    const data = await get(url);
-    if (data) {
+  const handleGetSntiEmployees = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getSntiEmployees();
       setEmployees(data);
+    } catch (error) {
+      alert(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   const handleRealoadData = () => {
     setReload((prev) => !prev);
-    getEmployees();
+    handleGetSntiEmployees();
   };
 
   const handleAddVacation = async (data) => {
-    const endpoint = '/vacations';
-    const url = `${baseUrl}${endpoint}`;
-    const result = await post(url, data);
-    if (!(result instanceof Error)) {
-      showAlert('Urlop został dodany', severityOptions.SUCCESS);
-    } else {
-      showAlert(result.message, severityOptions.ERROR);
+    try {
+      await createVacation(data);
+      handleRealoadData();
+    } catch (error) {
+      alert(error.message);
     }
-    handleRealoadData();
   };
 
-  const updateVacation = async (vacation) => {
-    const url = `${baseUrl}/vacations/update?id=${vacation.id}`;
-    const result = await post(url, vacation);
-    if (!(result instanceof Error)) {
-      showAlert('Urlop został zmieniony', severityOptions.SUCCESS);
-    } else {
-      showAlert(result.message, severityOptions.ERROR);
+  const handleUpdateVacation = async (vacation) => {
+    try {
+      await updateVacation(vacation);
+      handleRealoadData();
+    } catch (error) {
+      alert(error);
     }
-    handleRealoadData();
   };
 
-  const deleteVacation = async (vacation) => {
-    const url = `${baseUrl}/vacations?id=${vacation._id}`;
-    const result = await deleteItem(url);
-    if (!(result instanceof Error)) {
-      showAlert('Urlop został usunięty', severityOptions.SUCCESS);
-    } else {
-      showAlert(result.message, severityOptions.ERROR);
+  const handleDeleteVacation = async (vacation) => {
+    const id = vacation._id;
+    try {
+      await deleteVacation(id);
+      handleRealoadData();
+    } catch (error) {
+      alert(error);
     }
-    handleRealoadData();
   };
 
   useEffect(() => {
-    getEmployees();
+    handleGetSntiEmployees();
   }, []);
 
   const handleAddVacationClick = () => {
@@ -94,9 +84,9 @@ function Vacations() {
         <VacationsTable
           reload={reload}
           employees={employees}
-          getEmployees={getEmployees}
-          updateVacation={updateVacation}
-          deleteVacation={deleteVacation}
+          getEmployees={handleGetSntiEmployees}
+          updateVacation={handleUpdateVacation}
+          deleteVacation={handleDeleteVacation}
         />
       );
       break;
@@ -105,8 +95,8 @@ function Vacations() {
         <Calendar
           reload={reload}
           employees={employees}
-          onUpdate={updateVacation}
-          onDelete={deleteVacation}
+          onUpdate={handleUpdateVacation}
+          onDelete={handleDeleteVacation}
         />
       );
       break;
@@ -120,32 +110,28 @@ function Vacations() {
         <VacationsTable
           reload={reload}
           employees={employees}
-          getEmployees={getEmployees}
-          updateVacation={updateVacation}
-          deleteVacation={deleteVacation}
+          getEmployees={handleGetSntiEmployees}
+          updateVacation={handleUpdateVacation}
+          deleteVacation={handleDeleteVacation}
         />
       );
       break;
   }
 
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+
   return (
     <div>
-      <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
-        open={openAlert}
-        autoHideDuration={2000}
-        onClose={() => setOpenAlert(false)}
-      >
-        <Alert severity={severity} sx={{ width: '100%' }}>
-          {alertMessage}
-        </Alert>
-      </Snackbar>
-      <AddVacatonAlert
-        onClose={handleCloseAddVacationAlert}
-        open={isOpenAddVacationAlert}
-        handleAddVacation={handleAddVacation}
-        employees={employees}
-      />
+      {isOpenAddVacationAlert && (
+        <AddVacatonAlert
+          onClose={handleCloseAddVacationAlert}
+          open={isOpenAddVacationAlert}
+          handleAddVacation={handleAddVacation}
+          employees={employees}
+        />
+      )}
       <Box
         component="nav"
         sx={{

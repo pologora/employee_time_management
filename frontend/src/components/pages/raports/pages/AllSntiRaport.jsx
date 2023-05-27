@@ -61,6 +61,7 @@ function AllSntiRaport({ raport, raportRange }) {
 
   const raportsArrayElement = raport.map((employee) => (
     <SingleEmployeeRaport
+      key={employee._id}
       employeeRaport={[employee]}
       raportRange={raportRange}
       isButton={false}

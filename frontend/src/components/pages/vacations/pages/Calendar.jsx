@@ -5,11 +5,13 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
-import useAxios from '../../../../hooks/useAxios';
-import baseUrl from '../../../../options/baseUrl';
 import vacationTypes from '../../../../options/vacationTypes';
 import './Calendar.css';
 import UpdateVacationAlert from '../components/UpdateVacationAlert';
+import {
+  getAllVacationsByTimeAndType,
+  getVacationById,
+} from '../../../../api/vacationsApi';
 
 function Calendar({
   reload, employees, onDelete, onUpdate,
@@ -17,54 +19,62 @@ function Calendar({
   const [events, setEvents] = useState(null);
   const [isOpenUpdateeAlert, setIsOpenUpdateAlert] = useState(false);
   const [activeVacation, setActiveVacation] = useState(null);
-  const { get, isLoading } = useAxios();
+  const [isLoading, setIsLoading] = useState(false);
 
   const getVacations = async () => {
-    const url = `${baseUrl}/vacations/time`;
-    const data = await get(url);
+    setIsLoading(true);
+    try {
+      const data = await getAllVacationsByTimeAndType();
 
-    const dataForEvents = data?.map((doc) => {
-      const {
-        _id: id, startVacation, endVacation, type, name, surname,
-      } = doc;
+      const dataForEvents = data?.map((doc) => {
+        const {
+          _id: id,
+          startVacation,
+          endVacation,
+          type,
+          name,
+          surname,
+        } = doc;
 
-      const date = new Date(endVacation);
-      date.setDate(date.getDate() + 1);
-      const endPlusDay = date.toISOString();
+        const date = new Date(endVacation);
+        date.setDate(date.getDate() + 1);
+        const endPlusDay = date.toISOString();
 
-      const backgroundColor = vacationTypes.find(
-        (item) => item.label === type,
-      )?.color;
+        const backgroundColor = vacationTypes.find(
+          (item) => item.label === type,
+        )?.color;
 
-      return {
-        type,
-        start: startVacation,
-        end: endPlusDay,
-        title: `${name} ${surname} ${type}`,
-        allDay: true,
-        id,
-        backgroundColor:
-          backgroundColor
-          || vacationTypes.find((item) => item.label === 'inne').color,
-      };
-    });
-    setEvents(dataForEvents);
+        return {
+          type,
+          start: startVacation,
+          end: endPlusDay,
+          title: `${name} ${surname} ${type}`,
+          allDay: true,
+          id,
+          backgroundColor:
+            backgroundColor
+            || vacationTypes.find((item) => item.label === 'inne').color,
+        };
+      });
+      setEvents(dataForEvents);
+    } catch (error) {
+      alert(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
     getVacations();
   }, [reload]);
 
-  const getVacationById = async (id) => {
-    const url = `${baseUrl}/vacations/id?id=${id}`;
-    return get(url);
-  };
+  const handleGetVacationById = async (id) => getVacationById(id);
 
   const handleEventClick = async (arg) => {
     setIsOpenUpdateAlert(true);
     setActiveVacation(null);
     const id = arg.event._def.publicId;
-    const vacation = await getVacationById(id);
+    const vacation = await handleGetVacationById(id);
     if (vacation) {
       setActiveVacation(vacation);
     }
@@ -87,14 +97,16 @@ function Calendar({
     <CircularProgress />
   ) : (
     <div>
-      <UpdateVacationAlert
-        open={isOpenUpdateeAlert}
-        onClose={handleCloseUpdateAlert}
-        vacation={activeVacation}
-        employees={employees}
-        onDelete={onDelete}
-        onUpdate={onUpdate}
-      />
+      {isOpenUpdateeAlert && (
+        <UpdateVacationAlert
+          open={isOpenUpdateeAlert}
+          onClose={handleCloseUpdateAlert}
+          vacation={activeVacation}
+          employees={employees}
+          onDelete={onDelete}
+          onUpdate={onUpdate}
+        />
+      )}
       <div className="calendar">
         <FullCalendar
           plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}

@@ -1,55 +1,40 @@
 import { Box, Button } from '@mui/material';
 import { useState } from 'react';
-import useAxios from '../../../hooks/useAxios';
-import baseUrl from '../../../options/baseUrl';
 import AllEmployeesTable from './pages/AllEmployeesTable';
 import AllSntiRaport from './pages/AllSntiRaport';
 import SelectOptions from './pages/SelectOptions';
 import SingleEmployeeRaport from './pages/SingleEmployeeRaport';
+import {
+  getAllAgencjaRaport,
+  getAllSntiRaport,
+  getEmployeeRaportByIdAndDate,
+} from '../../../api/raportsApi';
 
 function Raporty() {
   const [selectedComponent, setSelectedComponent] = useState('home');
   const [raportData, setRaportData] = useState(null);
   const [raportRange, setRaportRange] = useState([]);
-  const { get, error } = useAxios();
-
-  const getAllEmployeesAgencja = async (startDate, endDate) => {
-    const url = `${baseUrl}/raports?startDate=${startDate}&endDate=${endDate}`;
-
-    return get(url);
-  };
-
-  const getEmployeeData = async (id, startDate, endDate) => {
-    const url = `${baseUrl}/raports/employeeId?employeeId=${id}&startDate=${startDate}&endDate=${endDate}`;
-
-    return get(url);
-  };
-
-  const getAllSntiRaport = async (startDate, endDate) => {
-    const url = `${baseUrl}/raports/snti?startDate=${startDate}&endDate=${endDate}`;
-
-    return get(url);
-  };
 
   const handleSingleEmployeeRaport = async (id, startDate, endDate) => {
-    const data = await getEmployeeData(id, startDate, endDate);
     try {
+      const data = await getEmployeeRaportByIdAndDate(id, startDate, endDate);
       setRaportData(data);
-    } catch (err) {
-      alert(err);
+      setRaportRange([startDate, endDate]);
+      setSelectedComponent('singleEmployee');
+    } catch (error) {
+      alert(error);
     }
-    setRaportRange([startDate, endDate]);
-    setSelectedComponent('singleEmployee');
   };
 
   const handleAllAgencjaGenerate = async (startDate, endDate) => {
-    const data = await getAllEmployeesAgencja(startDate, endDate);
-    if (error) {
+    try {
+      const data = await getAllAgencjaRaport(startDate, endDate);
+      setRaportData(data);
+      setRaportRange([startDate, endDate]);
+      setSelectedComponent('allEmployeesAgencja');
+    } catch (error) {
       alert(error);
     }
-    setRaportData(data);
-    setRaportRange([startDate, endDate]);
-    setSelectedComponent('allEmployeesAgencja');
   };
 
   const handleAllSntiRaport = async (startDate, endDate) => {

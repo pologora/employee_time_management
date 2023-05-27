@@ -25,8 +25,8 @@ import {
   getTimeById,
 } from '../../../../api/workTimeApi';
 import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
-import totalWorkTimeInMinutes from '../../../../utils/timeOperation/totalWorkTimeInMinutes';
-import oneDocumentTotalTimeInMinutes from '../../../../utils/timeOperation/oneDocumentTotalTimeInMinutes';
+import totalWorkTimeInMinutes from '../../../../utils/timeOperations/totalWorkTimeInMinutes';
+import oneDocumentTotalTimeInMinutes from '../../../../utils/timeOperations/oneDocumentTotalTimeInMinutes';
 
 const StyledTableRowWorkTime = styled(TableRow)(({ theme }) => ({
   '& > *': {
