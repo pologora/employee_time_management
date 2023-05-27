@@ -12,6 +12,7 @@
   "plugins": ["react"],
   "rules": {
     "linebreak-style": "off",
+    "no-alert": "off",
     "react/prop-types": "off",
     "max-len": "off",
     "react/jsx-props-no-spreading": "off",

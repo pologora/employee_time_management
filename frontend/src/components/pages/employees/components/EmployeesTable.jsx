@@ -10,11 +10,10 @@ import {
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
 import { useState } from 'react';
-import baseUrl from '../../../../options/baseUrl';
 import DeleteAlert from './DeleteAlert';
 import UpdateAlert from './UpdateAlert';
-import useAxios from '../../../../hooks/useAxios';
 import WorkHoursAlert from './WorkHoursAlert';
+import { deleteEmployeeById } from '../../../../api/employeesApi';
 
 function EmployeesTable({
   employees,
@@ -26,7 +25,6 @@ function EmployeesTable({
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState(false);
   const [isOpenUpdateAlert, setIsOpenUpdateAlert] = useState(false);
   const [isOpenWorkHoursAlert, setIsOpenWorkHoursAlert] = useState(false);
-  const { deleteItem } = useAxios();
 
   const handleOpenUpdateAlert = (employee) => {
     setActiveEmployee(employee);
@@ -39,10 +37,12 @@ function EmployeesTable({
 
   const handleDeleteEmployee = async (employee) => {
     const { id } = employee;
-    const url = `${baseUrl}/employee?id=${id}`;
-    await deleteItem(url);
-
-    getEmployees();
+    try {
+      await deleteEmployeeById(id);
+      getEmployees();
+    } catch (error) {
+      alert(error);
+    }
   };
 
   const handleOpendDeleteAlert = (employee) => {
