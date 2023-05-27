@@ -10,46 +10,45 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { useEffect, useState } from 'react';
 import { CircularProgress } from '@mui/material';
-import useAxios from '../../../../hooks/useAxios';
-import baseUrl from '../../../../options/baseUrl';
+import { getEmployeeByPin, updateEmployee } from '../../../../api/employeesApi';
 
 export default function UpdateAlert({
   open, onClose, employee, getEmployees,
 }) {
-  const [employeeToUpdate, setEmployeeToUpdate] = useState(null);
-  const { pin } = employee || {};
-  const {
-    get, isLoading, error, post,
-  } = useAxios();
+  const [employeeToUpdate, setEmployeeToUpdate] = useState({
+    name: '',
+    surname: '',
+    pin: '',
+    vacationDaysPerYear: '',
+    isSnti: false,
+  });
+  const { pin } = employee;
+  const [isLoading, setIsLoading] = useState(false);
 
   const updateEmployeeField = (name, value) => {
     setEmployeeToUpdate((prev) => ({ ...prev, [name]: value }));
   };
 
-  const updateEmployee = async () => {
-    const url = `${baseUrl}/employeeUpdate`;
-    await post(url, employeeToUpdate);
-    getEmployees();
-  };
   const handleUpdate = () => {
-    updateEmployee();
-    onClose();
+    setIsLoading(true);
+    try {
+      updateEmployee(employeeToUpdate);
+      getEmployees();
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      onClose();
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
-    const getEmployeeByPin = async (employeePin) => {
-      const url = `${baseUrl}/employee?pin=${employeePin}`;
-      const employeeData = await get(url);
+    const handleGetEmployee = async (employeePin) => {
+      const employeeData = await getEmployeeByPin(employeePin);
       setEmployeeToUpdate(employeeData);
     };
-    getEmployeeByPin(pin);
+    handleGetEmployee(pin);
   }, [pin]);
-
-  useEffect(() => {
-    if (error) {
-      alert(JSON.stringify(error));
-    }
-  }, [error]);
 
   return (
     <div>
@@ -64,7 +63,7 @@ export default function UpdateAlert({
               margin="dense"
               id="name"
               label="Imię"
-              value={employeeToUpdate?.name}
+              value={employeeToUpdate.name}
               onChange={(e) => updateEmployeeField('name', e.target.value)}
               fullWidth
               variant="standard"
@@ -73,7 +72,7 @@ export default function UpdateAlert({
               margin="dense"
               id="surname"
               label="Nazwisko"
-              value={employeeToUpdate?.surname}
+              value={employeeToUpdate.surname}
               onChange={(e) => updateEmployeeField('surname', e.target.value)}
               fullWidth
               variant="standard"
@@ -82,7 +81,7 @@ export default function UpdateAlert({
               margin="dense"
               id="pin"
               label="PIN"
-              value={employeeToUpdate?.pin}
+              value={employeeToUpdate.pin}
               onChange={(e) => updateEmployeeField('pin', e.target.value)}
               fullWidth
               variant="standard"
@@ -91,7 +90,7 @@ export default function UpdateAlert({
               margin="dense"
               id="vacationDaysPerYear"
               label="Dni wakacyjne w roku"
-              value={employeeToUpdate?.vacationDaysPerYear}
+              value={employeeToUpdate.vacationDaysPerYear}
               onChange={(e) => updateEmployeeField('vacationDaysPerYear', +e.target.value)}
               fullWidth
               variant="standard"
@@ -99,8 +98,8 @@ export default function UpdateAlert({
             <RadioGroup
               row
               aria-label="employee-type"
-              defaultValue={employeeToUpdate?.isSnti ? 'SNTI' : 'Agencja'}
-              value={employeeToUpdate?.isSnti ? 'SNTI' : 'Agencja'}
+              defaultValue={employeeToUpdate.isSnti ? 'SNTI' : 'Agencja'}
+              value={employeeToUpdate.isSnti ? 'SNTI' : 'Agencja'}
               onChange={(e) => updateEmployeeField('isSnti', e.target.value === 'SNTI')}
             >
               <FormControlLabel value="SNTI" control={<Radio />} label="SNTI" />

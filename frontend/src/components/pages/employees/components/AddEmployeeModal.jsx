@@ -1,4 +1,3 @@
-/* eslint-disable no-alert */
 import { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -14,8 +13,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import baseUrl from '../../../../options/baseUrl';
-import useAxios from '../../../../hooks/useAxios';
+import { createEmployee } from '../../../../api/employeesApi';
 
 const style = {
   position: 'absolute',
@@ -39,14 +37,11 @@ const closeModalBtnSx = {
 
 export default function AddEmployee({ employees, getEmployees }) {
   const [open, setOpen] = useState(false);
-  const { error, post } = useAxios();
-
   const [pin, setDifaultPin] = useState('');
   const [name, setName] = useState('');
   const [surname, setSurname] = useState('');
   const [isSnti, setIsSnti] = useState(false);
   const [vacationDaysPerYear, setVacationDaysPerYear] = useState(0);
-
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
 
   const dataForRequest = {
@@ -58,13 +53,11 @@ export default function AddEmployee({ employees, getEmployees }) {
   };
 
   const addEmployee = async (data) => {
-    const url = `${baseUrl}/employees`;
-    const response = await post(url, data);
-    getEmployees();
-    if (response) {
-      alert('Employee added successfully');
-    } else {
-      alert(error);
+    try {
+      createEmployee(data);
+      getEmployees();
+    } catch (error) {
+      alert(error.message);
     }
   };
 

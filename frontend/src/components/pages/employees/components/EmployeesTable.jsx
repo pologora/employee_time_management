@@ -98,24 +98,30 @@ function EmployeesTable({
 
   return (
     <>
-      <DeleteAlert
-        open={isOpenDeleteAlert}
-        onClose={handleCloseDeleteAlert}
-        onDelete={handleDeleteEmployee}
-        employee={activeEmployee}
-      />
-      <UpdateAlert
-        open={isOpenUpdateAlert}
-        onClose={hadleCloseUpdateAlert}
-        employee={activeEmployee}
-        getEmployees={getEmployees}
-      />
-      <WorkHoursAlert
-        open={isOpenWorkHoursAlert}
-        onClose={handleCloseOpenWorkHoursAlert}
-        employee={activeEmployee}
-        onDateRangeSelected={handleDateRangeSelected}
-      />
+      {isOpenDeleteAlert && (
+        <DeleteAlert
+          open={isOpenDeleteAlert}
+          onClose={handleCloseDeleteAlert}
+          onDelete={handleDeleteEmployee}
+          employee={activeEmployee}
+        />
+      )}
+      {isOpenUpdateAlert && (
+        <UpdateAlert
+          open={isOpenUpdateAlert}
+          onClose={hadleCloseUpdateAlert}
+          employee={activeEmployee}
+          getEmployees={getEmployees}
+        />
+      )}
+      {isOpenWorkHoursAlert && (
+        <WorkHoursAlert
+          open={isOpenWorkHoursAlert}
+          onClose={handleCloseOpenWorkHoursAlert}
+          employee={activeEmployee}
+          onDateRangeSelected={handleDateRangeSelected}
+        />
+      )}
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table aria-label="Pracownicy table">
           <TableHead>

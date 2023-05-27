@@ -1,33 +1,29 @@
 import { useEffect, useState } from 'react';
 import { Button, CircularProgress, Box } from '@mui/material';
-
 import EmployeesActiveTable from './EmployeesActiveTable';
-import useAxios from '../../../hooks/useAxios';
-import baseUrl from '../../../options/baseUrl';
 import LogoutButton from '../../auth/LogoutButton';
-import { useUser } from '../../auth/UserContext';
+import { getWorkingEmployees } from '../../../api/employeesApi';
 
 function Home() {
   const [employees, setEmployees] = useState([]);
-  const { error, get, isLoading } = useAxios();
-  const { user } = useUser();
-  const [err, setErr] = useState(error);
+  const [isLoading, setIsLoading] = useState(false);
+  const [err, setErr] = useState(null);
 
-  const getEmployees = async () => {
-    if (user) {
-      const url = `${baseUrl}/employees/isWorking`;
-      const data = await get(url);
+  const handleGetWorkingEmployees = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getWorkingEmployees();
       setEmployees(data);
-    } else {
-      setErr('User not logged in');
+    } catch (error) {
+      setErr(error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    if (user) {
-      getEmployees();
-    }
-  }, [user]);
+    handleGetWorkingEmployees();
+  }, []);
 
   return (
     <div>
@@ -35,7 +31,7 @@ function Home() {
         component="div"
         sx={{ display: 'flex', justifyContent: 'space-between' }}
       >
-        <Button variant="outlined" onClick={getEmployees}>
+        <Button variant="outlined" onClick={handleGetWorkingEmployees}>
           Odśwież
         </Button>
         <LogoutButton />

@@ -52,15 +52,23 @@ function WorkTimeTable({
     endDate,
   } = selectedEmployee;
   const [openAlert, setOpenAlert] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleAllEmployeesClick = () => {
     handleChangeComponentToRender('home');
   };
 
   const getSelectedTimeDocument = async (id) => {
-    const workDocument = await getTimeById(id);
-
-    setSelectedWorkTimeDocument(workDocument);
+    setIsLoading(true);
+    try {
+      const workDocument = await getTimeById(id);
+      setSelectedWorkTimeDocument(workDocument);
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleTimeUpdateClick = (id, isoTime) => {
@@ -78,18 +86,31 @@ function WorkTimeTable({
   };
 
   const handleTimeUpdate = async (id, startWork, endWork) => {
-    if (!id) {
-      await createTime(employeeId, startWork, endWork);
-    } else {
-      await updateTime(id, startWork, endWork);
+    setIsLoading(true);
+    try {
+      if (!id) {
+        await createTime(employeeId, startWork, endWork);
+      } else {
+        await updateTime(id, startWork, endWork);
+      }
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
     }
+
     getEmployeeWorkTime();
   };
 
   const handleTimeDelete = async (id) => {
-    await deleteTime(id);
-
-    getEmployeeWorkTime();
+    try {
+      await deleteTime(id);
+      getEmployeeWorkTime();
+    } catch (error) {
+      console.log(error);
+      alert(error.message);
+    }
   };
 
   const emptyErray = createCalendarArray(startDate, endDate);
@@ -161,17 +182,19 @@ function WorkTimeTable({
         autoHideDuration={2000}
         onClose={() => setOpenAlert(false)}
       />
-      <WorkTimeUpdateCreateAlert
-        open={isOpenUpdateCreateWorkTime}
-        onClose={handleUpdateTimeAlertClose}
-        onTimeSelected={handleTimeUpdate}
-        selectedWorkTimeDocument={selectedWorkTimeDocument}
-        dayIsoTime={selectedDayIsoTime}
-        handleTimeDelete={handleTimeDelete}
-      />
+      {isOpenUpdateCreateWorkTime && (
+        <WorkTimeUpdateCreateAlert
+          open={isOpenUpdateCreateWorkTime}
+          onClose={handleUpdateTimeAlertClose}
+          onTimeSelected={handleTimeUpdate}
+          selectedWorkTimeDocument={selectedWorkTimeDocument}
+          dayIsoTime={selectedDayIsoTime}
+          handleTimeDelete={handleTimeDelete}
+        />
+      )}
       <Button onClick={handleAllEmployeesClick}>Wszyscy pracownicy</Button>
       <Typography variant="h4">{`${name}`}</Typography>
-      {false ? (
+      {isLoading ? (
         <CircularProgress />
       ) : (
         <TableContainer component={Paper} sx={{ marginTop: 2 }}>

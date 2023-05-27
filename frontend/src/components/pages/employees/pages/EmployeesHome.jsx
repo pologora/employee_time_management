@@ -1,21 +1,26 @@
 import { Box, CircularProgress, TextField } from '@mui/material';
 import { useEffect, useState } from 'react';
-import useAxios from '../../../../hooks/useAxios';
 import AddEmployee from '../components/AddEmployeeModal';
 import EmployeesTable from '../components/EmployeesTable';
-import baseUrl from '../../../../options/baseUrl';
+import { getEmployees } from '../../../../api/employeesApi';
 
 function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   const [employees, setEmployees] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
-  const { get, isLoading } = useAxios();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const getEmployees = async () => {
-    const url = `${baseUrl}/employees`;
-    const data = await get(url);
-    setEmployees(data);
-    setFilteredEmployees(data);
+  const handleGetEmployees = async () => {
+    setIsLoading(true);
+    try {
+      const data = await getEmployees();
+      setEmployees(data);
+      setFilteredEmployees(data);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -27,7 +32,7 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   }, [searchTerm, employees]);
 
   useEffect(() => {
-    getEmployees();
+    handleGetEmployees();
   }, []);
 
   return (
@@ -48,14 +53,17 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
             sx={{ margin: 0 }}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <AddEmployee employees={employees} getEmployees={getEmployees} />
+          <AddEmployee
+            employees={employees}
+            getEmployees={handleGetEmployees}
+          />
         </Box>
         {!isLoading ? (
           <EmployeesTable
             employees={filteredEmployees}
             setSelectedEmployee={setSelectedEmployee}
             handleChangeComponentToRender={handleChangeComponentToRender}
-            getEmployees={getEmployees}
+            getEmployees={handleGetEmployees}
           />
         ) : (
           <CircularProgress />

@@ -2,21 +2,16 @@ import axios from 'axios';
 
 const useAxios = () => {
   const fetchData = async (url, method, data = null, headers = {}) => {
-    try {
-      const response = await axios({
-        method,
-        url,
-        data: data ? JSON.stringify(data) : null,
-        headers: {
-          ...headers,
-          'Content-Type': 'application/json',
-        },
-      });
-      return response.data;
-    } catch (err) {
-      console.error(err);
-      throw err;
-    }
+    const response = await axios({
+      method,
+      url,
+      data: data ? JSON.stringify(data) : null,
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      },
+    });
+    return response.data;
   };
 
   const get = async (url, headers = {}) => fetchData(url, 'GET', null, headers);
