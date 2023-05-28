@@ -143,7 +143,7 @@ function SingleEmployeeRaport({
                     color="primary"
                     aria-label="edycja czasu pracy"
                     sx={{ width: '6px', height: '6px' }}
-                    onClick={() => handleTimeUpdateClick(row.id, row.dayIso)}
+                    onClick={() => handleTimeUpdateClick(row.id, row.isoTime)}
                   >
                     <AlarmIcon />
                   </IconButton>
