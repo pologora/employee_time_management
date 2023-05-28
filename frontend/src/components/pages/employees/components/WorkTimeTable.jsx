@@ -15,11 +15,7 @@ import {
 import Paper from '@mui/material/Paper';
 import AlarmIcon from '@mui/icons-material/Alarm';
 import { useState } from 'react';
-import createCalendarArray from '../../../../utils/createCalendarArray';
 import WorkTimeUpdateCreateAlert from './WorkTimeUpdateCreateAlert';
-import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
-import totalWorkTimeInMinutes from '../../../../utils/timeOperations/totalWorkTimeInMinutes';
-import oneDocumentTotalTimeInMinutes from '../../../../utils/timeOperations/oneDocumentTotalTimeInMinutes';
 
 const StyledTableRowWorkTime = styled(TableRow)(({ theme }) => ({
   '& > *': {
@@ -39,8 +35,6 @@ function WorkTimeTable({
   const [isOpenUpdateCreateWorkTime, setisOpenUpdateCreateWorkTime] = useState(false);
   const {
     employee: { name, id: employeeId },
-    startDate,
-    endDate,
   } = selectedEmployee;
   const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
@@ -50,12 +44,17 @@ function WorkTimeTable({
     handleChangeComponentToRender('home');
   };
 
-  const handleTimeUpdateClick = (id, isoTime) => {
-    if (id.length > 10) {
-      setTimeDocumentId(id);
-    } else {
-      setTimeDocumentId(null);
+  function getHours(hoursCount) {
+    if (hoursCount) {
+      const [hoursStr] = hoursCount.split(' ');
+      const hours = parseInt(hoursStr, 10);
+      return hours;
     }
+    return null;
+  }
+
+  const handleTimeUpdateClick = (id, isoTime) => {
+    setTimeDocumentId(id);
     setSelectedDayIsoTime(isoTime);
     setisOpenUpdateCreateWorkTime(true);
   };
@@ -64,63 +63,30 @@ function WorkTimeTable({
     setisOpenUpdateCreateWorkTime(false);
   };
 
-  const emptyErray = createCalendarArray(startDate, endDate);
+  const workTimeTableRows = workTime.data.map((dayData) => {
+    const {
+      day,
+      dayOfWeek,
+      workHours,
+      hoursCount: total,
+      id,
+      isoTime,
+    } = dayData;
 
-  const workHoursDataArray = workTime?.map((workDocument) => {
-    const { _id, startWork, endWork } = workDocument;
-    const localTime = new Date(startWork);
-    localTime.setMinutes(
-      localTime.getMinutes() + localTime.getTimezoneOffset(),
-    );
-    const dayStartWork = localTime.getDate();
+    if (workHours && total) {
+      const [startTime, endTime] = workHours.split(' - ');
 
-    const totalTimeInMinutes = oneDocumentTotalTimeInMinutes(
-      startWork,
-      endWork,
-    );
-
-    const hours = Math.floor(totalTimeInMinutes / 60);
-    const minutes = Math.floor(totalTimeInMinutes % 60);
-    const totalWorkTime = `${hours}g ${minutes}m`;
-
-    return {
-      id: _id,
-      day: dayStartWork,
-      totalTimeWork: totalWorkTime,
-      startWork,
-      endWork,
-    };
-  });
-
-  const workTimeTableRows = emptyErray.map((dayData) => {
-    const { day, isoTime } = dayData;
-    const workHoursData = workHoursDataArray?.filter(
-      (workHours) => workHours.day === day,
-    );
-
-    if (workHoursData && workHoursData.length > 0) {
-      const totalTimeInMinutes = workHoursData.reduce((acc, curr) => {
-        const { startWork, endWork } = curr;
-        const minutesWork = oneDocumentTotalTimeInMinutes(startWork, endWork);
-        return acc + Math.round(minutesWork);
-      }, 0);
-
-      const hours = Math.floor(totalTimeInMinutes / 60);
-      const minutes = Math.floor(totalTimeInMinutes % 60);
-      const total = `${hours}h ${minutes}min`;
-
-      const start = workHoursData[0].startWork.slice(11, 16);
-      const end = workHoursData[workHoursData.length - 1].endWork?.slice(11, 16) || null;
-
-      return {
-        id: workHoursData[0].id,
-        startWork: start,
-        endWork: end,
-        total,
-        day,
-        dayOfWeek: dayData.dayOfWeek,
-        isoTime,
-      };
+      if (startTime && endTime) {
+        return {
+          id,
+          startWork: startTime,
+          endWork: endTime,
+          total,
+          day,
+          dayOfWeek,
+          isoTime,
+        };
+      }
     }
 
     return dayData;
@@ -146,6 +112,7 @@ function WorkTimeTable({
       )}
       <Button onClick={handleAllEmployeesClick}>Wszyscy pracownicy</Button>
       <Typography variant="h4">{`${name}`}</Typography>
+      <Typography variant="h5">{`Zakres dat: ${workTime.period}`}</Typography>
       <TableContainer component={Paper} sx={{ marginTop: 2 }}>
         <Table aria-label="Pracownicy table">
           <TableHead>
@@ -160,12 +127,21 @@ function WorkTimeTable({
           </TableHead>
           <TableBody>
             {workTimeTableRows.map((row) => (
-              <StyledTableRowWorkTime key={row.id}>
+              <StyledTableRowWorkTime key={row.day}>
                 <TableCell align="center">{row.day}</TableCell>
                 <TableCell align="center">{row.dayOfWeek}</TableCell>
-                <TableCell align="center">{row.startWork}</TableCell>
+                <TableCell align="center">
+                  {row.startWork || row.workHours}
+                </TableCell>
                 <TableCell align="center">{row.endWork}</TableCell>
-                <TableCell align="center">{row.total}</TableCell>
+                <TableCell
+                  align="center"
+                  style={{
+                    color: `${getHours(row?.total) >= 12 && 'red'}`,
+                  }}
+                >
+                  {row.total || row.hoursCount}
+                </TableCell>
                 <TableCell align="center">
                   <IconButton
                     color="primary"
@@ -181,8 +157,7 @@ function WorkTimeTable({
             <TableRow>
               <TableCell colSpan={4} align="right" />
               <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                {workTime
-                  && getTimeFromMinutes(totalWorkTimeInMinutes(workTime))}
+                {workTime.total}
               </TableCell>
               <TableCell />
             </TableRow>

@@ -1,11 +1,11 @@
-import { CircularProgress } from '@mui/material';
 import { useEffect, useState } from 'react';
 import WorkTimeTable from '../components/WorkTimeTable';
-import { getEmployeeWorkTimeByDate } from '../../../../api/workTimeApi';
+import { getEmployeeRaportByIdAndDate } from '../../../../api/raportsApi';
+import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport';
+import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 
 function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   const [workTime, setWorkTime] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
   const {
     employee: { id },
     startDate,
@@ -13,14 +13,15 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   } = selectedEmployee;
 
   const getEmployeeWorkTime = async () => {
-    setIsLoading(true);
     try {
-      const data = await getEmployeeWorkTimeByDate(id, startDate, endDate);
-      setWorkTime(data);
+      const start = toISOStringWithLocalTimezone(startDate);
+      const end = toISOStringWithLocalTimezone(endDate);
+      const data = await getEmployeeRaportByIdAndDate(id, start, end);
+      const [employee] = data;
+      const reportData = generateSingleEmplRaport(employee, start, end);
+      setWorkTime(reportData);
     } catch (error) {
       alert(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -30,9 +31,7 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
 
   return (
     <div>
-      {isLoading ? (
-        <CircularProgress />
-      ) : (
+      {workTime && (
         <WorkTimeTable
           selectedEmployee={selectedEmployee}
           workTime={workTime}
