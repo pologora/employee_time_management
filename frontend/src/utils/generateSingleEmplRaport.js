@@ -57,6 +57,7 @@ export default (data, startDate, endDate) => {
       workHours: workHoursOrVacation,
       hoursCount,
       id: workHoursId,
+      dayIso,
     };
   });
 

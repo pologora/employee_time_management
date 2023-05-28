@@ -3,7 +3,12 @@ import { Box, Button } from '@mui/material';
 import SingleEmployeeRaport from './SingleEmployeeRaport';
 import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport';
 
-function AllSntiRaport({ raport, raportRange }) {
+function AllSntiRaport({
+  raport,
+  raportRange,
+  openTimeEditModal,
+  closeTimeEditModal,
+}) {
   const [start, end] = raportRange;
 
   const raports = raport.map((item) => generateSingleEmplRaport(item, start, end));
@@ -61,6 +66,8 @@ function AllSntiRaport({ raport, raportRange }) {
 
   const raportsArrayElement = raport.map((employee) => (
     <SingleEmployeeRaport
+      openTimeEditModal={openTimeEditModal}
+      closeTimeEditModal={closeTimeEditModal}
       key={employee._id}
       employeeRaport={[employee]}
       raportRange={raportRange}

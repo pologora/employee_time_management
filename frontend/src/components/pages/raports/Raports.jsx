@@ -9,22 +9,33 @@ import {
   getAllSntiRaport,
   getEmployeeRaportByIdAndDate,
 } from '../../../api/raportsApi';
+import WorkTimeUpdateCreateAlert from '../employees/components/WorkTimeUpdateCreateAlert';
 
 function Raporty() {
   const [selectedComponent, setSelectedComponent] = useState('home');
   const [raportData, setRaportData] = useState(null);
   const [raportRange, setRaportRange] = useState([]);
 
-  // const handleTimeUpdateClick = (id, isoTime) => {
-  //   if (id.length > 10) {
-  //     getSelectedTimeDocument(id);
-  //   } else {
-  //     setSelectedWorkTimeDocument(null);
-  //   }
-  //   setSelectedDayIsoTime(isoTime);
-  //   console.log(isoTime);
-  //   setisOpenUpdateCreateWorkTime(true);
-  // };
+  const [isOpenTimeEditModal, setIsOpenTimeEditModal] = useState(false);
+  const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
+  const [timeDocumentId, setTimeDocumentId] = useState(null);
+  const [employeeId, setEmployeeId] = useState(null);
+
+  const handleCloseTimeEditModal = () => setIsOpenTimeEditModal(false);
+  const handleOpenEditTimeModal = () => setIsOpenTimeEditModal(true);
+  const handleTimeDelete = () => console.log('delete');
+  const handleTimeUpdate = () => console.log('update');
+
+  const handleTimeUpdateClick = (id, isoTime, empId) => {
+    if (id) {
+      setTimeDocumentId(id);
+    } else {
+      setTimeDocumentId(null);
+    }
+    setEmployeeId(empId);
+    setSelectedDayIsoTime(isoTime);
+    handleOpenEditTimeModal();
+  };
 
   const handleSingleEmployeeRaport = async (id, startDate, endDate) => {
     try {
@@ -78,6 +89,8 @@ function Raporty() {
     case 'singleEmployee':
       componentToRender = (
         <SingleEmployeeRaport
+          closeTimeEditModal={handleCloseTimeEditModal}
+          openTimeEditModal={handleTimeUpdateClick}
           employeeRaport={raportData}
           raportRange={raportRange}
           isButton
@@ -86,7 +99,12 @@ function Raporty() {
       break;
     case 'allSntiRaport':
       componentToRender = (
-        <AllSntiRaport raportRange={raportRange} raport={raportData} />
+        <AllSntiRaport
+          raportRange={raportRange}
+          raport={raportData}
+          closeTimeEditModal={handleCloseTimeEditModal}
+          openTimeEditModal={handleTimeUpdateClick}
+        />
       );
       break;
     default:
@@ -102,16 +120,17 @@ function Raporty() {
 
   return (
     <div>
-      {/* {isOpenUpdateCreateWorkTime && (
+      {isOpenTimeEditModal && (
         <WorkTimeUpdateCreateAlert
-          open={isOpenUpdateCreateWorkTime}
-          onClose={handleUpdateTimeAlertClose}
-          onTimeSelected={handleTimeUpdate}
-          selectedWorkTimeDocument={selectedWorkTimeDocument}
+          open={isOpenTimeEditModal}
           dayIsoTime={selectedDayIsoTime}
+          employeeId={employeeId}
+          timeDocumentId={timeDocumentId}
+          onClose={handleCloseTimeEditModal}
+          onTimeSelected={handleTimeUpdate}
           handleTimeDelete={handleTimeDelete}
         />
-      )} */}
+      )}
       <Box component="nav">
         {selectedComponent !== 'home' && (
           <Button onClick={() => setSelectedComponent('home')}>

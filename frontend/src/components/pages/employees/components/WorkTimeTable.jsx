@@ -22,7 +22,6 @@ import {
   createTime,
   deleteTime,
   updateTime,
-  getTimeById,
 } from '../../../../api/workTimeApi';
 import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
 import totalWorkTimeInMinutes from '../../../../utils/timeOperations/totalWorkTimeInMinutes';
@@ -44,37 +43,25 @@ function WorkTimeTable({
   getEmployeeWorkTime,
 }) {
   const [isOpenUpdateCreateWorkTime, setisOpenUpdateCreateWorkTime] = useState(false);
-  const [selectedWorkTimeDocument, setSelectedWorkTimeDocument] = useState(null);
-  const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
   const {
     employee: { name, id: employeeId },
     startDate,
     endDate,
   } = selectedEmployee;
+  const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [timeDocumentId, setTimeDocumentId] = useState(null);
 
   const handleAllEmployeesClick = () => {
     handleChangeComponentToRender('home');
   };
 
-  const getSelectedTimeDocument = async (id) => {
-    setIsLoading(true);
-    try {
-      const workDocument = await getTimeById(id);
-      setSelectedWorkTimeDocument(workDocument);
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
   const handleTimeUpdateClick = (id, isoTime) => {
     if (id.length > 10) {
-      getSelectedTimeDocument(id);
+      setTimeDocumentId(id);
     } else {
-      setSelectedWorkTimeDocument(null);
+      setTimeDocumentId(null);
     }
     setSelectedDayIsoTime(isoTime);
     setisOpenUpdateCreateWorkTime(true);
@@ -124,6 +111,7 @@ function WorkTimeTable({
       startWork,
       endWork,
     );
+
     const hours = Math.floor(totalTimeInMinutes / 60);
     const minutes = Math.floor(totalTimeInMinutes % 60);
     const totalWorkTime = `${hours}g ${minutes}m`;
@@ -182,10 +170,11 @@ function WorkTimeTable({
       {isOpenUpdateCreateWorkTime && (
         <WorkTimeUpdateCreateAlert
           open={isOpenUpdateCreateWorkTime}
+          employeeId={employeeId}
+          dayIsoTime={selectedDayIsoTime}
+          timeDocumentId={timeDocumentId}
           onClose={handleUpdateTimeAlertClose}
           onTimeSelected={handleTimeUpdate}
-          selectedWorkTimeDocument={selectedWorkTimeDocument}
-          dayIsoTime={selectedDayIsoTime}
           handleTimeDelete={handleTimeDelete}
         />
       )}

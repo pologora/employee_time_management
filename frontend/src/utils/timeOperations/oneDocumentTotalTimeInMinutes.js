@@ -3,10 +3,11 @@ export default (startWork, endWork) => {
   const endTime = endWork ? new Date(endWork) : new Date();
 
   // Get the timezone offset in minutes
-  const timezoneOffset = startTime.getTimezoneOffset();
-
-  // Adjust the start and end time by the timezone offset
-  startTime.setMinutes(startTime.getMinutes() + timezoneOffset);
+  // Adjust the end time by the timezone offset
+  if (!endWork) {
+    const timezoneOffset = startTime.getTimezoneOffset();
+    endTime.setMinutes(endTime.getMinutes() - timezoneOffset);
+  }
 
   const totalTimeInMinutes = Math.round((endTime - startTime) / (1000 * 60));
   return totalTimeInMinutes;

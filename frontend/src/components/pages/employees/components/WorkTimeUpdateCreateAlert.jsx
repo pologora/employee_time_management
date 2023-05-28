@@ -5,35 +5,63 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
-import { Box, DialogContent } from '@mui/material';
+import { CircularProgress, DialogContent } from '@mui/material';
 import { pl } from 'date-fns/locale';
 import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 import convertTimeStringISOToObject from '../../../../utils/convertTimeStringISOToObject';
+import { getTimeById } from '../../../../api/workTimeApi';
 
 export default function WorkTimeUpdateCreateAlert({
   open,
   onClose,
   onTimeSelected,
-  selectedWorkTimeDocument,
   dayIsoTime,
   handleTimeDelete,
+  timeDocumentId,
 }) {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
-  const [idWorkTimeDoc, setIdWorkTimeDoc] = useState(null);
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedWorkTimeDocument, setSelectedWorkTimeDocument] =
+    useState(null);
+
   const isTimeValues = endTime && startTime;
-  const isDocumentToDelete = isTimeValues && idWorkTimeDoc;
+  const isDocumentToDelete = isTimeValues && timeDocumentId;
 
   const handleResetStates = () => {
     setStartTime(null);
     setEndTime(null);
-    setIdWorkTimeDoc(null);
-    setError('');
+    setSelectedWorkTimeDocument(null);
+  };
+
+  const handleTimeUpdate = async (id, startWork, endWork) => {
+    setIsLoading(true);
+    try {
+      if (!id) {
+        await createTime(employeeId, startWork, endWork);
+      } else {
+        await updateTime(id, startWork, endWork);
+      }
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setIsLoading(false);
+    }
+
+    getEmployeeWorkTime();
+  };
+
+  const handleTimeDelete = async (id) => {
+    try {
+      await deleteTime(id);
+      getEmployeeWorkTime();
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const handleDateSelection = () => {
-    onTimeSelected(idWorkTimeDoc, startTime, endTime);
+    onTimeSelected(timeDocumentId, startTime, endTime);
     onClose();
     handleResetStates();
   };
@@ -56,7 +84,6 @@ export default function WorkTimeUpdateCreateAlert({
 
   const handleTimeChange = useCallback(
     (name, date) => {
-      if (error) return;
       let newTime = createFullTimeString(dayIsoTime, date);
       if (name === 'start') {
         setStartTime(newTime);
@@ -73,67 +100,104 @@ export default function WorkTimeUpdateCreateAlert({
   );
 
   useEffect(() => {
+    const getSelectedTimeDocument = async (id) => {
+      setIsLoading(true);
+      try {
+        const workDocument = await getTimeById(id);
+        setSelectedWorkTimeDocument(workDocument);
+      } catch (error) {
+        alert(error.message);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (timeDocumentId) {
+      getSelectedTimeDocument(timeDocumentId);
+    }
+  }, [timeDocumentId]);
+
+  useEffect(() => {
     if (selectedWorkTimeDocument) {
-      const { startWork, endWork, _id: id } = selectedWorkTimeDocument;
+      const { startWork, endWork } = selectedWorkTimeDocument;
       setStartTime(startWork);
       setEndTime(endWork);
-      setIdWorkTimeDoc(id);
       if (startWork && !endWork) {
-        setError('Nie można redagować niezakończonej pracy');
+        console.log('praca nie skończona');
       }
     }
   }, [selectedWorkTimeDocument]);
 
   return (
     <div>
-      <Dialog open={open} onClose={handleCloseAlert} fullWidth maxWidth="xs">
-        <DialogTitle>Wybierz czas</DialogTitle>
-        <DialogContent>
-          <DatePicker
-            selected={
-              startTime ? convertTimeStringISOToObject(startTime) : null
-            }
-            onChange={(date) => handleTimeChange('start', date)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={30}
-            timeCaption="Time"
-            dateFormat="HH:mm"
-            locale={pl}
-          />
-          <DatePicker
-            selected={endTime ? convertTimeStringISOToObject(endTime) : null}
-            onChange={(date) => handleTimeChange('end', date)}
-            showTimeSelect
-            showTimeSelectOnly
-            timeIntervals={30}
-            timeCaption="Time"
-            dateFormat="HH:mm"
-            locale={pl}
-          />
-          <Box sx={{ height: '200px', color: 'red' }}>{error}</Box>
-        </DialogContent>
-        <DialogActions>
-          <Button
-            onClick={() => handleDeleteTimeClick(idWorkTimeDoc)}
-            variant="outlined"
-            color="error"
-            disabled={!isDocumentToDelete}
-          >
-            Usuń
-          </Button>
-          <Button onClick={handleCloseAlert} variant="outlined" color="primary">
-            Powrót
-          </Button>
-          <Button
-            onClick={handleDateSelection}
-            disabled={!isTimeValues}
-            color="secondary"
-            variant="contained"
-          >
-            Zapisz
-          </Button>
-        </DialogActions>
+      <Dialog
+        open={open}
+        onClose={handleCloseAlert}
+        fullWidth
+        maxWidth="xs"
+        PaperProps={{
+          style: {
+            height: '400px', // Specify the desired height here
+          },
+        }}
+      >
+        {isLoading ? (
+          <CircularProgress />
+        ) : (
+          <>
+            <DialogTitle>Wybierz czas</DialogTitle>
+            <DialogContent>
+              <DatePicker
+                selected={
+                  startTime ? convertTimeStringISOToObject(startTime) : null
+                }
+                onChange={(date) => handleTimeChange('start', date)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={30}
+                timeCaption="Time"
+                dateFormat="HH:mm"
+                locale={pl}
+              />
+              <DatePicker
+                selected={
+                  endTime ? convertTimeStringISOToObject(endTime) : null
+                }
+                onChange={(date) => handleTimeChange('end', date)}
+                showTimeSelect
+                showTimeSelectOnly
+                timeIntervals={30}
+                timeCaption="Time"
+                dateFormat="HH:mm"
+                locale={pl}
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => handleDeleteTimeClick(timeDocumentId)}
+                variant="outlined"
+                color="error"
+                disabled={!isDocumentToDelete}
+              >
+                Usuń
+              </Button>
+              <Button
+                onClick={handleCloseAlert}
+                variant="outlined"
+                color="primary"
+              >
+                Powrót
+              </Button>
+              <Button
+                onClick={handleDateSelection}
+                disabled={!isTimeValues}
+                color="secondary"
+                variant="contained"
+              >
+                Zapisz
+              </Button>
+            </DialogActions>
+          </>
+        )}
       </Dialog>
     </div>
   );

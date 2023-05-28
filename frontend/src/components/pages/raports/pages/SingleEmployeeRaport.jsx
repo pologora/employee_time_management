@@ -24,13 +24,20 @@ const StyledTableRow = styled(TableRow)(() => ({
   },
 }));
 
-function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
+function SingleEmployeeRaport({
+  employeeRaport,
+  raportRange,
+  isButton,
+  openTimeEditModal,
+  // closeTimeEditModal,
+}) {
   const [employee] = employeeRaport;
   const [startDate, endDate] = raportRange;
   const reportData = generateSingleEmplRaport(employee, startDate, endDate);
 
-  const handleTimeUpdateClick = (id) => {
-    console.log(id);
+  const handleTimeUpdateClick = (id, dayIso) => {
+    console.log(id, dayIso, employee._id);
+    openTimeEditModal(id, dayIso, employee._id);
   };
 
   function getHours(hoursCount) {
@@ -137,7 +144,7 @@ function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
                     color="primary"
                     aria-label="edycja czasu pracy"
                     sx={{ width: '6px', height: '6px' }}
-                    onClick={() => handleTimeUpdateClick(row.id)}
+                    onClick={() => handleTimeUpdateClick(row.id, row.dayIso)}
                   >
                     <AlarmIcon />
                   </IconButton>
