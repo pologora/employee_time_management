@@ -9,24 +9,28 @@ import { CircularProgress, DialogContent } from '@mui/material';
 import { pl } from 'date-fns/locale';
 import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
 import convertTimeStringISOToObject from '../../../../utils/convertTimeStringISOToObject';
-import { getTimeById } from '../../../../api/workTimeApi';
+import {
+  createTime,
+  deleteTime,
+  getTimeById,
+  updateTime,
+} from '../../../../api/workTimeApi';
 
 export default function WorkTimeUpdateCreateAlert({
   open,
   onClose,
-  onTimeSelected,
+  getEmployeeWorkTime,
   dayIsoTime,
-  handleTimeDelete,
   timeDocumentId,
+  employeeId,
 }) {
   const [startTime, setStartTime] = useState(null);
   const [endTime, setEndTime] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedWorkTimeDocument, setSelectedWorkTimeDocument] =
-    useState(null);
+  const [selectedWorkTimeDocument, setSelectedWorkTimeDocument] = useState(null);
 
   const isTimeValues = endTime && startTime;
-  const isDocumentToDelete = isTimeValues && timeDocumentId;
+  const isDocumentToDelete = startTime && timeDocumentId;
 
   const handleResetStates = () => {
     setStartTime(null);
@@ -34,21 +38,20 @@ export default function WorkTimeUpdateCreateAlert({
     setSelectedWorkTimeDocument(null);
   };
 
-  const handleTimeUpdate = async (id, startWork, endWork) => {
-    setIsLoading(true);
+  const handleTimeUpdate = async () => {
     try {
-      if (!id) {
-        await createTime(employeeId, startWork, endWork);
+      if (!timeDocumentId) {
+        await createTime(employeeId, startTime, endTime);
       } else {
-        await updateTime(id, startWork, endWork);
+        await updateTime(timeDocumentId, startTime, endTime);
       }
     } catch (error) {
       alert(error.message);
     } finally {
-      setIsLoading(false);
+      onClose();
+      handleResetStates();
+      getEmployeeWorkTime();
     }
-
-    getEmployeeWorkTime();
   };
 
   const handleTimeDelete = async (id) => {
@@ -57,13 +60,10 @@ export default function WorkTimeUpdateCreateAlert({
       getEmployeeWorkTime();
     } catch (error) {
       alert(error.message);
+    } finally {
+      onClose();
+      handleResetStates();
     }
-  };
-
-  const handleDateSelection = () => {
-    onTimeSelected(timeDocumentId, startTime, endTime);
-    onClose();
-    handleResetStates();
   };
 
   const handleCloseAlert = () => {
@@ -121,9 +121,6 @@ export default function WorkTimeUpdateCreateAlert({
       const { startWork, endWork } = selectedWorkTimeDocument;
       setStartTime(startWork);
       setEndTime(endWork);
-      if (startWork && !endWork) {
-        console.log('praca nie skończona');
-      }
     }
   }, [selectedWorkTimeDocument]);
 
@@ -136,7 +133,7 @@ export default function WorkTimeUpdateCreateAlert({
         maxWidth="xs"
         PaperProps={{
           style: {
-            height: '400px', // Specify the desired height here
+            height: '400px',
           },
         }}
       >
@@ -188,7 +185,7 @@ export default function WorkTimeUpdateCreateAlert({
                 Powrót
               </Button>
               <Button
-                onClick={handleDateSelection}
+                onClick={handleTimeUpdate}
                 disabled={!isTimeValues}
                 color="secondary"
                 variant="contained"

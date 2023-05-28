@@ -10,6 +10,7 @@ import {
   TableBody,
   TableCell,
   TableContainer,
+  TableFooter,
   TableHead,
   TableRow,
   Typography,
@@ -29,14 +30,12 @@ function SingleEmployeeRaport({
   raportRange,
   isButton,
   openTimeEditModal,
-  // closeTimeEditModal,
 }) {
   const [employee] = employeeRaport;
   const [startDate, endDate] = raportRange;
   const reportData = generateSingleEmplRaport(employee, startDate, endDate);
 
   const handleTimeUpdateClick = (id, dayIso) => {
-    console.log(id, dayIso, employee._id);
     openTimeEditModal(id, dayIso, employee._id);
   };
 
@@ -151,16 +150,24 @@ function SingleEmployeeRaport({
                 </TableCell>
               </StyledTableRow>
             ))}
+          </TableBody>
+          <TableFooter>
             <TableRow>
-              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+              <TableCell
+                align="left"
+                sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+              >
                 Razem:
               </TableCell>
-              <TableCell colSpan={2} align="right" />
-              <TableCell align="left" sx={{ fontWeight: 'bold' }}>
+              <TableCell colSpan={2} />
+              <TableCell
+                align="center"
+                sx={{ fontWeight: 'bold', fontSize: '14px', color: 'black' }}
+              >
                 {reportData.total}
               </TableCell>
             </TableRow>
-          </TableBody>
+          </TableFooter>
         </Table>
       </TableContainer>
       {isButton && (

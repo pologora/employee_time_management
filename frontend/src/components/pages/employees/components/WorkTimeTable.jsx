@@ -2,7 +2,6 @@ import { styled } from '@mui/material/styles';
 import {
   Box,
   Button,
-  CircularProgress,
   IconButton,
   Snackbar,
   Table,
@@ -18,11 +17,6 @@ import AlarmIcon from '@mui/icons-material/Alarm';
 import { useState } from 'react';
 import createCalendarArray from '../../../../utils/createCalendarArray';
 import WorkTimeUpdateCreateAlert from './WorkTimeUpdateCreateAlert';
-import {
-  createTime,
-  deleteTime,
-  updateTime,
-} from '../../../../api/workTimeApi';
 import getTimeFromMinutes from '../../../../utils/getTimeFromMinutes';
 import totalWorkTimeInMinutes from '../../../../utils/timeOperations/totalWorkTimeInMinutes';
 import oneDocumentTotalTimeInMinutes from '../../../../utils/timeOperations/oneDocumentTotalTimeInMinutes';
@@ -50,7 +44,6 @@ function WorkTimeTable({
   } = selectedEmployee;
   const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
   const [openAlert, setOpenAlert] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [timeDocumentId, setTimeDocumentId] = useState(null);
 
   const handleAllEmployeesClick = () => {
@@ -69,32 +62,6 @@ function WorkTimeTable({
 
   const handleUpdateTimeAlertClose = () => {
     setisOpenUpdateCreateWorkTime(false);
-  };
-
-  const handleTimeUpdate = async (id, startWork, endWork) => {
-    setIsLoading(true);
-    try {
-      if (!id) {
-        await createTime(employeeId, startWork, endWork);
-      } else {
-        await updateTime(id, startWork, endWork);
-      }
-    } catch (error) {
-      alert(error.message);
-    } finally {
-      setIsLoading(false);
-    }
-
-    getEmployeeWorkTime();
-  };
-
-  const handleTimeDelete = async (id) => {
-    try {
-      await deleteTime(id);
-      getEmployeeWorkTime();
-    } catch (error) {
-      alert(error.message);
-    }
   };
 
   const emptyErray = createCalendarArray(startDate, endDate);
@@ -174,59 +141,54 @@ function WorkTimeTable({
           dayIsoTime={selectedDayIsoTime}
           timeDocumentId={timeDocumentId}
           onClose={handleUpdateTimeAlertClose}
-          onTimeSelected={handleTimeUpdate}
-          handleTimeDelete={handleTimeDelete}
+          getEmployeeWorkTime={getEmployeeWorkTime}
         />
       )}
       <Button onClick={handleAllEmployeesClick}>Wszyscy pracownicy</Button>
       <Typography variant="h4">{`${name}`}</Typography>
-      {isLoading ? (
-        <CircularProgress />
-      ) : (
-        <TableContainer component={Paper} sx={{ marginTop: 2 }}>
-          <Table aria-label="Pracownicy table">
-            <TableHead>
-              <TableRow>
-                <TableCell align="left">Dzień</TableCell>
-                <TableCell align="center">Dzień tygodnia</TableCell>
-                <TableCell align="center">Początek pracy</TableCell>
-                <TableCell align="center">Koniec pracy</TableCell>
-                <TableCell align="center">Ilość godzin</TableCell>
-                <TableCell align="center">Edytuj</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {workTimeTableRows.map((row) => (
-                <StyledTableRowWorkTime key={row.id}>
-                  <TableCell align="center">{row.day}</TableCell>
-                  <TableCell align="center">{row.dayOfWeek}</TableCell>
-                  <TableCell align="center">{row.startWork}</TableCell>
-                  <TableCell align="center">{row.endWork}</TableCell>
-                  <TableCell align="center">{row.total}</TableCell>
-                  <TableCell align="center">
-                    <IconButton
-                      color="primary"
-                      aria-label="edycja czasu pracy"
-                      sx={{ width: '7px', height: '7px' }}
-                      onClick={() => handleTimeUpdateClick(row.id, row.isoTime)}
-                    >
-                      <AlarmIcon />
-                    </IconButton>
-                  </TableCell>
-                </StyledTableRowWorkTime>
-              ))}
-              <TableRow>
-                <TableCell colSpan={4} align="right" />
-                <TableCell align="center" sx={{ fontWeight: 'bold' }}>
-                  {workTime
-                    && getTimeFromMinutes(totalWorkTimeInMinutes(workTime))}
+      <TableContainer component={Paper} sx={{ marginTop: 2 }}>
+        <Table aria-label="Pracownicy table">
+          <TableHead>
+            <TableRow>
+              <TableCell align="left">Dzień</TableCell>
+              <TableCell align="center">Dzień tygodnia</TableCell>
+              <TableCell align="center">Początek pracy</TableCell>
+              <TableCell align="center">Koniec pracy</TableCell>
+              <TableCell align="center">Ilość godzin</TableCell>
+              <TableCell align="center">Edytuj</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {workTimeTableRows.map((row) => (
+              <StyledTableRowWorkTime key={row.id}>
+                <TableCell align="center">{row.day}</TableCell>
+                <TableCell align="center">{row.dayOfWeek}</TableCell>
+                <TableCell align="center">{row.startWork}</TableCell>
+                <TableCell align="center">{row.endWork}</TableCell>
+                <TableCell align="center">{row.total}</TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    color="primary"
+                    aria-label="edycja czasu pracy"
+                    sx={{ width: '7px', height: '7px' }}
+                    onClick={() => handleTimeUpdateClick(row.id, row.isoTime)}
+                  >
+                    <AlarmIcon />
+                  </IconButton>
                 </TableCell>
-                <TableCell />
-              </TableRow>
-            </TableBody>
-          </Table>
-        </TableContainer>
-      )}
+              </StyledTableRowWorkTime>
+            ))}
+            <TableRow>
+              <TableCell colSpan={4} align="right" />
+              <TableCell align="center" sx={{ fontWeight: 'bold' }}>
+                {workTime
+                  && getTimeFromMinutes(totalWorkTimeInMinutes(workTime))}
+              </TableCell>
+              <TableCell />
+            </TableRow>
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 }

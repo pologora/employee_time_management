@@ -20,11 +20,10 @@ function Raporty() {
   const [selectedDayIsoTime, setSelectedDayIsoTime] = useState(null);
   const [timeDocumentId, setTimeDocumentId] = useState(null);
   const [employeeId, setEmployeeId] = useState(null);
+  const [lastReport, setLastReport] = useState(null);
 
   const handleCloseTimeEditModal = () => setIsOpenTimeEditModal(false);
   const handleOpenEditTimeModal = () => setIsOpenTimeEditModal(true);
-  const handleTimeDelete = () => console.log('delete');
-  const handleTimeUpdate = () => console.log('update');
 
   const handleTimeUpdateClick = (id, isoTime, empId) => {
     if (id) {
@@ -43,6 +42,7 @@ function Raporty() {
       setRaportData(data);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('singleEmployee');
+      setLastReport('single');
     } catch (error) {
       alert(error);
     }
@@ -65,8 +65,17 @@ function Raporty() {
       setRaportData(data);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('allSntiRaport');
+      setLastReport('allSnti');
     } catch (err) {
       alert(err);
+    }
+  };
+
+  const getEmployeeWorkTime = () => {
+    if (lastReport === 'allSnti') {
+      handleAllSntiRaport(raportRange[0], raportRange[1]);
+    } else if (lastReport === 'single') {
+      handleSingleEmployeeRaport(employeeId, raportRange[0], raportRange[1]);
     }
   };
 
@@ -127,8 +136,7 @@ function Raporty() {
           employeeId={employeeId}
           timeDocumentId={timeDocumentId}
           onClose={handleCloseTimeEditModal}
-          onTimeSelected={handleTimeUpdate}
-          handleTimeDelete={handleTimeDelete}
+          getEmployeeWorkTime={getEmployeeWorkTime}
         />
       )}
       <Box component="nav">
