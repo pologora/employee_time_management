@@ -1,8 +1,10 @@
 import styled from '@emotion/styled';
+import AlarmIcon from '@mui/icons-material/Alarm';
 import {
   Box,
   Button,
   CircularProgress,
+  IconButton,
   Paper,
   Table,
   TableBody,
@@ -17,16 +19,19 @@ import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport
 
 const StyledTableRow = styled(TableRow)(() => ({
   '& > *': {
-    padding: 0,
-    paddingLeft: '10px',
+    padding: '2px',
+    paddingLeft: '5px',
   },
 }));
 
 function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
   const [employee] = employeeRaport;
   const [startDate, endDate] = raportRange;
-
   const reportData = generateSingleEmplRaport(employee, startDate, endDate);
+
+  const handleTimeUpdateClick = (id) => {
+    console.log(id);
+  };
 
   function getHours(hoursCount) {
     if (hoursCount) {
@@ -106,24 +111,36 @@ function SingleEmployeeRaport({ employeeRaport, raportRange, isButton }) {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Dzień</TableCell>
-              <TableCell>Dzień tygodnia</TableCell>
-              <TableCell>Godziny pracy</TableCell>
-              <TableCell>Ilość Godzin</TableCell>
+              <TableCell align="center">Dzień</TableCell>
+              <TableCell align="center">Dzień tygodnia</TableCell>
+              <TableCell align="center">Godziny pracy</TableCell>
+              <TableCell align="center">Ilość Godzin</TableCell>
+              <TableCell align="center">Edytuj</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {reportData.data.map((row) => (
               <StyledTableRow key={row.day}>
-                <TableCell>{row.day}</TableCell>
-                <TableCell>{row.dayOfWeek}</TableCell>
-                <TableCell>{row.workHours}</TableCell>
+                <TableCell align="center">{row.day}</TableCell>
+                <TableCell align="center">{row.dayOfWeek}</TableCell>
+                <TableCell align="center">{row.workHours}</TableCell>
                 <TableCell
+                  align="center"
                   style={{
                     color: `${getHours(row?.hoursCount) > 10 && 'red'}`,
                   }}
                 >
                   {row.hoursCount}
+                </TableCell>
+                <TableCell align="center">
+                  <IconButton
+                    color="primary"
+                    aria-label="edycja czasu pracy"
+                    sx={{ width: '6px', height: '6px' }}
+                    onClick={() => handleTimeUpdateClick(row.id)}
+                  >
+                    <AlarmIcon />
+                  </IconButton>
                 </TableCell>
               </StyledTableRow>
             ))}

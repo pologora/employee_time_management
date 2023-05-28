@@ -16,14 +16,17 @@ export default (data, startDate, endDate) => {
     let end = '';
     let hoursCount = null;
     let workHoursOrVacation = '--------';
+    let workHoursId = null;
 
     const workingDay = data?.workhours.find(
       (workDoc) => workDoc.startWork.slice(0, 10) === dayIso,
     );
 
     if (workingDay) {
-      const { startWork, endWork, total = 0 } = workingDay;
-
+      const {
+        startWork, endWork, total = 0, id,
+      } = workingDay;
+      workHoursId = id;
       start += startWork.slice(11, 16);
       end += endWork ? endWork.slice(11, 16) : '';
       workHoursOrVacation = `${start} - ${end}`;
@@ -53,6 +56,7 @@ export default (data, startDate, endDate) => {
       dayOfWeek,
       workHours: workHoursOrVacation,
       hoursCount,
+      id: workHoursId,
     };
   });
 

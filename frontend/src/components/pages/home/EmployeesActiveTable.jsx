@@ -55,7 +55,9 @@ function EmployeesActiveTable({ employees }) {
         </TableHead>
         <TableBody>
           {rows?.map((row) => (
-            <StyledTableRowEmployeeActive key={row.startWorkTime}>
+            <StyledTableRowEmployeeActive
+              key={`${row.startWorkTime}+${row.name}`}
+            >
               <TableCell component="th" scope="row">
                 {row.name}
               </TableCell>

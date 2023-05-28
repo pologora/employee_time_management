@@ -15,6 +15,17 @@ function Raporty() {
   const [raportData, setRaportData] = useState(null);
   const [raportRange, setRaportRange] = useState([]);
 
+  // const handleTimeUpdateClick = (id, isoTime) => {
+  //   if (id.length > 10) {
+  //     getSelectedTimeDocument(id);
+  //   } else {
+  //     setSelectedWorkTimeDocument(null);
+  //   }
+  //   setSelectedDayIsoTime(isoTime);
+  //   console.log(isoTime);
+  //   setisOpenUpdateCreateWorkTime(true);
+  // };
+
   const handleSingleEmployeeRaport = async (id, startDate, endDate) => {
     try {
       const data = await getEmployeeRaportByIdAndDate(id, startDate, endDate);
@@ -91,6 +102,16 @@ function Raporty() {
 
   return (
     <div>
+      {/* {isOpenUpdateCreateWorkTime && (
+        <WorkTimeUpdateCreateAlert
+          open={isOpenUpdateCreateWorkTime}
+          onClose={handleUpdateTimeAlertClose}
+          onTimeSelected={handleTimeUpdate}
+          selectedWorkTimeDocument={selectedWorkTimeDocument}
+          dayIsoTime={selectedDayIsoTime}
+          handleTimeDelete={handleTimeDelete}
+        />
+      )} */}
       <Box component="nav">
         {selectedComponent !== 'home' && (
           <Button onClick={() => setSelectedComponent('home')}>
