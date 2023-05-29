@@ -20,8 +20,8 @@ import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport
 
 const StyledTableRow = styled(TableRow)(() => ({
   '& > *': {
-    padding: '2px',
-    paddingLeft: '5px',
+    padding: '2px !important',
+    paddingLeft: '5px !important',
   },
 }));
 
