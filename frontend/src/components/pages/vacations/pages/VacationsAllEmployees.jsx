@@ -48,8 +48,8 @@ function VacationsAllEmployees({ reload, employees }) {
     setIsLoading(true);
     try {
       const data = { type: 'Wypoczynkowy' };
-      const vacatons = await getAllVacationsByTimeAndType(data);
-      setVacationsData(vacatons);
+      const vacations = await getAllVacationsByTimeAndType(data);
+      setVacationsData(vacations);
     } catch (error) {
       alert(error);
     } finally {
