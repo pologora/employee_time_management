@@ -23,26 +23,6 @@ export default (data, startDate, endDate) => {
     let end = '';
     let hoursCount = null;
 
-    // Create a Date object from the ISO string
-    const dateObj = new Date(dayIso);
-
-    // Format the day to 'mm-dd'
-    const formattedDay = `${`0${dateObj.getMonth() + 1}`.slice(
-      -2,
-    )}-${`0${dateObj.getDate()}`.slice(-2)}`;
-
-    // Check if the day is a holiday
-    if (holidays.includes(formattedDay)) {
-      return {
-        day,
-        dayOfWeek,
-        workHours: workHoursOrVacation,
-        hoursCount,
-        id: workHoursId,
-        isoTime: dayIso,
-      };
-    }
-
     const workingDay = data?.workhours.filter(
       (workDoc) => workDoc.startWork.slice(0, 10) === dayIso,
     );
@@ -63,6 +43,26 @@ export default (data, startDate, endDate) => {
       hoursCount = `${hours}h ${minutes}min`;
 
       workHoursOrVacation = `${start} - ${end}`;
+    }
+
+    // Create a Date object from the ISO string
+    const dateObj = new Date(dayIso);
+
+    // Format the day to 'mm-dd'
+    const formattedDay = `${`0${dateObj.getMonth() + 1}`.slice(
+      -2,
+    )}-${`0${dateObj.getDate()}`.slice(-2)}`;
+
+    // Check if the day is a holiday
+    if (holidays.includes(formattedDay)) {
+      return {
+        day,
+        dayOfWeek,
+        workHours: workHoursOrVacation,
+        hoursCount,
+        id: workHoursId,
+        isoTime: dayIso,
+      };
     }
 
     const vacationDay = data?.vacations.find((vacation) => {
