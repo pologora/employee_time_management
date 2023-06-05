@@ -1,3 +1,4 @@
+import calculateHolidays from './calculateHolidays';
 import createCalendarArray from './createCalendarArray';
 import getTimeFromMinutes from './getTimeFromMinutes';
 import oneDocumentTotalTimeInMinutes from './timeOperations/oneDocumentTotalTimeInMinutes';
@@ -9,6 +10,9 @@ export default (data, startDate, endDate) => {
 
   const totalMonthWorkTime = getTimeFromMinutes(data?.totalWorkHours);
 
+  const currentYear = new Date().getFullYear(); // Get the current year
+  const holidays = calculateHolidays(currentYear); // Calculate holidays for the year
+
   const reportData = calendar.map((item) => {
     const { day, isoTime, dayOfWeek } = item;
     const dayIso = isoTime.slice(0, 10);
@@ -18,6 +22,26 @@ export default (data, startDate, endDate) => {
     let start = '';
     let end = '';
     let hoursCount = null;
+
+    // Create a Date object from the ISO string
+    const dateObj = new Date(dayIso);
+
+    // Format the day to 'mm-dd'
+    const formattedDay = `${`0${dateObj.getMonth() + 1}`.slice(
+      -2,
+    )}-${`0${dateObj.getDate()}`.slice(-2)}`;
+
+    // Check if the day is a holiday
+    if (holidays.includes(formattedDay)) {
+      return {
+        day,
+        dayOfWeek,
+        workHours: workHoursOrVacation,
+        hoursCount,
+        id: workHoursId,
+        isoTime: dayIso,
+      };
+    }
 
     const workingDay = data?.workhours.filter(
       (workDoc) => workDoc.startWork.slice(0, 10) === dayIso,

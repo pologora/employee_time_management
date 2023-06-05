@@ -66,9 +66,8 @@ function VacationsAllEmployees({ reload, employees }) {
     const employeesVacations = {};
 
     vacationsD?.forEach((vacation) => {
-      const { employeeId } = vacation;
+      const { employeeId, duration } = vacation;
       const startDate = new Date(vacation.startVacation);
-      const endDate = new Date(vacation.endVacation);
 
       if (!employeesVacations[employeeId]) {
         employeesVacations[employeeId] = {
@@ -84,9 +83,8 @@ function VacationsAllEmployees({ reload, employees }) {
 
       if (startDate.getFullYear() === currentYear) {
         const month = startDate.getMonth();
-        const days = (endDate - startDate) / (1000 * 60 * 60 * 24) + 1;
-        employeesVacations[employeeId].months[month] += days;
-        employeesVacations[employeeId].tookedInThisYear += days;
+        employeesVacations[employeeId].months[month] += duration;
+        employeesVacations[employeeId].tookedInThisYear += duration;
         employeesVacations[employeeId].daysLeft = employeesVacations[employeeId].vacationsThisYear
           - employeesVacations[employeeId].tookedInThisYear
           + employeesVacations[employeeId].lastYearLeft;
