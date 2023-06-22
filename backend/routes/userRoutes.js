@@ -5,8 +5,8 @@ const {
   getUser,
   updateUser,
   deleteUser,
-  checkID,
 } = require('../controllers/userController');
+const { checkID } = require('../middlewares/userMiddlewares');
 
 const router = express.Router();
 
