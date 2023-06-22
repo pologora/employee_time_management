@@ -1,16 +1,16 @@
 {
-  "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
-  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "env": {
-    "node": true,
-    "es6": true
+    "browser": true,
+    "commonjs": true,
+    "es2021": true
   },
+  "extends": ["plugin:react/recommended", "airbnb"],
+  "overrides": [],
   "parserOptions": {
-    "ecmaVersion": 2018,
-    "sourceType": "module"
+    "ecmaVersion": "latest"
   },
+  "plugins": ["react"],
   "rules": {
-    // Add your custom rules here
+    "linebreak-style": ["error", "windows"]
   }
 }
