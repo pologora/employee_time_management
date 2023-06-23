@@ -20,7 +20,6 @@ app.use('/api/v1/users', userRouter);
 
 app.all('*', (req, res, next) => {
   const err = new AppError(`Can't find ${req.originalUrl} on this server`, 404);
-
   next(err);
 });
 

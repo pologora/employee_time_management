@@ -1,7 +1,7 @@
 // dbSetup.js
 const { MongoClient } = require('mongodb');
 
-const uri = 'mongodb+srv://admin:admin@natures.fmvhhwp.mongodb.net/?retryWrites=true&w=majority';
+const uri = '';
 
 (async () => {
   const client = await MongoClient.connect(uri, {
