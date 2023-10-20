@@ -1,19 +1,59 @@
 import { styled } from '@mui/material/styles';
 import {
   Button,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
 import Paper from '@mui/material/Paper';
+import './style.css';
 import { useState } from 'react';
+import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
+import UnfoldMoreDoubleIcon from '@mui/icons-material/UnfoldMoreDouble';
+import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
+import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import DeleteAlert from './DeleteAlert';
 import UpdateAlert from './UpdateAlert';
 import WorkHoursAlert from './WorkHoursAlert';
 import { deleteEmployeeById } from '../../../../api/employeesApi';
+
+function sortAlphabeticallyAscending(a, b) {
+  if (a.surname < b.surname) {
+    return -1;
+  }
+  if (a.surname > b.surname) {
+    return 1;
+  }
+  return 0;
+}
+
+function sortAlphabeticallyDescending(a, b) {
+  if (a.surname < b.surname) {
+    return 1;
+  }
+  if (a.surname > b.surname) {
+    return -1;
+  }
+  return 0;
+}
+
+function sortByPinAscending(a, b) {
+  return a.pin - b.pin;
+}
+
+function sortByPinDescending(a, b) {
+  return b.pin - a.pin;
+}
+
+const sortingOrder = Object.freeze({
+  Descending: 'descending',
+  Ascending: 'ascending',
+});
 
 function EmployeesTable({
   employees,
@@ -25,6 +65,36 @@ function EmployeesTable({
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState(false);
   const [isOpenUpdateAlert, setIsOpenUpdateAlert] = useState(false);
   const [isOpenWorkHoursAlert, setIsOpenWorkHoursAlert] = useState(false);
+  const [isSorted, setIsSorted] = useState({
+    byName: {
+      sorted: false,
+      order: '',
+    },
+    byPin: {
+      sorted: false,
+      order: '',
+    },
+  });
+
+  function getNameSortingIcon() {
+    if (isSorted.byName.order === sortingOrder.Ascending) {
+      return <KeyboardDoubleArrowDownIcon color="primary" />;
+    }
+    if (isSorted.byName.order === sortingOrder.Descending) {
+      return <KeyboardDoubleArrowUpIcon color="primary" />;
+    }
+    return <SortByAlphaIcon />;
+  }
+
+  function getPinSortingIcon() {
+    if (isSorted.byPin.order === sortingOrder.Ascending) {
+      return <KeyboardDoubleArrowDownIcon color="primary" />;
+    }
+    if (isSorted.byPin.order === sortingOrder.Descending) {
+      return <KeyboardDoubleArrowUpIcon color="primary" />;
+    }
+    return <UnfoldMoreDoubleIcon />;
+  }
 
   const handleOpenUpdateAlert = (employee) => {
     setActiveEmployee(employee);
@@ -66,6 +136,72 @@ function EmployeesTable({
   const handleDateRangeSelected = (employee, startDate, endDate) => {
     setSelectedEmployee(employee, startDate, endDate);
     handleChangeComponentToRender('workTime');
+  };
+
+  const handleSortByName = () => {
+    if (
+      !isSorted.byName.sorted
+      || isSorted.byName.order === sortingOrder.Descending
+    ) {
+      employees.sort(sortAlphabeticallyAscending);
+      setIsSorted((prev) => ({
+        ...prev,
+        byName: {
+          order: sortingOrder.Ascending,
+          sorted: true,
+        },
+        byPin: {
+          order: '',
+          sorted: false,
+        },
+      }));
+    } else if (isSorted.byName.order === sortingOrder.Ascending) {
+      employees.sort(sortAlphabeticallyDescending);
+      setIsSorted((prev) => ({
+        ...prev,
+        byName: {
+          order: sortingOrder.Descending,
+          sorted: true,
+        },
+        byPin: {
+          order: '',
+          sorted: false,
+        },
+      }));
+    }
+  };
+
+  const handleSortByPin = () => {
+    if (
+      !isSorted.byPin.sorted
+      || isSorted.byPin.order === sortingOrder.Descending
+    ) {
+      employees.sort(sortByPinAscending);
+      setIsSorted((prev) => ({
+        ...prev,
+        byPin: {
+          order: sortingOrder.Ascending,
+          sorted: true,
+        },
+        byName: {
+          order: '',
+          sorted: false,
+        },
+      }));
+    } else if (isSorted.byPin.order === sortingOrder.Ascending) {
+      employees.sort(sortByPinDescending);
+      setIsSorted((prev) => ({
+        ...prev,
+        byPin: {
+          order: sortingOrder.Descending,
+          sorted: true,
+        },
+        byName: {
+          order: '',
+          sorted: false,
+        },
+      }));
+    }
   };
 
   const StyledTableRowEmployees = styled(TableRow)(({ theme }) => ({
@@ -126,8 +262,30 @@ function EmployeesTable({
         <Table aria-label="Pracownicy table">
           <TableHead>
             <TableRow>
-              <TableCell>Imię i nazwisko</TableCell>
-              <TableCell align="left">PIN</TableCell>
+              <TableCell>
+                <Typography className="inline-elements" mr={1}>
+                  Imię i nazwisko
+                </Typography>
+                <IconButton
+                  aria-label="sort by name"
+                  onClick={handleSortByName}
+                  className="inline-elements"
+                >
+                  {getNameSortingIcon()}
+                </IconButton>
+              </TableCell>
+              <TableCell align="left">
+                <Typography className="inline-elements" mr={1}>
+                  PIN
+                </Typography>
+                <IconButton
+                  aria-label="sort by PIN"
+                  onClick={handleSortByPin}
+                  className="inline-elements"
+                >
+                  {getPinSortingIcon()}
+                </IconButton>
+              </TableCell>
               <TableCell align="left" />
               <TableCell align="left" />
               <TableCell align="left" />
