@@ -15,7 +15,10 @@ export class EmployeeModel extends Realm.Object<EmployeeModel> {
     properties: {
       _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
       name: 'string',
+      email: 'string?',
       surname: 'string',
+      agency: 'objectId?',
+      userId: 'objectId?',
       pin: 'string',
       isSnti: {type: 'bool', default: false},
       isWorking: {type: 'bool', default: false},
