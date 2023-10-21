@@ -6,6 +6,7 @@ import Modal from '@mui/material/Modal';
 import AddIcon from '@mui/icons-material/Add';
 import {
   AppBar,
+  Autocomplete,
   FormControlLabel,
   Radio,
   RadioGroup,
@@ -14,6 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { createEmployee } from '../../../../api/employeesApi';
+import { getAgencies } from '../../../../api/agenciesApi';
 
 const style = {
   position: 'absolute',
@@ -43,6 +45,8 @@ export default function AddEmployee({ employees, getEmployees }) {
   const [isSnti, setIsSnti] = useState(false);
   const [vacationDaysPerYear, setVacationDaysPerYear] = useState(0);
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
+  const [agency, setAgency] = useState(null);
+  const [agenciesList, setAgenciesList] = useState(null);
 
   const dataForRequest = {
     name,
@@ -50,6 +54,24 @@ export default function AddEmployee({ employees, getEmployees }) {
     pin,
     isSnti,
     vacationDaysPerYear,
+    agency: agency?.id || '',
+  };
+
+  const getAllAgencies = async () => {
+    const data = await getAgencies();
+    const dataForAutocomplete = data?.data.map((item) => ({
+      label: item.name,
+      id: item._id,
+    }));
+    setAgenciesList(dataForAutocomplete);
+  };
+
+  useEffect(() => {
+    getAllAgencies();
+  }, []);
+
+  const handleAgencyChange = (e, newValue) => {
+    setAgency(newValue);
   };
 
   const addEmployee = async (data) => {
@@ -68,12 +90,18 @@ export default function AddEmployee({ employees, getEmployees }) {
     setDifaultPin('');
     setOpen(false);
     setVacationDaysPerYear(0);
+    setAgency(null);
   };
 
   const handleAddEmployee = () => {
     addEmployee(dataForRequest);
     handleClearForm();
   };
+
+  // const handleChooseAgency = (e) => {
+  //   const { value } = e.target;
+  //   setAgency(value);
+  // };
 
   const findLastPin = () => {
     const biggestPin = employees.reduce((acc, item) => {
@@ -95,6 +123,7 @@ export default function AddEmployee({ employees, getEmployees }) {
   };
 
   const handleClose = () => setOpen(false);
+
   useEffect(() => {
     const active = name && surname && pin;
     setIsActiveAddButton(active);
@@ -177,6 +206,20 @@ export default function AddEmployee({ employees, getEmployees }) {
                 />
               </RadioGroup>
             </Box>
+            {!isSnti ? (
+              <Autocomplete
+                disablePortal
+                id="agencja"
+                options={agenciesList || []}
+                sx={{ marginBottom: 2 }}
+                onChange={handleAgencyChange}
+                value={agency}
+                renderInput={(params) => (
+                  <TextField {...params} label="Agencja" />
+                )}
+              />
+            ) : null}
+
             <Button
               variant="contained"
               color="primary"
