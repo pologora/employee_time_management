@@ -48,13 +48,12 @@ export default function AddEmployee({ employees, getEmployees }) {
   const [agency, setAgency] = useState(null);
   const [agenciesList, setAgenciesList] = useState(null);
 
-  const dataForRequest = {
+  const dataForEmployeeCreation = {
     name,
     surname,
     pin,
     isSnti,
     vacationDaysPerYear,
-    agency: agency?.id || '',
   };
 
   const getAllAgencies = async () => {
@@ -94,14 +93,9 @@ export default function AddEmployee({ employees, getEmployees }) {
   };
 
   const handleAddEmployee = () => {
-    addEmployee(dataForRequest);
+    addEmployee(dataForEmployeeCreation);
     handleClearForm();
   };
-
-  // const handleChooseAgency = (e) => {
-  //   const { value } = e.target;
-  //   setAgency(value);
-  // };
 
   const findLastPin = () => {
     const biggestPin = employees.reduce((acc, item) => {
