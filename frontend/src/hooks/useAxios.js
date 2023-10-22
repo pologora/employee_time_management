@@ -6,19 +6,24 @@ const useAxios = () => {
       method,
       url,
       data: data ? JSON.stringify(data) : null,
-      headers: {
-        ...headers,
-        'Content-Type': 'application/json',
-      },
+      headers,
     });
     return response.data;
   };
 
-  const get = async (url, headers = {}) => fetchData(url, 'GET', null, headers);
+  const get = async (url, headers = { 'Content-Type': 'application/json' }) => fetchData(url, 'GET', null, headers);
 
-  const post = async (url, data, headers = {}) => fetchData(url, 'POST', data, headers);
+  const post = async (
+    url,
+    data,
+    headers = { 'Content-Type': 'application/json' },
+  ) => fetchData(url, 'POST', data, headers);
 
-  const patch = async (url, data, headers = {}) => fetchData(url, 'PATCH', data, headers);
+  const patch = async (
+    url,
+    data,
+    headers = { 'Content-Type': 'application/json' },
+  ) => fetchData(url, 'PATCH', data, headers);
 
   const deleteItem = async (url, headers = {}) => fetchData(url, 'DELETE', null, headers);
 

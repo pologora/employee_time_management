@@ -1,6 +1,7 @@
 import useAxios from '../hooks/useAxios';
 
 const baseUrl = 'https://beckend-employee-app.onrender.com/api/v1';
+
 const {
   post, deleteItem, get, patch,
 } = useAxios();
@@ -18,7 +19,8 @@ export const deleteAgency = async (id) => {
 };
 
 export const updateAgency = async (agencyToUpdate) => {
-  const url = `${baseUrl}/agencies`;
+  const { id } = agencyToUpdate;
+  const url = `${baseUrl}/agencies/${id}`;
   const response = await patch(url, agencyToUpdate);
   return response;
 };

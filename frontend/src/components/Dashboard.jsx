@@ -9,12 +9,15 @@ import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
 import ForestSharpIcon from '@mui/icons-material/ForestSharp';
 import ListAltSharpIcon from '@mui/icons-material/ListAltSharp';
+import AssistWalkerIcon from '@mui/icons-material/AssistWalker';
 import { useState } from 'react';
+
 import Home from './pages/home/Home';
 import Employees from './pages/employees/Employees';
 import Raporty from './pages/raports/Raports';
 import Urlop from './pages/vacations/Vacations';
 import Logo from './Logo';
+import AgencjaHome from './pages/agencja/AgencjaHome';
 
 const drawerWidth = 240;
 
@@ -38,6 +41,11 @@ const nav = [
     title: 'Raporty',
     icon: <ListAltSharpIcon />,
     link: 'raporty',
+  },
+  {
+    title: 'Agencja',
+    icon: <AssistWalkerIcon />,
+    link: 'agencja',
   },
 ];
 
@@ -67,6 +75,9 @@ export default function PermanentDrawerLeft() {
       break;
     case 'raporty':
       componentToRender = <Raporty />;
+      break;
+    case 'agencja':
+      componentToRender = <AgencjaHome />;
       break;
 
     default:
