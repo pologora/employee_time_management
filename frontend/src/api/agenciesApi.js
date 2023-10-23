@@ -1,6 +1,7 @@
 import useAxios from '../hooks/useAxios';
+import azureUrl from '../options/azureUrl';
 
-const baseUrl = 'https://beckend-employee-app.onrender.com/api/v1';
+const baseUrl = azureUrl;
 
 const {
   post, deleteItem, get, patch,
