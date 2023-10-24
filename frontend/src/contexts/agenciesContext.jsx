@@ -1,4 +1,6 @@
-import { useContext, createContext, useState } from 'react';
+import {
+  useContext, createContext, useState, useMemo,
+} from 'react';
 import { getAgencies } from '../api/agenciesApi';
 
 const AgenciesContext = createContext();
@@ -18,8 +20,13 @@ export function AgenciesContextProvider({ children }) {
     fetchAgencies();
   }, []);
 
+  const contextValue = useMemo(
+    () => ({ agencies, isLoading, fetchAgencies }),
+    [agencies, isLoading, fetchAgencies],
+  );
+
   return (
-    <AgenciesContext.Provider value={(agencies, fetchAgencies, isLoading)}>
+    <AgenciesContext.Provider value={contextValue}>
       {children}
     </AgenciesContext.Provider>
   );

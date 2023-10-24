@@ -3,14 +3,13 @@ import {
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 
-import { useEffect, useState } from 'react';
-import { getAgencies } from '../../../api/agenciesApi';
-
+import { useState } from 'react';
 import AgenciesList from './AgenciesList';
 import AgenciesSettingsModal from './AgenciesSettingsModal';
+import { useAgenciesContext } from '../../../contexts/agenciesContext';
 
 function AgencjaHome() {
-  const [agencies, setAgencies] = useState(null);
+  const { agencies, fetchAgencies } = useAgenciesContext();
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAgency, setActiveAgency] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -28,15 +27,6 @@ function AgencjaHome() {
     setOpenSettings(true);
     setActiveAgency(null);
   };
-
-  const fetchAgencies = async () => {
-    const data = await getAgencies();
-    setAgencies(data.data);
-  };
-
-  useEffect(() => {
-    fetchAgencies();
-  }, []);
 
   return (
     <Box>
