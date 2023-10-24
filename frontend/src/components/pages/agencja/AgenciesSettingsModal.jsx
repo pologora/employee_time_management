@@ -15,7 +15,11 @@ import {
 } from '../../../api/agenciesApi';
 
 function AgenciesSettingsModal({
-  open, close, agency, fetchAgencies,
+  open,
+  close,
+  agency,
+  fetchAgencies,
+  setIsLoading,
 }) {
   const {
     name = '',
@@ -40,8 +44,10 @@ function AgenciesSettingsModal({
 
   const handleDeleteAgency = async () => {
     close();
+    setIsLoading(true);
     await deleteAgency(id);
-    fetchAgencies();
+    await fetchAgencies();
+    setIsLoading(false);
   };
 
   const handleDeleteClick = () => {
@@ -49,14 +55,17 @@ function AgenciesSettingsModal({
   };
 
   const handleUpdateClick = async () => {
+    setIsLoading(true);
+
     if (agency) {
       close();
-      updateAgency(agencyData);
+      await updateAgency(agencyData);
     } else {
       close();
       await createAgency(agencyData);
     }
-    fetchAgencies();
+    await fetchAgencies();
+    setIsLoading(false);
   };
 
   const handleInputChange = (e) => {

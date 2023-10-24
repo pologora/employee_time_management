@@ -13,6 +13,7 @@ function AgencjaHome() {
   const [agencies, setAgencies] = useState(null);
   const [openSettings, setOpenSettings] = useState(false);
   const [activeAgency, setActiveAgency] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleClickOpenSettings = (agency) => {
     setOpenSettings(true);
@@ -45,6 +46,8 @@ function AgencjaHome() {
           close={handleCloseSettings}
           agency={activeAgency}
           fetchAgencies={fetchAgencies}
+          isLoading={isLoading}
+          setIsLoading={setIsLoading}
         />
       )}
 
@@ -63,6 +66,9 @@ function AgencjaHome() {
           <AgenciesList
             agencies={agencies}
             handleClickOpen={handleClickOpenSettings}
+            setIsLoading={setIsLoading}
+            isLoading={isLoading}
+            activeAgency={activeAgency}
           />
         ) : (
           <CircularProgress />

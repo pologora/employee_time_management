@@ -1,5 +1,6 @@
 import {
   Avatar,
+  CircularProgress,
   IconButton,
   ListItem,
   ListItemAvatar,
@@ -8,37 +9,47 @@ import {
 
 import SettingsIcon from '@mui/icons-material/Settings';
 
-function AgancyListItem({ agency, handleClickOpen }) {
+function AgancyListItem({
+  agency, handleClickOpen, isLoading, activeAgency,
+}) {
   const {
-    name, email, phone, contactPerson,
+    name, email, phone, contactPerson, _id: id,
   } = agency;
+
+  const isAgencyOnChange = id === activeAgency?._id && isLoading;
 
   const handleSettingsClick = () => {
     handleClickOpen(agency);
   };
 
   const avatarChars = (agencyTitle) => {
-    const titleWorldsList = agencyTitle.split(' ');
+    const agencyTitleCopy = agencyTitle.trim();
+    const titleWorldsList = agencyTitleCopy.split(' ');
     if (titleWorldsList.length > 1) {
-      return (
-        titleWorldsList[0][0].toUpperCase()
-        + titleWorldsList[1][0].toUpperCase()
-      );
+      const firstChar = titleWorldsList[0][0];
+      const secondChar = titleWorldsList[1][0];
+      if (secondChar) {
+        return firstChar.toUpperCase() + secondChar.toUpperCase();
+      }
     }
     return agencyTitle[0].toUpperCase() + agencyTitle[1];
   };
 
   return (
     <ListItem
-      secondaryAction={(
-        <IconButton
-          edge="end"
-          aria-label="delete"
-          onClick={handleSettingsClick}
-        >
-          <SettingsIcon color="secondary" />
-        </IconButton>
-      )}
+      secondaryAction={
+        !isAgencyOnChange ? (
+          <IconButton
+            edge="end"
+            aria-label="settings"
+            onClick={handleSettingsClick}
+          >
+            <SettingsIcon color="secondary" />
+          </IconButton>
+        ) : (
+          <CircularProgress size={25} />
+        )
+      }
     >
       <ListItemAvatar>
         <Avatar>{avatarChars(name)}</Avatar>
