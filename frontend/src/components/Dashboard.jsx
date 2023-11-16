@@ -18,7 +18,6 @@ import Raporty from './pages/raports/Raports';
 import Urlop from './pages/vacations/Vacations';
 import Logo from './Logo';
 import AgencjaHome from './pages/agencja/AgencjaHome';
-import { AgenciesContextProvider } from '../contexts/agenciesContext';
 
 const drawerWidth = 240;
 
@@ -127,7 +126,7 @@ export default function PermanentDrawerLeft() {
         component="main"
         sx={{ flexGrow: 1, bgcolor: 'background.default', p: 3 }}
       >
-        <AgenciesContextProvider>{componentToRender}</AgenciesContextProvider>
+        {componentToRender}
       </Box>
     </Box>
   );
