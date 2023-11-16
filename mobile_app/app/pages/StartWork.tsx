@@ -11,7 +11,14 @@ import {
   mainLight,
 } from '../styles/styles';
 
-import {employeeContext, WorkTimeModel} from '../realm';
+export enum WorkActions {
+  StartWork,
+  EndWork,
+  StartBreak,
+  EndBreak,
+}
+
+import {BreakModel, employeeContext, WorkTimeModel} from '../realm';
 const {useQuery, useRealm} = employeeContext;
 
 type StartWorkProps = {
@@ -24,12 +31,45 @@ export default function StartWork({
   route,
 }: StartWorkProps): JSX.Element {
   const workHours = useQuery(WorkTimeModel);
+  const breaks = useQuery(BreakModel);
+
   const realm = useRealm();
-  const {employee} = route.params;
+  const {employee, adminSettings} = route.params;
   const {isWorking, _id: id} = employee;
+
+  const currentBreak = breaks.filtered(
+    'employeeId = $0 AND endBreak = null',
+    id,
+  )[0];
 
   const textInStartButton = isWorking ? 'Kończę pracę' : 'Rozpoczynam pracę';
   const actionButtonBackgroundColor = isWorking ? actionDanger : actionPositive;
+  const breakButtonBgColor = '#6B4E71';
+  const breakButtonText = `Przerwa ${adminSettings.defaultBreakDuration} min`;
+
+  const breakHandler = () => {
+    navigation.navigate('Greetings', {
+      employee,
+      action: currentBreak ? WorkActions.EndBreak : WorkActions.StartBreak,
+    });
+    if (currentBreak) {
+      endBreak();
+    } else {
+      startBreak();
+    }
+  };
+
+  const startEndWorkHandler = () => {
+    navigation.navigate('Greetings', {
+      employee,
+      action: employee.isWorking ? WorkActions.EndWork : WorkActions.StartWork,
+    });
+    if (employee.isWorking) {
+      endWork();
+    } else {
+      startWork();
+    }
+  };
 
   const startWork = useCallback(() => {
     const now = new Date();
@@ -63,16 +103,31 @@ export default function StartWork({
     }
   }, [realm, employee, id, workHours]);
 
-  const startEndWorkHandler = () => {
-    navigation.navigate('Greetings', {
-      employee,
+  function startBreak() {
+    const now = new Date();
+    const timezoneOffset = now.getTimezoneOffset();
+    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+    const breakStartTime = {
+      _id: new Realm.BSON.ObjectId(),
+      employeeId: id,
+      startBreak: localDateTime,
+      endBreak: null,
+    };
+    realm.write(() => {
+      realm.create('Break', breakStartTime);
     });
-    if (employee.isWorking) {
-      endWork();
-    } else {
-      startWork();
+  }
+
+  function endBreak() {
+    const now = new Date();
+    const timezoneOffset = now.getTimezoneOffset();
+    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+    if (currentBreak) {
+      realm.write(() => {
+        currentBreak.endBreak = localDateTime;
+      });
     }
-  };
+  }
 
   return (
     <View style={styles.container}>
@@ -82,6 +137,11 @@ export default function StartWork({
           {employee?.name} {employee?.surname}
         </Text>
       </View>
+      <TouchableOpacity
+        style={[styles.breakButton, {backgroundColor: breakButtonBgColor}]}
+        onPress={breakHandler}>
+        <Text style={styles.breakButtonText}>{breakButtonText}</Text>
+      </TouchableOpacity>
       <TouchableOpacity
         style={[
           styles.startWorkContainer,
@@ -129,7 +189,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 20,
     width: '80%',
-    marginTop: '30%',
+    marginTop: '10%',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -138,5 +198,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 18,
     textTransform: 'uppercase',
+  },
+  breakButtonText: {
+    color: mainLight,
+    fontWeight: 'bold',
+    fontSize: 18,
+    textTransform: 'uppercase',
+  },
+  breakButton: {
+    borderRadius: 30,
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+    width: '80%',
+    marginTop: '10%',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

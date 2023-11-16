@@ -16,6 +16,8 @@ import Greetings from './app/pages/Greetings';
 import {employeeContext} from './app/realm';
 import Login from './app/Login';
 import {APP_ID, BASE_URL} from './options';
+import EmployeesOnBreak from './app/pages/EmployeesOnBreak';
+import {BreakProvider} from './app/contexts/BreakContext';
 
 const {RealmProvider} = employeeContext;
 
@@ -70,6 +72,12 @@ function App(): JSX.Element {
     subs.add(realm.objects('Workdays'), {
       name: 'WorkdaysSubscription',
     });
+    subs.add(realm.objects('AdminSettings'), {
+      name: 'AdminSettingsSubscription',
+    });
+    subs.add(realm.objects('Break'), {
+      name: 'BreakSubscription',
+    });
   });
 
   const Stack = createNativeStackNavigator();
@@ -85,6 +93,7 @@ function App(): JSX.Element {
         <Stack.Screen name="StartWork" component={StartWork} />
         <Stack.Screen name="EmployeesList" component={EmployeesList} />
         <Stack.Screen name="Greetings" component={Greetings} />
+        <Stack.Screen name="BreaksList" component={EmployeesOnBreak} />
       </Stack.Navigator>
     </NavigationContainer>
   );

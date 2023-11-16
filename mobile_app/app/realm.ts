@@ -69,6 +69,45 @@ export class VacationModel extends Realm.Object<VacationModel> {
   };
 }
 
+export class BreakModel extends Realm.Object<BreakModel> {
+  _id!: Realm.BSON.ObjectId;
+  employeeId!: Realm.BSON.ObjectId;
+  startBreak!: Date;
+  endBreak!: Date;
+
+  static schema = {
+    name: 'Break',
+    primaryKey: '_id',
+    properties: {
+      _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
+      employeeId: 'objectId',
+      startBreak: 'date',
+      endBreak: {type: 'date?', default: null},
+    },
+  };
+}
+
+export class AdminSettingsModel extends Realm.Object<AdminSettingsModel> {
+  maxBreaksPerDay!: number;
+  defaultBreakDuration!: number;
+
+  static schema = {
+    name: 'AdminSettings',
+    primaryKey: '_id',
+    properties: {
+      _id: {type: 'objectId', default: () => new Realm.BSON.ObjectId()},
+      maxBreaksPerDay: {type: 'int', default: 3},
+      defaultBreakDuration: {type: 'int', default: 5},
+    },
+  };
+}
+
 export const employeeContext = createRealmContext({
-  schema: [EmployeeModel, WorkTimeModel, VacationModel],
+  schema: [
+    EmployeeModel,
+    WorkTimeModel,
+    VacationModel,
+    BreakModel,
+    AdminSettingsModel,
+  ],
 });
