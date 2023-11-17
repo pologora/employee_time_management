@@ -11,10 +11,10 @@ import {
 import Keypad from '../Keypad';
 import Logo from '../Logo';
 import {
-  mainLight,
   backgroundDark,
   backgroundLight,
   mainDark,
+  mainLight,
 } from '../styles/styles';
 import {employeeContext, EmployeeModel, AdminSettingsModel} from '../realm';
 import Clock from '../Clock';
@@ -26,20 +26,20 @@ type HomeProps = {
 };
 
 export default function Home({navigation, syncStatus}: HomeProps): JSX.Element {
-  const {useQuery, useRealm} = employeeContext;
+  const {useQuery} = employeeContext;
   const [pin, setPin] = useState<string>('');
   const [employee, setEmployee] = useState<EmployeeModel | undefined>(
     undefined,
   );
-  const realm = useRealm();
 
   let adminSettings = useQuery(AdminSettingsModel)[0];
 
-  if (!adminSettings) {
-    realm.write(() => {
-      adminSettings = realm.create('AdminSettings', {});
-    });
-  }
+  // const realm = useRealm();
+  // if (!adminSettings) {
+  //   realm.write(() => {
+  //     adminSettings = realm.create('AdminSettings', {});
+  //   });
+  // }
 
   const employeesAll = useQuery(EmployeeModel);
 
@@ -73,7 +73,9 @@ export default function Home({navigation, syncStatus}: HomeProps): JSX.Element {
   };
 
   const handleBreaksList = () => {
-    navigation.navigate('BreaksList');
+    navigation.navigate('BreaksList', {
+      defaultBreakDuration: adminSettings.defaultBreakDuration,
+    });
   };
 
   return (
@@ -117,12 +119,12 @@ export default function Home({navigation, syncStatus}: HomeProps): JSX.Element {
             handleAcceptButton={handleAcceptButton}
           />
         </View>
-        <View>
+        <View style={styles.buttonsContainer}>
           <TouchableOpacity onPress={handleGoToList}>
-            <Text style={styles.listaObecnosci}>Lista obecności</Text>
+            <Text style={styles.listaObecnosci}>Obecność</Text>
           </TouchableOpacity>
           <TouchableOpacity onPress={handleBreaksList}>
-            <Text style={styles.listaObecnosci}>Lista przerw</Text>
+            <Text style={styles.listaObecnosci}>Przerwy</Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -176,6 +178,13 @@ const styles = StyleSheet.create({
   listaObecnosci: {
     color: mainLight,
     marginBottom: 10,
+
+    textAlign: 'center',
+    textTransform: 'uppercase',
   },
-  buttonsContainer: {},
+  buttonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '80%',
+  },
 });

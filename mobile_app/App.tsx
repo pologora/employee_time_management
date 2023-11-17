@@ -17,7 +17,6 @@ import {employeeContext} from './app/realm';
 import Login from './app/Login';
 import {APP_ID, BASE_URL} from './options';
 import EmployeesOnBreak from './app/pages/EmployeesOnBreak';
-import {BreakProvider} from './app/contexts/BreakContext';
 
 const {RealmProvider} = employeeContext;
 

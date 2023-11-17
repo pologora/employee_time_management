@@ -11,13 +11,17 @@ import {backgroundDark, backgroundLight} from '../styles/styles';
 import {useCallback, useEffect, useState} from 'react';
 
 import {employeeContext, EmployeeModel, BreakModel} from '../realm';
+import {getLocalTime} from '../helpers/dateHelpers';
 
 type EmployeesListProps = {
   navigation: any;
   route: any;
 };
 
-export default function EmployeesOnBreak({navigation}: EmployeesListProps) {
+export default function EmployeesOnBreak({
+  navigation,
+  route,
+}: EmployeesListProps) {
   const [breaksList, setBreaksList] = useState<Array<{
     employee: EmployeeModel;
     breakDuration: number;
@@ -28,15 +32,16 @@ export default function EmployeesOnBreak({navigation}: EmployeesListProps) {
   const breaks = useQuery(BreakModel);
   const ongoingBreaks = breaks.filtered('endBreak = $0', null);
 
+  const {defaultBreakDuration} = route.params;
+
   const getBreakList = useCallback(() => {
     const breakList: Array<{
       employee: EmployeeModel;
       breakDuration: number;
       startTime: Date;
     }> = [];
-    const now = new Date();
-    const timezoneOffset = now.getTimezoneOffset();
-    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+
+    const localDateTime = getLocalTime();
 
     ongoingBreaks.forEach((item: BreakModel) => {
       const employee = employeesAll.find((employee: EmployeeModel) =>
@@ -53,9 +58,7 @@ export default function EmployeesOnBreak({navigation}: EmployeesListProps) {
   }, [ongoingBreaks, employeesAll]);
 
   const updateBreakList = () => {
-    const now = new Date();
-    const timezoneOffset = now.getTimezoneOffset();
-    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+    const localDateTime = getLocalTime();
 
     setBreaksList(currentList => {
       if (!currentList) {
@@ -82,12 +85,17 @@ export default function EmployeesOnBreak({navigation}: EmployeesListProps) {
 
   const listEployeesItem = breaksList?.map(item => {
     const {name, surname, _id} = item.employee;
+    const durationTimeColor =
+      Math.floor((item.breakDuration / (1000 * 60)) % 60) > defaultBreakDuration
+        ? 'red'
+        : 'black';
     const duration = formatDuration(item.breakDuration);
     return (
-      <View key={_id.toString()}>
-        <Text style={styles.listItem}>
-          {name} {surname}: {duration}
+      <View key={_id.toString()} style={styles.listItemContainer}>
+        <Text style={styles.listItemName}>
+          {name} {surname}:
         </Text>
+        <Text style={{color: durationTimeColor}}>{duration}</Text>
       </View>
     );
   });
@@ -136,7 +144,13 @@ const styles = StyleSheet.create({
     marginBottom: 100,
     marginTop: 130,
   },
-  listItem: {
-    color: 'green',
+  listItemName: {
+    color: 'black',
+
+    marginHorizontal: 3,
+  },
+  listItemContainer: {
+    flexDirection: 'row',
+    marginTop: 1,
   },
 });

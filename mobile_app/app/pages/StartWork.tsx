@@ -19,6 +19,7 @@ export enum WorkActions {
 }
 
 import {BreakModel, employeeContext, WorkTimeModel} from '../realm';
+import {getBoundaryTime, getLocalTime} from '../helpers/dateHelpers';
 const {useQuery, useRealm} = employeeContext;
 
 type StartWorkProps = {
@@ -36,7 +37,7 @@ export default function StartWork({
   const realm = useRealm();
   const {employee, adminSettings} = route.params;
   const {isWorking, _id: id} = employee;
-
+  const {defaultBreakDuration, maxBreaksPerDay} = adminSettings;
   const currentBreak = breaks.filtered(
     'employeeId = $0 AND endBreak = null',
     id,
@@ -44,8 +45,55 @@ export default function StartWork({
 
   const textInStartButton = isWorking ? 'Kończę pracę' : 'Rozpoczynam pracę';
   const actionButtonBackgroundColor = isWorking ? actionDanger : actionPositive;
-  const breakButtonBgColor = '#6B4E71';
-  const breakButtonText = `Przerwa ${adminSettings.defaultBreakDuration} min`;
+  const breakButtonText = currentBreak
+    ? 'Koniec przerwy'
+    : `Przerwa ${defaultBreakDuration} min`;
+  const breaksLeft = maxBreaksPerDay - getCurrentWorkDayBreaks();
+  const breakButtonBgColor =
+    breaksLeft <= 0 && !currentBreak
+      ? 'gray'
+      : currentBreak
+      ? actionDanger
+      : actionPositive;
+  const breaksLeftText = `Pozostał${
+    breaksLeft === 1 ? 'a' : 'o'
+  } ${breaksLeft} przerw${breaksLeft === 1 ? 'a' : breaksLeft > 1 ? 'y' : ''}`;
+
+  function getCurrentWorkDayBreaks() {
+    const localTime = getLocalTime();
+    const hours = localTime.getHours();
+    let todayBreaks = null;
+
+    const startOfDay = getBoundaryTime(8);
+    const startOfNightShift = getBoundaryTime(22);
+
+    if (hours >= 8 && hours < 18) {
+      todayBreaks = breaks.filtered(
+        'employeeId = $0 AND startBreak > $1',
+        id,
+        startOfDay,
+      );
+    } else if (hours >= 22) {
+      todayBreaks = breaks.filtered(
+        'employeeId = $0 AND startBreak > $1',
+        id,
+        startOfNightShift,
+      );
+    } else if (hours < 8) {
+      const startOfPreviousNightShift = new Date(startOfNightShift);
+      startOfPreviousNightShift.setDate(
+        startOfPreviousNightShift.getDate() - 1,
+      );
+
+      todayBreaks = breaks.filtered(
+        'employeeId = $0 AND startBreak >= $1',
+        id,
+        startOfPreviousNightShift,
+      );
+    }
+
+    return todayBreaks?.length || 0;
+  }
 
   const breakHandler = () => {
     navigation.navigate('Greetings', {
@@ -70,6 +118,16 @@ export default function StartWork({
       startWork();
     }
   };
+  const endBreak = useCallback(() => {
+    const now = new Date();
+    const timezoneOffset = now.getTimezoneOffset();
+    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
+    if (currentBreak) {
+      realm.write(() => {
+        currentBreak.endBreak = localDateTime;
+      });
+    }
+  }, [realm, currentBreak]);
 
   const startWork = useCallback(() => {
     const now = new Date();
@@ -101,7 +159,8 @@ export default function StartWork({
         employee.isWorking = false;
       });
     }
-  }, [realm, employee, id, workHours]);
+    endBreak();
+  }, [realm, employee, id, workHours, endBreak]);
 
   function startBreak() {
     const now = new Date();
@@ -118,17 +177,6 @@ export default function StartWork({
     });
   }
 
-  function endBreak() {
-    const now = new Date();
-    const timezoneOffset = now.getTimezoneOffset();
-    const localDateTime = new Date(now.getTime() - timezoneOffset * 60 * 1000);
-    if (currentBreak) {
-      realm.write(() => {
-        currentBreak.endBreak = localDateTime;
-      });
-    }
-  }
-
   return (
     <View style={styles.container}>
       <Logo />
@@ -136,12 +184,19 @@ export default function StartWork({
         <Text style={styles.text}>
           {employee?.name} {employee?.surname}
         </Text>
+        {isWorking && (
+          <Text style={styles.breaksLeftText}>{breaksLeftText}</Text>
+        )}
       </View>
-      <TouchableOpacity
-        style={[styles.breakButton, {backgroundColor: breakButtonBgColor}]}
-        onPress={breakHandler}>
-        <Text style={styles.breakButtonText}>{breakButtonText}</Text>
-      </TouchableOpacity>
+      {isWorking && (
+        <TouchableOpacity
+          style={[styles.breakButton, {backgroundColor: breakButtonBgColor}]}
+          onPress={breakHandler}
+          disabled={breaksLeft <= 0 && !currentBreak}>
+          <Text style={styles.breakButtonText}>{breakButtonText}</Text>
+        </TouchableOpacity>
+      )}
+
       <TouchableOpacity
         style={[
           styles.startWorkContainer,
@@ -174,6 +229,7 @@ const styles = StyleSheet.create({
   },
   text: {
     marginVertical: 20,
+    marginBottom: 10,
     fontSize: 24,
     color: 'black',
     fontWeight: 'bold',
@@ -213,5 +269,10 @@ const styles = StyleSheet.create({
     marginTop: '10%',
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  breaksLeftText: {
+    textAlign: 'center',
+    marginBottom: 2,
+    fontWeight: 'bold',
   },
 });
