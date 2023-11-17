@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react';
 import notifee from '@notifee/react-native';
+import BackgroundTimer from 'react-native-background-timer';
 
 import {
   StyleSheet,
@@ -63,7 +64,7 @@ export default function Home({
       name: string,
       surname: string,
     ) {
-      const id = setTimeout(() => {
+      const id = BackgroundTimer.setTimeout(() => {
         displayNotification(
           `${name} ${surname}`,
           `Znajduje się na przerwie powyżej ${timeInMin} minut`,
@@ -90,11 +91,11 @@ export default function Home({
       clearIdAndIdList(id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [action, adminSettings.defaultBreakDuration, route.params]);
+  }, [action]);
 
   function clearIdAndIdList(id: number | undefined) {
     if (id) {
-      clearTimeout(id);
+      BackgroundTimer.clearTimeout(id);
       if (alertsIdList.length) {
         setAlertsIdList(prev => {
           const newArray = prev.filter(item => item.id !== id);

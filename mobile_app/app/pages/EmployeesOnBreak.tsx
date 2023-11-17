@@ -94,9 +94,9 @@ export default function EmployeesOnBreak({
     return (
       <View key={_id.toString()} style={styles.listItemContainer}>
         <Text style={styles.listItemName}>
-          {name} {surname}:
+          {name} {surname}
         </Text>
-        <Text style={{color: durationTimeColor}}>{duration}</Text>
+        <Text style={{color: durationTimeColor}}>{`(${duration})`}</Text>
       </View>
     );
   });
@@ -120,8 +120,8 @@ function formatDuration(duration: number) {
   const hours = Math.floor((duration / (1000 * 60 * 60)) % 24);
 
   const hoursDisplay = hours > 0 ? `${hours}h ` : '';
-  const minutesDisplay = minutes > 0 ? `${minutes}m ` : '';
-  const secondsDisplay = seconds > 0 ? `${seconds}s` : '';
+  const minutesDisplay = minutes > 0 ? `${minutes}min ` : '0min ';
+  const secondsDisplay = seconds > 0 ? `${seconds}s` : '00s';
 
   return hoursDisplay + minutesDisplay + secondsDisplay;
 }
@@ -147,11 +147,10 @@ const styles = StyleSheet.create({
   },
   listItemName: {
     color: 'black',
-
-    marginHorizontal: 3,
+    marginRight: 5,
   },
   listItemContainer: {
     flexDirection: 'row',
-    marginTop: 1,
+    margin: 5,
   },
 });

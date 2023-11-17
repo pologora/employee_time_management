@@ -55,9 +55,7 @@ export default function StartWork({
       : currentBreak
       ? actionDanger
       : actionPositive;
-  const breaksLeftText = `Pozostał${
-    breaksLeft === 1 ? 'a' : 'o'
-  } ${breaksLeft} przerw${breaksLeft === 1 ? 'a' : breaksLeft > 1 ? 'y' : ''}`;
+  const breaksLeftText = `Pozostało przerw: ${breaksLeft}`;
 
   function getCurrentWorkDayBreaks() {
     const localTime = getLocalTime();
@@ -67,7 +65,7 @@ export default function StartWork({
     const startOfDay = getBoundaryTime(8);
     const startOfNightShift = getBoundaryTime(22);
 
-    if (hours >= 8 && hours < 18) {
+    if (hours >= 9 && hours < 19) {
       todayBreaks = breaks.filtered(
         'employeeId = $0 AND startBreak > $1',
         id,
@@ -79,7 +77,7 @@ export default function StartWork({
         id,
         startOfNightShift,
       );
-    } else if (hours < 8) {
+    } else if (hours < 9) {
       const startOfPreviousNightShift = new Date(startOfNightShift);
       startOfPreviousNightShift.setDate(
         startOfPreviousNightShift.getDate() - 1,
@@ -274,5 +272,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 2,
     fontWeight: 'bold',
+    color: actionPositive,
   },
 });

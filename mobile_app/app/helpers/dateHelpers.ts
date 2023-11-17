@@ -7,7 +7,7 @@ export function getLocalTime() {
 
 export function getBoundaryTime(hour: number) {
   const now = new Date();
-
+  const timezoneOffset = now.getTimezoneOffset();
   const boundary = new Date(
     now.getFullYear(),
     now.getMonth(),
@@ -15,5 +15,5 @@ export function getBoundaryTime(hour: number) {
     hour,
   );
 
-  return boundary;
+  return new Date(boundary.getTime() - timezoneOffset * 60 * 1000);
 }
