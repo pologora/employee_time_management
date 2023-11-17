@@ -42,11 +42,15 @@ export default function Greetings({
 
   useEffect(() => {
     const timeout = setTimeout(() => {
-      navigation.navigate('Home');
+      navigation.navigate('Home', {
+        action,
+        name: employee.name,
+        surname: employee.surname,
+      });
     }, 1300);
 
     return () => clearTimeout(timeout);
-  }, [navigation]);
+  }, [navigation, action, employee.name, employee.surname]);
 
   return (
     <View style={styles.container}>

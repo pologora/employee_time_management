@@ -1,4 +1,5 @@
 import {useEffect, useState} from 'react';
+import notifee from '@notifee/react-native';
 
 import {
   StyleSheet,
@@ -19,27 +20,89 @@ import {
 import {employeeContext, EmployeeModel, AdminSettingsModel} from '../realm';
 import Clock from '../Clock';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {WorkActions} from './StartWork';
 
 type HomeProps = {
   navigation: any;
   syncStatus: string;
+  route: any;
 };
 
-export default function Home({navigation, syncStatus}: HomeProps): JSX.Element {
+type AlertIdListItem = {
+  id: number;
+  name: string;
+  surname: string;
+};
+
+export default function Home({
+  navigation,
+  syncStatus,
+  route,
+}: HomeProps): JSX.Element {
   const {useQuery} = employeeContext;
   const [pin, setPin] = useState<string>('');
   const [employee, setEmployee] = useState<EmployeeModel | undefined>(
     undefined,
   );
+  const [alertsIdList, setAlertsIdList] = useState<Array<AlertIdListItem>>([]);
+  console.log(alertsIdList);
+
+  const action = route.params?.action || null;
 
   let adminSettings = useQuery(AdminSettingsModel)[0];
-
   // const realm = useRealm();
   // if (!adminSettings) {
   //   realm.write(() => {
   //     adminSettings = realm.create('AdminSettings', {});
   //   });
   // }
+
+  useEffect(() => {
+    function startBrekAlertTimeout(
+      timeInMin: number,
+      name: string,
+      surname: string,
+    ) {
+      const id = setTimeout(() => {
+        displayNotification(
+          `${name} ${surname}`,
+          `Znajduje się na przerwie powyżej ${timeInMin} minut`,
+        );
+        clearIdAndIdList(id);
+      }, timeInMin * 1000 * 60);
+
+      setAlertsIdList(prev => {
+        return [...prev, {id, name, surname}];
+      });
+    }
+
+    if (action === WorkActions.StartBreak) {
+      const {name, surname} = route.params;
+      startBrekAlertTimeout(adminSettings.defaultBreakDuration, name, surname);
+    } else if (
+      action === WorkActions.EndBreak ||
+      action === WorkActions.EndWork
+    ) {
+      const {name, surname} = route.params;
+      const id = alertsIdList?.find(
+        item => item.name === name && item.surname === surname,
+      )?.id;
+      clearIdAndIdList(id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [action, adminSettings.defaultBreakDuration, route.params]);
+
+  function clearIdAndIdList(id: number | undefined) {
+    if (id) {
+      clearTimeout(id);
+      if (alertsIdList.length) {
+        setAlertsIdList(prev => {
+          const newArray = prev.filter(item => item.id !== id);
+          return [...newArray];
+        });
+      }
+    }
+  }
 
   const employeesAll = useQuery(EmployeeModel);
 
@@ -77,6 +140,25 @@ export default function Home({navigation, syncStatus}: HomeProps): JSX.Element {
       defaultBreakDuration: adminSettings.defaultBreakDuration,
     });
   };
+
+  async function displayNotification(title: string, body: string) {
+    const channelId = await notifee.createChannel({
+      id: 'default',
+      name: 'Default Channel',
+      sound: 'alert-1',
+    });
+
+    await notifee.displayNotification({
+      title,
+      body,
+      android: {
+        channelId,
+        pressAction: {
+          id: 'default',
+        },
+      },
+    });
+  }
 
   return (
     <>
@@ -123,6 +205,7 @@ export default function Home({navigation, syncStatus}: HomeProps): JSX.Element {
           <TouchableOpacity onPress={handleGoToList}>
             <Text style={styles.listaObecnosci}>Obecność</Text>
           </TouchableOpacity>
+
           <TouchableOpacity onPress={handleBreaksList}>
             <Text style={styles.listaObecnosci}>Przerwy</Text>
           </TouchableOpacity>

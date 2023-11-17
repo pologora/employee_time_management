@@ -18,15 +18,19 @@ type EmployeesListProps = {
   route: any;
 };
 
+type breakListItem = {
+  employee: EmployeeModel;
+  breakDuration: number;
+  startTime: Date;
+};
+
 export default function EmployeesOnBreak({
   navigation,
   route,
 }: EmployeesListProps) {
-  const [breaksList, setBreaksList] = useState<Array<{
-    employee: EmployeeModel;
-    breakDuration: number;
-    startTime: Date;
-  }> | null>(null);
+  const [breaksList, setBreaksList] = useState<Array<breakListItem> | null>(
+    null,
+  );
   const {useQuery} = employeeContext;
   const employeesAll = useQuery(EmployeeModel);
   const breaks = useQuery(BreakModel);
@@ -35,11 +39,7 @@ export default function EmployeesOnBreak({
   const {defaultBreakDuration} = route.params;
 
   const getBreakList = useCallback(() => {
-    const breakList: Array<{
-      employee: EmployeeModel;
-      breakDuration: number;
-      startTime: Date;
-    }> = [];
+    const breakList: Array<breakListItem> = [];
 
     const localDateTime = getLocalTime();
 
@@ -81,6 +81,7 @@ export default function EmployeesOnBreak({
     return () => {
       clearInterval(id);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const listEployeesItem = breaksList?.map(item => {
