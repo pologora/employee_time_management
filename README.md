@@ -40,7 +40,7 @@ This is a commercial, freelance project that was developed based on client needs
 - Managers can export reports to Excel files.
 
 Development version: 
-[Check live](https://best-ever-magazyn.netlify.app/)
+[Check live](https://test-magazyn.netlify.app/login)
 
 
 
