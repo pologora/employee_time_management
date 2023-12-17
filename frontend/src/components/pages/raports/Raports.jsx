@@ -39,7 +39,6 @@ function Raporty() {
   const handleSingleEmployeeRaport = async (id, startDate, endDate) => {
     try {
       const data = await getEmployeeRaportByIdAndDate(id, startDate, endDate);
-      console.log(data);
       setRaportData(data);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('singleEmployee');
