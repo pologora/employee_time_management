@@ -97,6 +97,7 @@ export default function UpdateVacationAlert({
       id: vacation._id,
     };
     onUpdate(newVacationData);
+
     onClose();
   };
 

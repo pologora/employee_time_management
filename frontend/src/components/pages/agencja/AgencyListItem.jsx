@@ -23,6 +23,9 @@ function AgancyListItem({
   };
 
   const avatarChars = (agencyTitle) => {
+    if (!agencyTitle) {
+      return 'NN';
+    }
     const agencyTitleCopy = agencyTitle.trim();
     const titleWorldsList = agencyTitleCopy.split(' ');
     if (titleWorldsList.length > 1) {

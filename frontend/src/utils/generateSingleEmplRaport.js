@@ -70,6 +70,9 @@ export default (data, startDate, endDate) => {
       const endVacation = new Date(vacation.endVacation);
       const currentDay = new Date(dayIso);
 
+      startVacation.setHours(0, 0, 0, 0);
+      endVacation.setHours(23, 0, 0, 0);
+
       return currentDay >= startVacation && currentDay <= endVacation;
     });
 

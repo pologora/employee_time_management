@@ -1,11 +1,7 @@
 import useAxios from '../hooks/useAxios';
-import azureUrl from '../options/azureUrl';
+import baseUrl from '../options/baseUrl';
 
-const baseUrl = azureUrl;
-
-const {
-  post, deleteItem, get, patch,
-} = useAxios();
+const { post, deleteItem, get } = useAxios();
 
 export const createAgency = async (data) => {
   const url = `${baseUrl}/agencies`;
@@ -14,15 +10,14 @@ export const createAgency = async (data) => {
 };
 
 export const deleteAgency = async (id) => {
-  const url = `${baseUrl}/agencies/${id}`;
+  const url = `${baseUrl}/agencies?id=${id}`;
   const response = await deleteItem(url);
   return response;
 };
 
 export const updateAgency = async (agencyToUpdate) => {
-  const { id } = agencyToUpdate;
-  const url = `${baseUrl}/agencies/${id}`;
-  const response = await patch(url, agencyToUpdate);
+  const url = `${baseUrl}/agencies`;
+  const response = await post(url, agencyToUpdate);
   return response;
 };
 
@@ -33,7 +28,7 @@ export const getAgencies = async () => {
 };
 
 export const getAgencyByID = async (id) => {
-  const url = `${baseUrl}/agencies/${id}`;
+  const url = `${baseUrl}/agencies/?id=${id}`;
   const response = await get(url);
   return response;
 };

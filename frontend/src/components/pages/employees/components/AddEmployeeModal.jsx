@@ -54,11 +54,12 @@ export default function AddEmployee({ employees, getEmployees }) {
     pin,
     isSnti,
     vacationDaysPerYear,
+    agency: agency?.id,
   };
 
   const getAllAgencies = async () => {
     const data = await getAgencies();
-    const dataForAutocomplete = data?.data.map((item) => ({
+    const dataForAutocomplete = data?.map((item) => ({
       label: item.name,
       id: item._id,
     }));

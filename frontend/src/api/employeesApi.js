@@ -4,6 +4,7 @@ import useAxios from '../hooks/useAxios';
 const { post, deleteItem, get } = useAxios();
 
 export const createEmployee = async (data) => {
+  console.log(data);
   const url = `${baseUrl}/employees`;
   const response = await post(url, data);
   return response;
