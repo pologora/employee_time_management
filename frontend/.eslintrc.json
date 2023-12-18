@@ -16,6 +16,7 @@
     "react/prop-types": "off",
     "max-len": "off",
     "react/jsx-props-no-spreading": "off",
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "no-shadow": "off"
   }
 }

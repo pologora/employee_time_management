@@ -16,35 +16,17 @@ import { useAgenciesContext } from '../../../../contexts/agenciesContext';
 export default function UpdateAlert({
   open, onClose, employee, getEmployees,
 }) {
-  const [employeeToUpdate, setEmployeeToUpdate] = useState({
-    name: '',
-    surname: '',
-    pin: '',
-    vacationDaysPerYear: '',
-    isSnti: false,
-    agency: '',
-  });
+  const [employeeToUpdate, setEmployeeToUpdate] = useState(employee);
 
-  const { pin } = employee;
   const [isLoading, setIsLoading] = useState(false);
   const { agencies } = useAgenciesContext();
-  const [agenciesList, setAgenciesList] = useState(null);
+  const {
+    name, surname, pin, vacationDaysPerYear, isSnti, agency,
+  } = employeeToUpdate;
 
   const updateEmployeeField = (name, value) => {
     setEmployeeToUpdate((prev) => ({ ...prev, [name]: value }));
   };
-
-  const getAgenciesForAutocomplete = async () => {
-    const data = agencies?.map((item) => ({
-      label: item.name,
-      id: item._id,
-    }));
-    setAgenciesList(data);
-  };
-
-  useEffect(() => {
-    getAgenciesForAutocomplete();
-  }, [agencies]);
 
   const handleUpdate = () => {
     setIsLoading(true);
@@ -58,10 +40,16 @@ export default function UpdateAlert({
       setIsLoading(false);
     }
   };
-
-  const handleAgencyChange = (e, newValue) => {
-    const agency = newValue.label;
-    setEmployeeToUpdate((prev) => ({ ...prev, agency }));
+  const handleInputUpdate = (e) => {
+    const { name, value } = e.target;
+    if (name === 'isSnti') {
+      const isSnti = value === 'SNTI';
+      if (isSnti) {
+        setEmployeeToUpdate((prev) => ({ ...prev, agency: '' }));
+      }
+      return setEmployeeToUpdate((prev) => ({ ...prev, isSnti }));
+    }
+    return setEmployeeToUpdate((prev) => ({ ...prev, [name]: value }));
   };
 
   useEffect(() => {
@@ -85,7 +73,7 @@ export default function UpdateAlert({
               margin="dense"
               id="name"
               label="Imię"
-              value={employeeToUpdate.name}
+              value={name}
               onChange={(e) => updateEmployeeField('name', e.target.value)}
               fullWidth
               variant="standard"
@@ -94,7 +82,7 @@ export default function UpdateAlert({
               margin="dense"
               id="surname"
               label="Nazwisko"
-              value={employeeToUpdate.surname}
+              value={surname}
               onChange={(e) => updateEmployeeField('surname', e.target.value)}
               fullWidth
               variant="standard"
@@ -103,7 +91,7 @@ export default function UpdateAlert({
               margin="dense"
               id="pin"
               label="PIN"
-              value={employeeToUpdate.pin}
+              value={pin}
               onChange={(e) => updateEmployeeField('pin', e.target.value)}
               fullWidth
               variant="standard"
@@ -112,7 +100,7 @@ export default function UpdateAlert({
               margin="dense"
               id="vacationDaysPerYear"
               label="Dni wakacyjne w roku"
-              value={employeeToUpdate.vacationDaysPerYear}
+              value={vacationDaysPerYear}
               onChange={(e) => updateEmployeeField('vacationDaysPerYear', +e.target.value)}
               fullWidth
               variant="standard"
@@ -131,14 +119,20 @@ export default function UpdateAlert({
                 label="Agencja"
               />
             </RadioGroup>
-            {!employeeToUpdate.isSnti ? (
+            {!isSnti ? (
               <Autocomplete
                 disablePortal
                 id="agencja"
-                options={agenciesList || []}
-                sx={{ marginBottom: 2 }}
-                onChange={handleAgencyChange}
-                value={employeeToUpdate.agency}
+                name="agency"
+                options={agencies}
+                getOptionLabel={(option) => option?.name || ''}
+                value={agency || null} // Make sure it's either a valid option or null
+                onChange={(_, newValue) => handleInputUpdate({
+                  target: { name: 'agency', value: newValue },
+                })}
+                filterOptions={(options, { inputValue }) => options.filter((option) => option.name
+                  .toLowerCase()
+                  .includes(inputValue.toLowerCase()))}
                 renderInput={(params) => (
                   <TextField {...params} label="Agencja" />
                 )}

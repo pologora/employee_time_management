@@ -21,34 +21,15 @@ import DeleteAlert from './DeleteAlert';
 import UpdateAlert from './UpdateAlert';
 import WorkHoursAlert from './WorkHoursAlert';
 import { deleteEmployeeById } from '../../../../api/employeesApi';
-
-function sortAlphabeticallyAscending(a, b) {
-  if (a.surname < b.surname) {
-    return 1;
-  }
-  if (a.surname > b.surname) {
-    return -1;
-  }
-  return 0;
-}
-
-function sortAlphabeticallyDescending(a, b) {
-  if (a.surname < b.surname) {
-    return -1;
-  }
-  if (a.surname > b.surname) {
-    return 1;
-  }
-  return 0;
-}
-
-function sortByPinAscending(a, b) {
-  return a.pin - b.pin;
-}
-
-function sortByPinDescending(a, b) {
-  return b.pin - a.pin;
-}
+import {
+  sortAlphabeticallyAscending,
+  sortAlphabeticallyDescending,
+  sortByPinAscending,
+  sortByPinDescending,
+} from '../../../../helpers/sortFuncs';
+import { useEmployeesContext } from '../../../../contexts/employeeContext';
+import { useAgenciesContext } from '../../../../contexts/agenciesContext';
+import getAgienciesIdToNameMap from '../../../../helpers/getAgenciesIdToNameMap';
 
 const sortingOrder = Object.freeze({
   Descending: 'descending',
@@ -56,15 +37,16 @@ const sortingOrder = Object.freeze({
 });
 
 function EmployeesTable({
-  employees,
   setSelectedEmployee,
   handleChangeComponentToRender,
-  getEmployees,
+  employees,
 }) {
   const [activeEmployee, setActiveEmployee] = useState(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState(false);
   const [isOpenUpdateAlert, setIsOpenUpdateAlert] = useState(false);
   const [isOpenWorkHoursAlert, setIsOpenWorkHoursAlert] = useState(false);
+  const { fetchEmployees } = useEmployeesContext();
+  const { agencies } = useAgenciesContext();
   const [isSorted, setIsSorted] = useState({
     byName: {
       sorted: false,
@@ -75,6 +57,8 @@ function EmployeesTable({
       order: '',
     },
   });
+
+  const agenciesMap = getAgienciesIdToNameMap(agencies);
 
   function getNameSortingIcon() {
     if (isSorted.byName.order === sortingOrder.Ascending) {
@@ -109,7 +93,7 @@ function EmployeesTable({
     const { id } = employee;
     try {
       await deleteEmployeeById(id);
-      getEmployees();
+      fetchEmployees();
     } catch (error) {
       alert(error);
     }
@@ -221,6 +205,7 @@ function EmployeesTable({
       _id: id,
       vacationDaysPerYear,
       isSnti,
+      agency,
     } = employee;
 
     return {
@@ -229,6 +214,7 @@ function EmployeesTable({
       pin,
       isSnti,
       id,
+      agency: agenciesMap.get(agency) || 'SNTI',
     };
   });
 
@@ -247,7 +233,7 @@ function EmployeesTable({
           open={isOpenUpdateAlert}
           onClose={hadleCloseUpdateAlert}
           employee={activeEmployee}
-          getEmployees={getEmployees}
+          getEmployees={fetchEmployees}
         />
       )}
       {isOpenWorkHoursAlert && (
@@ -286,6 +272,11 @@ function EmployeesTable({
                   {getPinSortingIcon()}
                 </IconButton>
               </TableCell>
+              <TableCell align="left">
+                <Typography className="inline-elements" mr={1}>
+                  Agencja
+                </Typography>
+              </TableCell>
               <TableCell align="left" />
               <TableCell align="left" />
               <TableCell align="left" />
@@ -298,6 +289,7 @@ function EmployeesTable({
                   {row.name}
                 </TableCell>
                 <TableCell align="left">{row.pin}</TableCell>
+                <TableCell align="left">{row.agency}</TableCell>
                 <TableCell align="left">
                   <Button
                     size="small"

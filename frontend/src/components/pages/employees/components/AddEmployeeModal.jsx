@@ -16,6 +16,8 @@ import {
 } from '@mui/material';
 import { createEmployee } from '../../../../api/employeesApi';
 import { useAgenciesContext } from '../../../../contexts/agenciesContext';
+import { useEmployeesContext } from '../../../../contexts/employeeContext';
+import getNextPin from '../../../../helpers/getNextPin';
 
 const style = {
   position: 'absolute',
@@ -37,83 +39,71 @@ const closeModalBtnSx = {
   },
 };
 
-export default function AddEmployee({ employees, getEmployees }) {
+const employeeInitialValue = {
+  name: '',
+  surname: '',
+  pin: '',
+  vacationDaysPerYear: 0,
+  isSnti: false,
+  agency: '',
+};
+
+export default function AddEmployee() {
   const [open, setOpen] = useState(false);
-  const [pin, setDifaultPin] = useState('');
-  const [name, setName] = useState('');
-  const [surname, setSurname] = useState('');
-  const [isSnti, setIsSnti] = useState(false);
-  const [vacationDaysPerYear, setVacationDaysPerYear] = useState(0);
+  const [employee, setEmployee] = useState(employeeInitialValue);
+  const {
+    name, surname, pin, vacationDaysPerYear, isSnti, agency,
+  } = employee;
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
-  const [agency, setAgency] = useState(null);
-  const [agenciesList, setAgenciesList] = useState(null);
   const { agencies } = useAgenciesContext();
-
-  const dataForEmployeeCreation = {
-    name,
-    surname,
-    pin,
-    isSnti,
-    vacationDaysPerYear,
-    agency: agency?.id,
-  };
-
-  const getAgenciesForAutocomplete = async () => {
-    const data = agencies?.map((item) => ({
-      label: item.name,
-      id: item._id,
-    }));
-    setAgenciesList(data);
-  };
+  const { employees, fetchEmployees } = useEmployeesContext();
+  const title = 'Dodawanie pracownika';
 
   useEffect(() => {
-    getAgenciesForAutocomplete();
-  }, [agencies]);
+    if (employees) {
+      const pin = getNextPin(employees);
+      setEmployee((prev) => ({ ...prev, pin }));
+    }
+  }, [employees]);
 
-  const handleAgencyChange = (e, newValue) => {
-    setAgency(newValue);
+  const handleInputUpdate = (e) => {
+    const { name, value } = e.target;
+    if (name === 'isSnti') {
+      const isSnti = value === 'SNTI';
+      if (isSnti) {
+        setEmployee((prev) => ({ ...prev, agency: '' }));
+      }
+      return setEmployee((prev) => ({ ...prev, isSnti }));
+    }
+    return setEmployee((prev) => ({ ...prev, [name]: value }));
   };
 
   const addEmployee = async (data) => {
     try {
-      createEmployee(data);
-      getEmployees();
+      await createEmployee(data);
+      fetchEmployees();
+      setOpen(false);
     } catch (error) {
       alert(error.message);
     }
   };
 
   const handleClearForm = () => {
-    setName('');
-    setSurname('');
-    setIsSnti(false);
-    setDifaultPin('');
-    setOpen(false);
-    setVacationDaysPerYear(0);
-    setAgency(null);
+    setEmployee(employeeInitialValue);
   };
 
   const handleAddEmployee = () => {
-    addEmployee(dataForEmployeeCreation);
+    const data = { ...employee };
+    if (data.agency && !data.isSnti) {
+      data.agency = data.agency._id;
+    } else {
+      data.agency = '';
+    }
+    addEmployee(data);
     handleClearForm();
   };
 
-  const findLastPin = () => {
-    const biggestPin = employees.reduce((acc, item) => {
-      let newAcc;
-      if (item.pin > acc) {
-        newAcc = item.pin;
-      } else {
-        newAcc = acc;
-      }
-      return newAcc;
-    }, 0);
-    const defaultPin = (+biggestPin + 1).toString();
-    setDifaultPin(defaultPin);
-  };
-
   const handleOpen = () => {
-    findLastPin();
     setOpen(true);
   };
 
@@ -139,7 +129,7 @@ export default function AddEmployee({ employees, getEmployees }) {
           <AppBar position="absolute" sx={{ width: '100%' }}>
             <Toolbar>
               <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                Dodawanie pracownika
+                {title}
               </Typography>
               <CloseIcon onClick={handleClose} sx={closeModalBtnSx} />
             </Toolbar>
@@ -149,45 +139,49 @@ export default function AddEmployee({ employees, getEmployees }) {
           >
             <TextField
               label="Imię"
+              name="name"
               required
               variant="outlined"
               margin="dense"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={handleInputUpdate}
               autoFocus
             />
             <TextField
               label="Nazwisko"
+              name="surname"
               variant="outlined"
               required
               margin="dense"
               value={surname}
-              onChange={(e) => setSurname(e.target.value)}
+              onChange={handleInputUpdate}
             />
             <TextField
               label="PIN"
+              name="pin"
               variant="outlined"
               margin="dense"
               required
               value={pin}
-              onChange={(e) => setDifaultPin(e.target.value)}
+              onChange={handleInputUpdate}
             />
             <TextField
               margin="dense"
               id="vacationDaysPerYear"
+              name="vacationDaysPerYear"
               label="Dni wakacyjne w roku"
               value={vacationDaysPerYear}
-              onChange={(e) => setVacationDaysPerYear(+e.target.value)}
+              onChange={handleInputUpdate}
               fullWidth
               variant="standard"
             />
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
               <RadioGroup
                 row
+                name="isSnti"
                 aria-label="employee-type"
-                defaultValue={isSnti ? 'SNTI' : 'Agencja'}
                 value={isSnti ? 'SNTI' : 'Agencja'}
-                onChange={(e) => setIsSnti(e.target.value === 'SNTI')}
+                onChange={handleInputUpdate}
               >
                 <FormControlLabel
                   value="SNTI"
@@ -205,10 +199,16 @@ export default function AddEmployee({ employees, getEmployees }) {
               <Autocomplete
                 disablePortal
                 id="agencja"
-                options={agenciesList || []}
-                sx={{ marginBottom: 2 }}
-                onChange={handleAgencyChange}
-                value={agency}
+                name="agency"
+                options={agencies}
+                getOptionLabel={(option) => option?.name || ''}
+                value={agency || null} // Make sure it's either a valid option or null
+                onChange={(_, newValue) => handleInputUpdate({
+                  target: { name: 'agency', value: newValue },
+                })}
+                filterOptions={(options, { inputValue }) => options.filter((option) => option.name
+                  .toLowerCase()
+                  .includes(inputValue.toLowerCase()))}
                 renderInput={(params) => (
                   <TextField {...params} label="Agencja" />
                 )}
