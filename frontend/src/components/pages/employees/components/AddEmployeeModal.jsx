@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CloseIcon from '@mui/icons-material/Close';
 import Modal from '@mui/material/Modal';
-import AddIcon from '@mui/icons-material/Add';
+
 import {
   AppBar,
   Autocomplete,
@@ -14,7 +14,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { createEmployee } from '../../../../api/employeesApi';
+import { createEmployee, updateEmployee } from '../../../../api/employeesApi';
 import { useAgenciesContext } from '../../../../contexts/agenciesContext';
 import { useEmployeesContext } from '../../../../contexts/employeeContext';
 import getNextPin from '../../../../helpers/getNextPin';
@@ -48,8 +48,9 @@ const employeeInitialValue = {
   agency: '',
 };
 
-export default function AddEmployee() {
-  const [open, setOpen] = useState(false);
+export default function AddEmployee({
+  open, setOpen, activeEmployee, title,
+}) {
   const [employee, setEmployee] = useState(employeeInitialValue);
   const {
     name, surname, pin, vacationDaysPerYear, isSnti, agency,
@@ -57,10 +58,21 @@ export default function AddEmployee() {
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
   const { agencies } = useAgenciesContext();
   const { employees, fetchEmployees } = useEmployeesContext();
-  const title = 'Dodawanie pracownika';
+
+  const agenciesNamesList = agencies.map((agency) => agency?.name);
 
   useEffect(() => {
-    if (employees) {
+    if (activeEmployee) {
+      const employee = employees.find((item) => item._id === activeEmployee.id);
+      const agency = agencies.find(
+        (item) => item._id === employee.agency,
+      )?.name;
+      setEmployee({ ...employee, agency });
+    }
+  }, [activeEmployee]);
+
+  useEffect(() => {
+    if (employees && !activeEmployee) {
       const pin = getNextPin(employees);
       setEmployee((prev) => ({ ...prev, pin }));
     }
@@ -78,6 +90,7 @@ export default function AddEmployee() {
     return setEmployee((prev) => ({ ...prev, [name]: value }));
   };
 
+  // eslint-disable-next-line no-unused-vars
   const addEmployee = async (data) => {
     try {
       await createEmployee(data);
@@ -92,33 +105,48 @@ export default function AddEmployee() {
     setEmployee(employeeInitialValue);
   };
 
+  const handleClose = () => setOpen(false);
+
+  const handleUpdateEmployee = async () => {
+    try {
+      let agency = '';
+      if (!isSnti) {
+        agency = agencies.find((item) => item.name === employee.agency)._id;
+      }
+      const data = { ...employee, agency };
+      await updateEmployee(data);
+      fetchEmployees();
+      setOpen(false);
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      handleClearForm();
+      handleClose();
+    }
+  };
+
   const handleAddEmployee = () => {
     const data = { ...employee };
-    if (data.agency && !data.isSnti) {
-      data.agency = data.agency._id;
-    } else {
+    if (!data.agency || data.isSnti) {
       data.agency = '';
+    } else {
+      data.agency = agencies.find((item) => item.name === data.agency)._id;
     }
     addEmployee(data);
     handleClearForm();
   };
 
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => setOpen(false);
-
   useEffect(() => {
-    const active = name && surname && pin;
+    let active = name && surname && pin;
+    if (activeEmployee && !isSnti) {
+      active = active && agency;
+    }
+
     setIsActiveAddButton(active);
-  }, [surname, name, pin]);
+  }, [surname, name, pin, agency, isSnti]);
 
   return (
     <div>
-      <Button variant="contained" startIcon={<AddIcon />} onClick={handleOpen}>
-        Dodaj pracownika
-      </Button>
       <Modal
         open={open}
         onClose={handleClose}
@@ -200,17 +228,13 @@ export default function AddEmployee() {
                 disablePortal
                 id="agencja"
                 name="agency"
-                options={agencies}
-                getOptionLabel={(option) => option?.name || ''}
+                options={agenciesNamesList}
                 value={agency || null} // Make sure it's either a valid option or null
                 onChange={(_, newValue) => handleInputUpdate({
                   target: { name: 'agency', value: newValue },
                 })}
-                filterOptions={(options, { inputValue }) => options.filter((option) => option.name
-                  .toLowerCase()
-                  .includes(inputValue.toLowerCase()))}
                 renderInput={(params) => (
-                  <TextField {...params} label="Agencja" />
+                  <TextField {...params} label="Wybierz agencję" />
                 )}
               />
             ) : null}
@@ -219,9 +243,11 @@ export default function AddEmployee() {
               variant="contained"
               color="primary"
               disabled={!isActiveAddButton}
-              onClick={handleAddEmployee}
+              onClick={
+                activeEmployee ? handleUpdateEmployee : handleAddEmployee
+              }
             >
-              Dodać
+              {activeEmployee ? 'Zapisz' : 'Dodać'}
             </Button>
           </Box>
         </Box>

@@ -18,7 +18,6 @@ import UnfoldMoreDoubleIcon from '@mui/icons-material/UnfoldMoreDouble';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
 import DeleteAlert from './DeleteAlert';
-import UpdateAlert from './UpdateAlert';
 import WorkHoursAlert from './WorkHoursAlert';
 import { deleteEmployeeById } from '../../../../api/employeesApi';
 import {
@@ -30,6 +29,7 @@ import {
 import { useEmployeesContext } from '../../../../contexts/employeeContext';
 import { useAgenciesContext } from '../../../../contexts/agenciesContext';
 import getAgienciesIdToNameMap from '../../../../helpers/getAgenciesIdToNameMap';
+import AddEmployee from './AddEmployeeModal';
 
 const sortingOrder = Object.freeze({
   Descending: 'descending',
@@ -83,10 +83,6 @@ function EmployeesTable({
   const handleOpenUpdateAlert = (employee) => {
     setActiveEmployee(employee);
     setIsOpenUpdateAlert(true);
-  };
-
-  const hadleCloseUpdateAlert = () => {
-    setIsOpenUpdateAlert(false);
   };
 
   const handleDeleteEmployee = async (employee) => {
@@ -214,7 +210,7 @@ function EmployeesTable({
       pin,
       isSnti,
       id,
-      agency: agenciesMap.get(agency) || 'SNTI',
+      agency: isSnti ? 'SNTI' : agenciesMap.get(agency) || '-----',
     };
   });
 
@@ -229,11 +225,11 @@ function EmployeesTable({
         />
       )}
       {isOpenUpdateAlert && (
-        <UpdateAlert
+        <AddEmployee
           open={isOpenUpdateAlert}
-          onClose={hadleCloseUpdateAlert}
-          employee={activeEmployee}
-          getEmployees={fetchEmployees}
+          setOpen={setIsOpenUpdateAlert}
+          activeEmployee={activeEmployee}
+          title="Edycja pracownika"
         />
       )}
       {isOpenWorkHoursAlert && (

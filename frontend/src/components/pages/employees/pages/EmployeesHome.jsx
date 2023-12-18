@@ -1,7 +1,12 @@
 import {
-  Autocomplete, Box, CircularProgress, TextField,
+  Autocomplete,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
 } from '@mui/material';
 import { useEffect, useState } from 'react';
+import AddIcon from '@mui/icons-material/Add';
 import AddEmployee from '../components/AddEmployeeModal';
 import EmployeesTable from '../components/EmployeesTable';
 import { useEmployeesContext } from '../../../../contexts/employeeContext';
@@ -13,6 +18,11 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [agency, setAgency] = useState(null);
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
 
   useEffect(() => {
     let filtered = employees.filter(
@@ -59,7 +69,18 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
             filterOptions={(options, { inputValue }) => options.filter((option) => option.name.toLowerCase().includes(inputValue.toLowerCase()))}
             renderInput={(params) => <TextField {...params} label="Agencja" />}
           />
-          <AddEmployee />
+          <Button
+            variant="contained"
+            startIcon={<AddIcon />}
+            onClick={handleOpen}
+          >
+            Dodaj pracownika
+          </Button>
+          <AddEmployee
+            open={open}
+            setOpen={setOpen}
+            title="Dodawanie pracownika"
+          />
         </Box>
         {!isLoading ? (
           <EmployeesTable

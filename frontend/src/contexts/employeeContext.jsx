@@ -30,7 +30,9 @@ export function EmployeeContextProvider({ children }) {
 export const useEmployeesContext = () => {
   const context = useContext(EmployeesContext);
   if (!context) {
-    throw new Error('useEmployeesContext must be used inside the EmployeesProvider');
+    throw new Error(
+      'useEmployeesContext must be used inside the EmployeesProvider',
+    );
   }
 
   return context;
