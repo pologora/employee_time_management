@@ -13,7 +13,8 @@ import {
   Typography,
 } from '@mui/material';
 import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
-import { getEmployeesNames } from '../../../../api/employeesApi';
+import { useAgenciesContext } from '../../../../contexts/agenciesContext';
+import { useEmployeesContext } from '../../../../contexts/employeeContext';
 
 const styleChoosedOptions = {
   marginLeft: 2,
@@ -29,14 +30,12 @@ function SelectOptions({
   const [endDate, setEndDate] = useState(null);
   const [isSnti, setIsSnti] = useState(false);
   const [activeEmployee, setActiveEmployee] = useState(null);
-  const [employees, setEmployees] = useState(null);
   const [filteredEmployees, setFilteredEmployees] = useState(null);
-  const isAcceptButton = startDate && endDate;
+  const [agency, setAgency] = useState(null);
+  const { agencies } = useAgenciesContext();
+  const { employees } = useEmployeesContext();
 
-  const handleGetEmployeesNames = async () => {
-    const data = await getEmployeesNames();
-    setEmployees(data);
-  };
+  const isAcceptButton = startDate && endDate;
 
   const onChange = (dates) => {
     const [start, end] = dates;
@@ -54,7 +53,7 @@ function SelectOptions({
     const start = toISOStringWithLocalTimezone(startDate);
     const end = toISOStringWithLocalTimezone(endDate);
     if (!isSnti && !activeEmployee) {
-      handleAllAgencjaGenerate(start, end);
+      handleAllAgencjaGenerate(start, end, agency);
     }
     if (activeEmployee) {
       const { _id: id } = activeEmployee;
@@ -72,19 +71,25 @@ function SelectOptions({
         filtered = employees.filter((employee) => employee.isSnti);
       } else {
         filtered = employees.filter((employee) => !employee.isSnti);
+        if (agency) {
+          filtered = filtered.filter(
+            (employee) => employee.agency === agency._id,
+          );
+        }
       }
       setFilteredEmployees(filtered);
     }
     setActiveEmployee(null);
-  }, [isSnti, employees]);
-
-  useEffect(() => {
-    handleGetEmployeesNames();
-  }, []);
+  }, [isSnti, employees, agency]);
 
   const propsAutocompl = {
     options: filteredEmployees || [],
     getOptionLabel: (option) => `${option.name} ${option.surname}`,
+  };
+
+  const propsAgenciesAutocopl = {
+    options: agencies || [],
+    getOptionLabel: (option) => option.name,
   };
 
   return (
@@ -141,6 +146,21 @@ function SelectOptions({
               <TextField {...params} label="Wybierz pracownika" />
             )}
           />
+          {!isSnti && (
+            <Autocomplete
+              value={agency}
+              onChange={(e, value) => {
+                setAgency(value);
+              }}
+              style={{ marginTop: '1rem' }}
+              {...propsAgenciesAutocopl}
+              disablePortal
+              sx={{ width: 300 }}
+              renderInput={(params) => (
+                <TextField {...params} label="Wybierz agencje" />
+              )}
+            />
+          )}
           <RadioGroup
             sx={{ marginTop: 4 }}
             row

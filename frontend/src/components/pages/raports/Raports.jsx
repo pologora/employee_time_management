@@ -48,10 +48,17 @@ function Raporty() {
     }
   };
 
-  const handleAllAgencjaGenerate = async (startDate, endDate) => {
+  const handleAllAgencjaGenerate = async (startDate, endDate, agency) => {
     try {
       const data = await getAllAgencjaRaport(startDate, endDate);
-      setRaportData(data);
+      let filteredData = data;
+      if (agency) {
+        const id = agency?._id || '';
+        if (id) {
+          filteredData = data.filter((item) => item.agency === id);
+        }
+      }
+      setRaportData(filteredData);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('allEmployeesAgencja');
     } catch (error) {
