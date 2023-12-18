@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@mui/material';
 import { createEmployee } from '../../../../api/employeesApi';
-import { getAgencies } from '../../../../api/agenciesApi';
+import { useAgenciesContext } from '../../../../contexts/agenciesContext';
 
 const style = {
   position: 'absolute',
@@ -47,6 +47,7 @@ export default function AddEmployee({ employees, getEmployees }) {
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
   const [agency, setAgency] = useState(null);
   const [agenciesList, setAgenciesList] = useState(null);
+  const { agencies } = useAgenciesContext();
 
   const dataForEmployeeCreation = {
     name,
@@ -57,18 +58,17 @@ export default function AddEmployee({ employees, getEmployees }) {
     agency: agency?.id,
   };
 
-  const getAllAgencies = async () => {
-    const data = await getAgencies();
-    const dataForAutocomplete = data?.map((item) => ({
+  const getAgenciesForAutocomplete = async () => {
+    const data = agencies?.map((item) => ({
       label: item.name,
       id: item._id,
     }));
-    setAgenciesList(dataForAutocomplete);
+    setAgenciesList(data);
   };
 
   useEffect(() => {
-    getAllAgencies();
-  }, []);
+    getAgenciesForAutocomplete();
+  }, [agencies]);
 
   const handleAgencyChange = (e, newValue) => {
     setAgency(newValue);

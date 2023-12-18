@@ -9,8 +9,9 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Radio from '@mui/material/Radio';
 import { useEffect, useState } from 'react';
-import { CircularProgress } from '@mui/material';
+import { Autocomplete, CircularProgress } from '@mui/material';
 import { getEmployeeByPin, updateEmployee } from '../../../../api/employeesApi';
+import { useAgenciesContext } from '../../../../contexts/agenciesContext';
 
 export default function UpdateAlert({
   open, onClose, employee, getEmployees,
@@ -21,13 +22,29 @@ export default function UpdateAlert({
     pin: '',
     vacationDaysPerYear: '',
     isSnti: false,
+    agency: '',
   });
+
   const { pin } = employee;
   const [isLoading, setIsLoading] = useState(false);
+  const { agencies } = useAgenciesContext();
+  const [agenciesList, setAgenciesList] = useState(null);
 
   const updateEmployeeField = (name, value) => {
     setEmployeeToUpdate((prev) => ({ ...prev, [name]: value }));
   };
+
+  const getAgenciesForAutocomplete = async () => {
+    const data = agencies?.map((item) => ({
+      label: item.name,
+      id: item._id,
+    }));
+    setAgenciesList(data);
+  };
+
+  useEffect(() => {
+    getAgenciesForAutocomplete();
+  }, [agencies]);
 
   const handleUpdate = () => {
     setIsLoading(true);
@@ -40,6 +57,11 @@ export default function UpdateAlert({
       onClose();
       setIsLoading(false);
     }
+  };
+
+  const handleAgencyChange = (e, newValue) => {
+    const agency = newValue.label;
+    setEmployeeToUpdate((prev) => ({ ...prev, agency }));
   };
 
   useEffect(() => {
@@ -109,6 +131,19 @@ export default function UpdateAlert({
                 label="Agencja"
               />
             </RadioGroup>
+            {!employeeToUpdate.isSnti ? (
+              <Autocomplete
+                disablePortal
+                id="agencja"
+                options={agenciesList || []}
+                sx={{ marginBottom: 2 }}
+                onChange={handleAgencyChange}
+                value={employeeToUpdate.agency}
+                renderInput={(params) => (
+                  <TextField {...params} label="Agencja" />
+                )}
+              />
+            ) : null}
           </DialogContent>
         )}
 
