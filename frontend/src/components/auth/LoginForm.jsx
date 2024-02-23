@@ -1,11 +1,10 @@
 import { useState } from 'react';
-import * as Realm from 'realm-web';
 import { useNavigate } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 import { Container, TextField, Typography } from '@mui/material';
 import LoadingButton from '@mui/lab/LoadingButton';
-import app from '../../options/realmConfig';
-import { useUser } from './UserContext';
+import { useUserContext } from './UserContext';
+import { login } from '../../api/authApi';
 
 const StyledContainer = styled(Container)`
   margin-top: ${({ theme }) => theme.spacing(8)};
@@ -26,7 +25,7 @@ const ErrorText = styled(Typography)`
 `;
 
 function LoginForm() {
-  const { setUser } = useUser();
+  const { signIn } = useUserContext();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -36,19 +35,24 @@ function LoginForm() {
   const performLogin = async (em, pass) => {
     try {
       setIsloading(true);
-      const user = await app.logIn(Realm.Credentials.emailPassword(em, pass));
-      setUser(user);
-      navigate('/app');
-    } catch (err) {
-      if (err.statusCode === 401) {
-        setError('Nieprawidłowa nazwa użytkownika lub hasło.');
+      const { data } = await login(em, pass);
+      if (data.role === 'admin') {
+        signIn(data);
+        navigate('/app');
       } else {
-        setError('Wystąpił błąd. Spróbuj ponownie później.');
+        throw new Error('Tylko dla administratora!');
+      }
+    } catch (err) {
+      if (err?.response?.data?.message) {
+        setError(err.response.data.message);
+      } else {
+        setError(err?.message);
       }
     } finally {
       setIsloading(false);
     }
   };
+
   const handleLogin = async (e) => {
     if (e) {
       e.preventDefault();
@@ -72,6 +76,7 @@ function LoginForm() {
           label="Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          autoComplete="email"
           required
           fullWidth
         />
@@ -82,6 +87,7 @@ function LoginForm() {
           onChange={(e) => setPassword(e.target.value)}
           required
           fullWidth
+          autoComplete="current-password"
         />
         <LoadingButton
           loading={isLoading}
