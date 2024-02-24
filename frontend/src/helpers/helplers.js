@@ -39,7 +39,7 @@ export const getDayStringFromUtcFullDate = (date) => {
   const dayExstractFromUtcStartIndex = 0;
   const dayExstractFromUtcEndIndex = 10;
 
-  return date.slice(dayExstractFromUtcStartIndex, dayExstractFromUtcEndIndex);
+  return date?.slice(dayExstractFromUtcStartIndex, dayExstractFromUtcEndIndex);
 };
 
 export const getRowColorByVacationType = (type) => {

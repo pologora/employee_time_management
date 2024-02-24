@@ -38,7 +38,7 @@ function LoginForm() {
       const { data } = await login(em, pass);
       if (data.role === 'admin') {
         signIn(data);
-        navigate('/');
+        navigate('/home');
       } else {
         throw new Error('Tylko dla administratora!');
       }

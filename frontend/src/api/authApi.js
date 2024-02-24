@@ -1,12 +1,13 @@
+import axiosInstance from '../options/axiosInstance';
+
 /* eslint-disable no-console */
-import axios from 'axios';
 
 export const login = async (email, password) => {
   try {
-    const url = 'http://localhost:3000/api/v1/users/login';
+    const url = '/users/login';
 
     const body = { email, password };
-    const { data } = await axios.post(url, body);
+    const { data } = await axiosInstance.post(url, body);
     return data;
   } catch (error) {
     console.log(error);

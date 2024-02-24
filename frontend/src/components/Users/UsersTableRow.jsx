@@ -15,27 +15,27 @@ const StyledTableRowVacations = styled(TableRow)(() => ({
   },
 }));
 
-export function PendingProposalsTableRow({ vacation, handleUpdateClick }) {
+export function UsersTableRow({ user }) {
   return (
     <StyledTableRowVacations>
       <TableCell>
-        {vacation.name}
+        {user.name}
         {' '}
-        {vacation.surname}
+        {user.surname}
       </TableCell>
-      <TableCell>{getDayStringFromUtcFullDate(vacation.startVacation)}</TableCell>
-      <TableCell>{getDayStringFromUtcFullDate(vacation.endVacation)}</TableCell>
+      <TableCell>{getDayStringFromUtcFullDate(user.startVacation)}</TableCell>
+      <TableCell>{getDayStringFromUtcFullDate(user.endVacation)}</TableCell>
       <TableCell>
-        {vacation.duration}
+        {user.duration}
         {' '}
         Dni
       </TableCell>
       <TableCell
         sx={{
-          color: getRowColorByVacationType(vacation.type),
+          color: getRowColorByVacationType(user.type),
         }}
       >
-        {vacation.type}
+        {user.type}
       </TableCell>
       <TableCell>
         <IconButton
@@ -48,7 +48,6 @@ export function PendingProposalsTableRow({ vacation, handleUpdateClick }) {
               color: '#6C3082',
             },
           }}
-          onClick={() => handleUpdateClick(vacation)}
         >
           <SettingsIcon />
         </IconButton>
