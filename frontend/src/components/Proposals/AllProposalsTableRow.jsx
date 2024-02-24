@@ -2,6 +2,8 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 
 import styled from '@emotion/styled';
+// import { IconButton } from '@mui/material';
+// import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { getDayStringFromUtcFullDate, getProposalStatus, getRowColorByVacationType } from '../../helpers/helplers';
 
 const StyledTableRowVacations = styled(TableRow)(() => ({
@@ -16,8 +18,8 @@ const StyledTableRowVacations = styled(TableRow)(() => ({
 
 export function AllProposalsTableRow({ vacation }) {
   const { fullTitle, color } = getProposalStatus(vacation.status);
-  return (
 
+  return (
     <StyledTableRowVacations>
       <TableCell>
         {vacation.name}
@@ -41,6 +43,11 @@ export function AllProposalsTableRow({ vacation }) {
       <TableCell sx={{ color }}>
         {fullTitle}
       </TableCell>
+      {/* <TableCell>
+        <IconButton color="primary" aria-label="add to shopping cart">
+        <KeyboardArrowDownIcon fontSize="small" />
+        </IconButton>
+    </TableCell> */}
     </StyledTableRowVacations>
 
   );

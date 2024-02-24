@@ -5,8 +5,8 @@ import {
 import { PendingProposalsTableRow } from './PendingProposalsTableRow';
 import './Proposals.css';
 
-export function PendingProposalsTable({ data }) {
-  const rows = data.map((item) => <PendingProposalsTableRow vacation={item} key={item._id} />);
+export function PendingProposalsTable({ data, refetch }) {
+  const rows = data.map((item) => <PendingProposalsTableRow vacation={item} key={item._id} refetch={refetch} />);
   return (
     <div className="pendingProposalsTableContainer">
       <Typography variant="h4">Wnioski do akceptacji</Typography>

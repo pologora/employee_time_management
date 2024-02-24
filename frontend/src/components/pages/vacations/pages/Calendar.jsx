@@ -24,7 +24,7 @@ function Calendar({
   const getVacations = async () => {
     setIsLoading(true);
     try {
-      const data = await getAllVacationsByTimeAndType();
+      const { data } = await getAllVacationsByTimeAndType();
 
       const dataForEvents = data?.map((doc) => {
         const {

@@ -7,6 +7,7 @@ import { AllProposalsTableRow } from './AllProposalsTableRow';
 
 export function AllProposalsTable({ data }) {
   const rows = data.map((item) => <AllProposalsTableRow vacation={item} key={item._id} />);
+
   return (
     <div className="pendingProposalsTableContainer">
       <Typography variant="h4">Wnioski pracowników</Typography>

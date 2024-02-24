@@ -6,7 +6,18 @@ const pages = [{ title: 'Oczekujące', path: '/proposals' }, { title: 'Wszystko'
 
 function ProposalsNavBar() {
   return (
-    <nav>{pages.map((item) => (<Button><Link className="custom-link" to={item.path}>{item.title}</Link></Button>))}</nav>
+    <nav>
+      {pages.map((item) => (
+        <Button key={item.title}>
+          <Link
+            className="custom-link"
+            to={item.path}
+          >
+            {item.title}
+          </Link>
+        </Button>
+      ))}
+    </nav>
   );
 }
 export default ProposalsNavBar;

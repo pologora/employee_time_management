@@ -2,6 +2,7 @@ import {
   blue, grey, red, teal,
 } from '@mui/material/colors';
 import vacationTypes from '../options/vacationTypes';
+import { vacationsProposalsStatusTypes } from '../options/proposalsTypes';
 
 export const getProposalStatus = (status) => {
   const rejectedColorShade = 800;
@@ -10,17 +11,17 @@ export const getProposalStatus = (status) => {
 
   const options = { color: '', title: '', fullTitle: '' };
   switch (status) {
-    case 'pending':
+    case vacationsProposalsStatusTypes.pending:
       options.color = teal[pendingColorShade];
       options.title = 'do akcept.';
       options.fullTitle = 'Do akceptacji';
       break;
-    case 'approved':
+    case vacationsProposalsStatusTypes.approved:
       options.color = blue[acceptedColorShade];
       options.title = 'zaakcept.';
       options.fullTitle = 'Zaakceptowany';
       break;
-    case 'rejected':
+    case vacationsProposalsStatusTypes.rejected:
       options.color = red[rejectedColorShade];
       options.title = 'odrzucony';
       options.fullTitle = 'Odrzucony';

@@ -4,7 +4,9 @@ import TableRow from '@mui/material/TableRow';
 import SettingsIcon from '@mui/icons-material/Settings';
 
 import styled from '@emotion/styled';
+import { useState } from 'react';
 import { getDayStringFromUtcFullDate, getRowColorByVacationType } from '../../helpers/helplers';
+import SubmitProposalAlert from './SubmitProposalAlert';
 
 const StyledTableRowVacations = styled(TableRow)(() => ({
   '& > *': {
@@ -16,49 +18,59 @@ const StyledTableRowVacations = styled(TableRow)(() => ({
   },
 }));
 
-export function PendingProposalsTableRow({ vacation }) {
-  const handleUpdateClick = (vacation) => {
-    console.log(vacation);
+export function PendingProposalsTableRow({ vacation, refetch }) {
+  const [isOpenAddVacationAlert, setIsOpenAddVacationAlert] = useState(false);
+  const handleUpdateClick = () => {
+    setIsOpenAddVacationAlert(true);
   };
   return (
-
-    <StyledTableRowVacations>
-      <TableCell>
-        {vacation.name}
-        {' '}
-        {vacation.surname}
-      </TableCell>
-      <TableCell>{getDayStringFromUtcFullDate(vacation.startVacation)}</TableCell>
-      <TableCell>{getDayStringFromUtcFullDate(vacation.endVacation)}</TableCell>
-      <TableCell>
-        {vacation.duration}
-        {' '}
-        Dni
-      </TableCell>
-      <TableCell
-        sx={{
-          color: getRowColorByVacationType(vacation.type),
-        }}
-      >
-        {vacation.type}
-      </TableCell>
-      <TableCell>
-        <IconButton
-          aria-label="delete"
-          size="small"
+    <>
+      { isOpenAddVacationAlert && (
+      <SubmitProposalAlert
+        vacation={vacation}
+        open={isOpenAddVacationAlert}
+        onClose={setIsOpenAddVacationAlert}
+        refetch={refetch}
+      />
+      )}
+      <StyledTableRowVacations>
+        <TableCell>
+          {vacation.name}
+          {' '}
+          {vacation.surname}
+        </TableCell>
+        <TableCell>{getDayStringFromUtcFullDate(vacation.startVacation)}</TableCell>
+        <TableCell>{getDayStringFromUtcFullDate(vacation.endVacation)}</TableCell>
+        <TableCell>
+          {vacation.duration}
+          {' '}
+          Dni
+        </TableCell>
+        <TableCell
           sx={{
-            color: '#8806CE',
-            '&:hover': {
-              backgroundColor: 'transparent',
-              color: '#6C3082',
-            },
+            color: getRowColorByVacationType(vacation.type),
           }}
-          onClick={() => handleUpdateClick(vacation)}
         >
-          <SettingsIcon />
-        </IconButton>
-      </TableCell>
-    </StyledTableRowVacations>
+          {vacation.type}
+        </TableCell>
+        <TableCell>
+          <IconButton
+            aria-label="delete"
+            size="small"
+            sx={{
+              color: '#8806CE',
+              '&:hover': {
+                backgroundColor: 'transparent',
+                color: '#6C3082',
+              },
+            }}
+            onClick={() => handleUpdateClick(vacation)}
+          >
+            <SettingsIcon />
+          </IconButton>
+        </TableCell>
+      </StyledTableRowVacations>
+    </>
 
   );
 }

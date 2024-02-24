@@ -48,12 +48,12 @@ function VacationsTable({
     setIsLoading(true);
     const employeeId = activeEmployee ? activeEmployee._id : '';
     try {
-      const data = await getAllVacationsOrByEmloyee(page, employeeId);
-      setVacations(data.vacationsList);
+      const { data } = await getAllVacationsOrByEmloyee(page, employeeId);
+      setVacations(data);
       if (activeEmployee) {
-        setTotalPages(Math.ceil(data.vacationsList.length / 25));
+        setTotalPages(Math.ceil(data.length / 25));
       } else {
-        setTotalPages(Math.ceil(data.vacationSize / 25));
+        setTotalPages(Math.ceil(data.length / 25));
       }
     } catch (error) {
       alert(error.message);

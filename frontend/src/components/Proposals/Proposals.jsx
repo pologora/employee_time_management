@@ -5,7 +5,7 @@ import { PendingProposalsTable } from './PendingProposalsTable';
 
 export function Proposals() {
   const {
-    data, isLoading, isError, error,
+    data, isLoading, isError, error, refetch,
   } = useQuery({
     queryFn: () => getAllProposalsByStatus('pending'),
     queryKey: ['pendingProposals'],
@@ -21,7 +21,7 @@ export function Proposals() {
 
   return (
     <div>
-      <PendingProposalsTable data={data?.data} />
+      <PendingProposalsTable data={data?.data} refetch={refetch} />
     </div>
   );
 }
