@@ -224,7 +224,7 @@ function EmployeesTable({
           employee={activeEmployee}
         />
       )}
-      {isOpenUpdateAlert && (
+      {isOpenUpdateAlert && activeEmployee && (
         <AddEmployee
           open={isOpenUpdateAlert}
           setOpen={setIsOpenUpdateAlert}
@@ -279,7 +279,7 @@ function EmployeesTable({
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {rows?.map((row) => (
               <StyledTableRowEmployees key={row.pin}>
                 <TableCell component="th" scope="row">
                   {row.name}

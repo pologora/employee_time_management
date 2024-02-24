@@ -6,12 +6,22 @@ const EmployeesContext = createContext();
 export function EmployeeContextProvider({ children }) {
   const [employees, setEmployees] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchEmployees = async () => {
     setIsLoading(true);
-    const data = await getEmployees();
-    setEmployees(data);
-    setIsLoading(false);
+    try {
+      const data = await getEmployees();
+      setEmployees(data);
+      setIsError(false);
+      setError('');
+    } catch (error) {
+      setIsError(true);
+      setError(error.message ?? 'Coś poszło nie tak');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useState(() => {
@@ -19,7 +29,9 @@ export function EmployeeContextProvider({ children }) {
   }, []);
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const contextValue = { employees, isLoading, fetchEmployees };
+  const contextValue = {
+    employees, isLoading, fetchEmployees, isError, error,
+  };
   return (
     <EmployeesContext.Provider value={contextValue}>
       {children}

@@ -19,9 +19,9 @@ import {
 } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import SettingsIcon from '@mui/icons-material/Settings';
-import vacationTypes from '../../../../options/vacationTypes';
 import UpdateVacationAlert from '../components/UpdateVacationAlert';
 import { getAllVacationsOrByEmloyee } from '../../../../api/vacationsApi';
+import { getRowColorByVacationType } from '../../../../helpers/helplers';
 
 const StyledTableRowVacations = styled(TableRow)(({ theme }) => ({
   '& > *': {
@@ -32,11 +32,6 @@ const StyledTableRowVacations = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
 }));
-
-const getRowColor = (type) => {
-  const color = vacationTypes.find((item) => item.label === type)?.color;
-  return color || vacationTypes.find((item) => item.label === 'inne').color;
-};
 
 function VacationsTable({
   reload, employees, updateVacation, deleteVacation,
@@ -208,7 +203,7 @@ function VacationsTable({
                 </TableCell>
                 <TableCell
                   sx={{
-                    color: getRowColor(vacation.type),
+                    color: getRowColorByVacationType(vacation.type),
                   }}
                 >
                   {vacation.type}

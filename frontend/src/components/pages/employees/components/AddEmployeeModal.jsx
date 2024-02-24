@@ -59,7 +59,7 @@ export default function AddEmployee({
   const { agencies } = useAgenciesContext();
   const { employees, fetchEmployees } = useEmployeesContext();
 
-  const agenciesNamesList = agencies.map((agency) => agency?.name);
+  const agenciesNamesList = agencies?.map((agency) => agency?.name);
 
   useEffect(() => {
     if (activeEmployee) {
