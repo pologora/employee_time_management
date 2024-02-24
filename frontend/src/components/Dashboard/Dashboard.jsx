@@ -142,7 +142,7 @@ export default function PermanentDrawerLeft() {
       </Drawer>
       <Box
         component="main"
-        sx={{ flexGrow: 1, bgcolor: 'background.default' }}
+        sx={{ flexGrow: 1, bgcolor: 'background.default', padding: 3 }}
       >
         <Outlet />
       </Box>

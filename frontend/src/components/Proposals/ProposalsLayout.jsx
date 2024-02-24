@@ -1,11 +1,11 @@
 import { Outlet } from 'react-router-dom';
 import './Proposals.css';
-import ProposalsAppBar from './ProposalsAppBar';
+import ProposalsNavBar from './ProposalsNavBar';
 
 export function ProposalsLayout() {
   return (
     <div className="proposalsLayoutContainer">
-      <ProposalsAppBar />
+      <ProposalsNavBar />
       <Outlet />
     </div>
   );

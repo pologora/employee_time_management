@@ -12,3 +12,12 @@
   justify-content: center;
   margin-top: 1rem;
 }
+
+.pendingProposalsTableContainer {
+   margin-top: 1rem;
+}
+
+.custom-link{
+    text-decoration: none; 
+    color: inherit;
+}
