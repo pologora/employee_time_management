@@ -1,8 +1,9 @@
 import IconButton from '@mui/material/IconButton';
 import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
-import SettingsIcon from '@mui/icons-material/Settings';
+import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
 import styled from '@emotion/styled';
+import { Link } from 'react-router-dom';
 
 const StyledTableRowVacations = styled(TableRow)(() => ({
   '& > *': {
@@ -26,18 +27,17 @@ export function UsersTableRow({ user }) {
         {user.email}
       </TableCell>
       <TableCell>
+        {user.token ? 'Oczekuje na rejestracje' : 'Aktywny'}
+      </TableCell>
+      <TableCell>
         <IconButton
-          aria-label="delete"
+          aria-label="details"
           size="small"
-          sx={{
-            color: '#8806CE',
-            '&:hover': {
-              backgroundColor: 'transparent',
-              color: '#6C3082',
-            },
-          }}
+          color="primary"
         >
-          <SettingsIcon />
+          <Link to={`/users/${user._id}`} className="custom-link">
+            <ArrowForwardRoundedIcon />
+          </Link>
         </IconButton>
       </TableCell>
     </StyledTableRowVacations>
