@@ -14,7 +14,7 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { createEmployee, updateEmployee } from '../../../../api/employeesApi';
+import { createEmployee, updateEmployeeById } from '../../../../api/employeesApi';
 import { useAgenciesContext } from '../../../../contexts/agenciesContext';
 import { useEmployeesContext } from '../../../../contexts/employeeContext';
 import getNextPin from '../../../../helpers/getNextPin';
@@ -46,14 +46,15 @@ const employeeInitialValue = {
   vacationDaysPerYear: 0,
   isSnti: false,
   agency: '',
+  email: '',
 };
 
-export default function AddEmployee({
+export default function AddEmployeeModal({
   open, setOpen, activeEmployee, title,
 }) {
   const [employee, setEmployee] = useState(employeeInitialValue);
   const {
-    name, surname, pin, vacationDaysPerYear, isSnti, agency,
+    name, surname, pin, vacationDaysPerYear, isSnti, agency, email,
   } = employee;
   const [isActiveAddButton, setIsActiveAddButton] = useState(false);
   const { agencies } = useAgenciesContext();
@@ -83,7 +84,7 @@ export default function AddEmployee({
     if (name === 'isSnti') {
       const isSnti = value === 'SNTI';
       if (isSnti) {
-        setEmployee((prev) => ({ ...prev, agency: '' }));
+        setEmployee((prev) => ({ ...prev, agency: null }));
       }
       return setEmployee((prev) => ({ ...prev, isSnti }));
     }
@@ -114,7 +115,7 @@ export default function AddEmployee({
         agency = agencies.find((item) => item.name === employee.agency)._id;
       }
       const data = { ...employee, agency };
-      await updateEmployee(data);
+      await updateEmployeeById(employee._id, data);
       fetchEmployees();
       setOpen(false);
     } catch (error) {
@@ -199,6 +200,16 @@ export default function AddEmployee({
               name="vacationDaysPerYear"
               label="Dni wakacyjne w roku"
               value={vacationDaysPerYear}
+              onChange={handleInputUpdate}
+              fullWidth
+              variant="standard"
+            />
+            <TextField
+              margin="dense"
+              id="email"
+              name="email"
+              label="Email"
+              value={email}
               onChange={handleInputUpdate}
               fullWidth
               variant="standard"

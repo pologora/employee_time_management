@@ -22,10 +22,9 @@ export function UsersTable({ data, refetch }) {
             <TableRow>
               <TableCell>Imię nazwisko</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Koniec</TableCell>
-              <TableCell>Długość</TableCell>
-              <TableCell>Rodzaj</TableCell>
-              <TableCell>Akcja</TableCell>
+              <TableCell>Stan konta</TableCell>
+              <TableCell />
+              <TableCell />
             </TableRow>
           </TableHead>
           <TableBody>{rows}</TableBody>

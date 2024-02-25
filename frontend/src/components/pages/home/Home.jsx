@@ -1,29 +1,16 @@
-import { useEffect, useState } from 'react';
 import { Button, CircularProgress, Box } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
 import EmployeesActiveTable from './EmployeesActiveTable';
 import LogoutButton from '../../auth/LogoutButton';
 import { getWorkingEmployees } from '../../../api/employeesApi';
 
 function Home() {
-  const [employees, setEmployees] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [err, setErr] = useState(null);
-
-  const handleGetWorkingEmployees = async () => {
-    setIsLoading(true);
-    try {
-      const data = await getWorkingEmployees();
-      setEmployees(data);
-    } catch (error) {
-      setErr(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    handleGetWorkingEmployees();
-  }, []);
+  const {
+    data, isLoading, isError, error, refetch,
+  } = useQuery({
+    queryFn: () => getWorkingEmployees(),
+    queryKey: ['isWorking'],
+  });
 
   return (
     <div>
@@ -31,20 +18,19 @@ function Home() {
         component="div"
         sx={{ display: 'flex', justifyContent: 'space-between' }}
       >
-        <Button variant="outlined" onClick={handleGetWorkingEmployees}>
+        <Button variant="outlined" onClick={refetch}>
           Odśwież
         </Button>
         <LogoutButton />
       </Box>
       <Box sx={{ marginTop: 5 }}>
-        {!isLoading && !err ? (
-          <EmployeesActiveTable employees={employees} />
+        {!isLoading && !isError ? (
+          <EmployeesActiveTable employees={data.data} />
         ) : (
           <div>
-            {err ? (
+            {isError ? (
               <p>
-                Wystąpił błąd podczas pobierania danych. Spróbuj ponownie
-                później.
+                {error}
               </p>
             ) : (
               <CircularProgress />

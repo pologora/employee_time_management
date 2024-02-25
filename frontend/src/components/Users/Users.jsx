@@ -7,11 +7,9 @@ export function Users() {
   const {
     data, isLoading, isError, error, refetch,
   } = useQuery({
-    queryFn: () => getAllUsers('pending'),
-    queryKey: ['pendingProposals'],
+    queryFn: () => getAllUsers(),
+    queryKey: ['users'],
   });
-
-  console.log(data.data);
 
   if (isError) {
     return <div className="error">{error.message}</div>;

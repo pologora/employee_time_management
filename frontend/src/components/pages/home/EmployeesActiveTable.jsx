@@ -22,6 +22,7 @@ const StyledTableRowEmployeeActive = styled(TableRow)(({ theme }) => ({
 function EmployeesActiveTable({ employees }) {
   const rows = employees?.map((employee) => {
     const { name, surname, startWork } = employee;
+    console.log(employee);
     const start = new Date(startWork).toISOString().slice(11, 16);
 
     const startWorkLocal = new Date(startWork);

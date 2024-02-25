@@ -17,6 +17,8 @@ import SortByAlphaIcon from '@mui/icons-material/SortByAlpha';
 import UnfoldMoreDoubleIcon from '@mui/icons-material/UnfoldMoreDouble';
 import KeyboardDoubleArrowDownIcon from '@mui/icons-material/KeyboardDoubleArrowDown';
 import KeyboardDoubleArrowUpIcon from '@mui/icons-material/KeyboardDoubleArrowUp';
+import MarkEmailReadOutlinedIcon from '@mui/icons-material/MarkEmailReadOutlined';
+import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import DeleteAlert from './DeleteAlert';
 import WorkHoursAlert from './WorkHoursAlert';
 import { deleteEmployeeById } from '../../../../api/employeesApi';
@@ -29,7 +31,8 @@ import {
 import { useEmployeesContext } from '../../../../contexts/employeeContext';
 import { useAgenciesContext } from '../../../../contexts/agenciesContext';
 import getAgienciesIdToNameMap from '../../../../helpers/getAgenciesIdToNameMap';
-import AddEmployee from './AddEmployeeModal';
+import AddEmployeeModal from './AddEmployeeModal';
+import { SendEmailAlert } from '../SendEmailAlert';
 
 const sortingOrder = Object.freeze({
   Descending: 'descending',
@@ -44,6 +47,7 @@ function EmployeesTable({
   const [activeEmployee, setActiveEmployee] = useState(null);
   const [isOpenDeleteAlert, setIsOpenDeleteAlert] = useState(false);
   const [isOpenUpdateAlert, setIsOpenUpdateAlert] = useState(false);
+  const [isOpenEmailAlert, setIsOpenEmailAlert] = useState(false);
   const [isOpenWorkHoursAlert, setIsOpenWorkHoursAlert] = useState(false);
   const { fetchEmployees } = useEmployeesContext();
   const { agencies } = useAgenciesContext();
@@ -59,6 +63,7 @@ function EmployeesTable({
   });
 
   const agenciesMap = getAgienciesIdToNameMap(agencies);
+  const isRegistrationEmailSended = true;
 
   function getNameSortingIcon() {
     if (isSorted.byName.order === sortingOrder.Ascending) {
@@ -83,6 +88,11 @@ function EmployeesTable({
   const handleOpenUpdateAlert = (employee) => {
     setActiveEmployee(employee);
     setIsOpenUpdateAlert(true);
+  };
+
+  const handleOpenEmailAlert = (employee) => {
+    setActiveEmployee(employee);
+    setIsOpenEmailAlert(true);
   };
 
   const handleDeleteEmployee = async (employee) => {
@@ -202,6 +212,7 @@ function EmployeesTable({
       vacationDaysPerYear,
       isSnti,
       agency,
+      email,
     } = employee;
 
     return {
@@ -209,6 +220,7 @@ function EmployeesTable({
       vacationDaysPerYear,
       pin,
       isSnti,
+      email,
       id,
       agency: isSnti ? 'SNTI' : agenciesMap.get(agency) || '-----',
     };
@@ -225,12 +237,15 @@ function EmployeesTable({
         />
       )}
       {isOpenUpdateAlert && activeEmployee && (
-        <AddEmployee
+        <AddEmployeeModal
           open={isOpenUpdateAlert}
           setOpen={setIsOpenUpdateAlert}
           activeEmployee={activeEmployee}
           title="Edycja pracownika"
         />
+      )}
+      {isOpenEmailAlert && activeEmployee && (
+        <SendEmailAlert employee={activeEmployee} open={isOpenEmailAlert} setOpen={setIsOpenEmailAlert} />
       )}
       {isOpenWorkHoursAlert && (
         <WorkHoursAlert
@@ -312,6 +327,29 @@ function EmployeesTable({
                   >
                     usuń
                   </Button>
+                </TableCell>
+                <TableCell align="left">
+                  {isRegistrationEmailSended
+                    ? (
+                      <IconButton
+                        aria-label="email sended"
+                        color="success"
+                        disabled={!row.email}
+                        onClick={() => handleOpenEmailAlert(row)}
+                      >
+                        <MarkEmailReadOutlinedIcon />
+                      </IconButton>
+                    )
+                    : (
+                      <IconButton
+                        aria-label="send email"
+                        color="primary"
+                        disabled={!row.email}
+                        onClick={() => handleOpenEmailAlert(row)}
+                      >
+                        <MailOutlinedIcon />
+                      </IconButton>
+                    )}
                 </TableCell>
               </StyledTableRowEmployees>
             ))}

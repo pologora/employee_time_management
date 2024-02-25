@@ -3,7 +3,6 @@ import TableCell from '@mui/material/TableCell';
 import TableRow from '@mui/material/TableRow';
 import SettingsIcon from '@mui/icons-material/Settings';
 import styled from '@emotion/styled';
-import { getDayStringFromUtcFullDate, getRowColorByVacationType } from '../../helpers/helplers';
 
 const StyledTableRowVacations = styled(TableRow)(() => ({
   '& > *': {
@@ -23,19 +22,8 @@ export function UsersTableRow({ user }) {
         {' '}
         {user.surname}
       </TableCell>
-      <TableCell>{getDayStringFromUtcFullDate(user.startVacation)}</TableCell>
-      <TableCell>{getDayStringFromUtcFullDate(user.endVacation)}</TableCell>
       <TableCell>
-        {user.duration}
-        {' '}
-        Dni
-      </TableCell>
-      <TableCell
-        sx={{
-          color: getRowColorByVacationType(user.type),
-        }}
-      >
-        {user.type}
+        {user.email}
       </TableCell>
       <TableCell>
         <IconButton

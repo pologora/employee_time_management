@@ -14,3 +14,15 @@ export const login = async (email, password) => {
     throw error;
   }
 };
+
+// email + employeeId
+export const sendUserCreationEmail = async (data) => {
+  try {
+    const url = 'users/createNewUserRegistration';
+    const { data: response } = await axiosInstance.post(url, data);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

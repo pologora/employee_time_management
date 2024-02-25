@@ -12,7 +12,7 @@ export function EmployeeContextProvider({ children }) {
   const fetchEmployees = async () => {
     setIsLoading(true);
     try {
-      const data = await getEmployees();
+      const { data } = await getEmployees();
       setEmployees(data);
       setIsError(false);
       setError('');
