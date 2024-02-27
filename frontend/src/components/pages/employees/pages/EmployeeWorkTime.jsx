@@ -16,8 +16,8 @@ function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
     try {
       const start = toISOStringWithLocalTimezone(startDate);
       const end = toISOStringWithLocalTimezone(endDate);
-      const data = await getEmployeeRaportByIdAndDate(id, start, end);
-      const [employee] = data;
+      const { data } = await getEmployeeRaportByIdAndDate(id, start, end);
+      const [employee] = data.data;
       const reportData = generateSingleEmplRaport(employee, start, end);
       setWorkTime(reportData);
     } catch (error) {

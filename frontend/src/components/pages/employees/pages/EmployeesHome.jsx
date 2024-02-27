@@ -81,7 +81,8 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
             onChange={(_, newValue) => {
               setAgency(newValue);
             }}
-            filterOptions={(options, { inputValue }) => options.filter((option) => option?.name.toLowerCase().includes(inputValue.toLowerCase()))}
+            filterOptions={(options, { inputValue }) => options
+              .filter((option) => option?.name.toLowerCase().includes(inputValue.toLowerCase()))}
             renderInput={(params) => <TextField {...params} label="Agencja" />}
           />
           <Button

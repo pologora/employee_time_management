@@ -1,22 +1,46 @@
-import baseUrl from '../options/baseUrl';
-import useAxios from '../hooks/useAxios';
-
-const { get } = useAxios();
+/* eslint-disable no-console */
+import axiosInstance from '../options/axiosInstance';
 
 export const getAllAgencjaRaport = async (startDate, endDate) => {
-  const url = `${baseUrl}/raports?startDate=${startDate}&endDate=${endDate}`;
-  const response = get(url);
-  return response;
+  // should change date string to format like: 2024-02-01T15:30:00
+  const start = startDate.slice(0, 19);
+  const end = endDate.slice(0, 19);
+  try {
+    const url = `/raports?startDate=${start}&endDate=${end}`;
+    const response = axiosInstance.get(url);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const getEmployeeRaportByIdAndDate = async (id, startDate, endDate) => {
-  const url = `${baseUrl}/raports/employeeId?employeeId=${id}&startDate=${startDate}&endDate=${endDate}`;
-  const response = await get(url);
-  return response;
+  // should change date string to format like: 2024-02-01T15:30:00
+  const start = startDate.slice(0, 19);
+  const end = endDate.slice(0, 19);
+  try {
+    const url = `/raports/${id}?startDate=${start}&endDate=${end}`;
+    const response = await axiosInstance.get(url);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const getAllSntiRaport = async (startDate, endDate) => {
-  const url = `${baseUrl}/raports/snti?startDate=${startDate}&endDate=${endDate}`;
-  const response = await get(url);
-  return response;
+  // should change date string to format like: 2024-02-01T15:30:00
+  const start = startDate.slice(0, 19);
+  const end = endDate.slice(0, 19);
+
+  try {
+    const url = `/raports/snti?startDate=${start}&endDate=${end}`;
+    const response = await axiosInstance.get(url);
+    console.log(response);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
