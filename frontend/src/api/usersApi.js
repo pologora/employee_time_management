@@ -34,12 +34,11 @@ export const deleteUserById = async (id) => {
   }
 };
 
-export const updateUserById = async (data) => {
+export const updateUserById = async (id, data) => {
   try {
-    // const url = `/users/${id}`;
-    // const { data } = await axiosInstance.delete(url);
-    // return data;
-    console.log(data);
+    const url = `/users/${id}`;
+    const { data: response } = await axiosInstance.patch(url, data);
+    return response;
   } catch (error) {
     console.error(error);
     throw error;

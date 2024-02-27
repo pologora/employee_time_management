@@ -9,6 +9,7 @@ import { useState } from 'react';
 import { deleteUserById, getUserById, updateUserById } from '../../api/usersApi';
 import BooleanAlert from '../shared/BooleanAlert';
 import { useNotificationContext } from '../../contexts/notificationContext';
+import { UserDetailFieldWithUpdate } from './UserDetailFieldWithUpdate';
 
 export function UserDetail() {
   const { id } = useParams();
@@ -54,7 +55,7 @@ export function UserDetail() {
   });
 
   const updateMutation = useMutation({
-    mutationFn: (values) => updateUserById(values),
+    mutationFn: (values) => updateUserById(user._id, values),
     onError: () => {
       sendErrorNotificationUpdateUser();
     },
@@ -72,8 +73,8 @@ export function UserDetail() {
     setIsOpenDeleteAlert(true);
   };
 
-  const handleUpdate = () => {
-    updateMutation.mutate(user._id);
+  const handleUpdate = (data) => {
+    updateMutation.mutate(data);
   };
 
   if (isLoading) {
@@ -112,11 +113,12 @@ export function UserDetail() {
           {' '}
           {user.surname}
         </Typography>
-        <Typography variant="body1">
-          Email:
-          {' '}
-          {user.email}
-        </Typography>
+        <UserDetailFieldWithUpdate
+          title="Email"
+          value={user.email}
+          update={handleUpdate}
+          name="email"
+        />
         <Typography variant="body1">
           Role:
           {' '}

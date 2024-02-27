@@ -135,15 +135,15 @@ function AgenciesSettingsModal({
           </Button>
         )}
 
+        <Button onClick={close} autoFocus variant="outlined">
+          Powrót
+        </Button>
         <Button
           onClick={handleUpdateClick}
           color="secondary"
-          variant="outlined"
+          variant="contained"
         >
           Zapisz
-        </Button>
-        <Button onClick={close} autoFocus variant="contained">
-          Powrót
         </Button>
       </DialogActions>
     </Dialog>

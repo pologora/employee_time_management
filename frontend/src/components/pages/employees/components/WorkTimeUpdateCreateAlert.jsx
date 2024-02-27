@@ -103,8 +103,8 @@ export default function WorkTimeUpdateCreateAlert({
     const getSelectedTimeDocument = async (id) => {
       setIsLoading(true);
       try {
-        const workDocument = await getTimeById(id);
-        setSelectedWorkTimeDocument(workDocument);
+        const { data } = await getTimeById(id);
+        setSelectedWorkTimeDocument(data);
       } catch (error) {
         alert(error.message);
       } finally {

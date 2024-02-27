@@ -12,7 +12,7 @@ export function AgenciesContextProvider({ children }) {
   const fetchAgencies = async () => {
     setIsLoading(true);
     try {
-      const data = await getAgencies();
+      const { data } = await getAgencies();
       setAgencies(data);
       setIsError(false);
       setError('');

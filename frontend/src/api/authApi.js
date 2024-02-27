@@ -10,7 +10,7 @@ export const login = async (email, password) => {
     const { data } = await axiosInstance.post(url, body);
     return data;
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw error;
   }
 };
