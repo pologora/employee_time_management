@@ -26,6 +26,7 @@ export function AllProposalsTableRow({ vacation }) {
         {' '}
         {vacation.surname}
       </TableCell>
+      <TableCell>{getDayStringFromUtcFullDate(vacation.created_at)}</TableCell>
       <TableCell>{getDayStringFromUtcFullDate(vacation.startVacation)}</TableCell>
       <TableCell>{getDayStringFromUtcFullDate(vacation.endVacation)}</TableCell>
       <TableCell>

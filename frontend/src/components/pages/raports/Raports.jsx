@@ -40,7 +40,6 @@ function Raporty() {
     try {
       const { data } = await getEmployeeRaportByIdAndDate(id, startDate, endDate);
       setRaportData(data.data);
-      console.log(data);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('singleEmployee');
       setLastReport('single');

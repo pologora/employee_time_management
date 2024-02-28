@@ -16,6 +16,7 @@ export function AllProposalsTable({ data }) {
           <TableHead>
             <TableRow>
               <TableCell>Imię nazwisko</TableCell>
+              <TableCell>Złożony</TableCell>
               <TableCell>Początek</TableCell>
               <TableCell>Koniec</TableCell>
               <TableCell>Długość</TableCell>
