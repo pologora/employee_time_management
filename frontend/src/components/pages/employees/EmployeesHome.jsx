@@ -7,10 +7,10 @@ import {
 } from '@mui/material';
 import { useEffect, useState } from 'react';
 import AddIcon from '@mui/icons-material/Add';
-import AddEmployeeModal from '../components/AddEmployeeModal';
-import EmployeesTable from '../components/EmployeesTable';
-import { useEmployeesContext } from '../../../../contexts/employeeContext';
-import { useAgenciesContext } from '../../../../contexts/agenciesContext';
+import AddEmployeeModal from './AddEmployeeModal';
+import EmployeesTable from './EmployeesTable';
+import { useEmployeesContext } from '../../../contexts/employeeContext';
+import { useAgenciesContext } from '../../../contexts/agenciesContext';
 
 function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
   const {

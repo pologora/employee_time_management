@@ -7,14 +7,14 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { CircularProgress, DialogContent } from '@mui/material';
 import { pl } from 'date-fns/locale';
-import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
-import convertTimeStringISOToObject from '../../../../utils/convertTimeStringISOToObject';
+import toISOStringWithLocalTimezone from '../../../utils/toISOStringWithLocalTimezone';
+import convertTimeStringISOToObject from '../../../utils/convertTimeStringISOToObject';
 import {
   createTime,
   deleteTime,
   getTimeById,
   updateTime,
-} from '../../../../api/workTimeApi';
+} from '../../../api/workTimeApi';
 
 export default function WorkTimeUpdateCreateAlert({
   open,

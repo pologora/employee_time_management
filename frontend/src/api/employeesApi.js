@@ -14,7 +14,7 @@ export const createEmployee = async (data) => {
 
 export const deleteEmployeeById = async (id) => {
   try {
-    const url = `$/employees/${id}`;
+    const url = `/employees/${id}`;
     const { data: response } = await axiosInstance.delete(url);
     return response;
   } catch (error) {

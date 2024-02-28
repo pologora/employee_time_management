@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
-import WorkTimeTable from '../components/WorkTimeTable';
-import { getEmployeeRaportByIdAndDate } from '../../../../api/raportsApi';
-import generateSingleEmplRaport from '../../../../utils/generateSingleEmplRaport';
-import toISOStringWithLocalTimezone from '../../../../utils/toISOStringWithLocalTimezone';
+import WorkTimeTable from './WorkTimeTable';
+import { getEmployeeRaportByIdAndDate } from '../../../api/raportsApi';
+import generateSingleEmplRaport from '../../../utils/generateSingleEmplRaport';
+import toISOStringWithLocalTimezone from '../../../utils/toISOStringWithLocalTimezone';
 
 function EmployeeWorkTime({ selectedEmployee, handleChangeComponentToRender }) {
   const [workTime, setWorkTime] = useState(null);

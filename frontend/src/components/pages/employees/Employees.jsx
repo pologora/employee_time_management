@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import EmployeesHome from './pages/EmployeesHome';
-import EmployeeWorkTime from './pages/EmployeeWorkTime';
+import EmployeesHome from './EmployeesHome';
+import EmployeeWorkTime from './EmployeeWorkTime';
 
 function Employees() {
   const [selectedComponent, setSelectedComponent] = useState('home');

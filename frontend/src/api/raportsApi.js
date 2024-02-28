@@ -37,7 +37,6 @@ export const getAllSntiRaport = async (startDate, endDate) => {
   try {
     const url = `/raports/snti?startDate=${start}&endDate=${end}`;
     const response = await axiosInstance.get(url);
-    console.log(response);
     return response;
   } catch (error) {
     console.error(error);

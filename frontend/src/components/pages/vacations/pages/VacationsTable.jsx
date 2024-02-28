@@ -62,6 +62,13 @@ function VacationsTable({
     }
   }
 
+  const getAllVacationsDuration = () => vacations.reduce((acc, item) => {
+    if (item.type === 'Wypoczynkowy') {
+      return acc + item.duration;
+    }
+    return acc;
+  }, 0);
+
   const handleDeleteVacation = async (vacation) => {
     deleteVacation(vacation);
     handleGetVacations();
@@ -168,7 +175,7 @@ function VacationsTable({
                 component="span"
                 sx={{ marginLeft: 1, fontWeight: 'bold' }}
               >
-                {activeEmployee && activeEmployee.vacations}
+                {activeEmployee && getAllVacationsDuration()}
               </Typography>
             </Typography>
           </Box>

@@ -21,18 +21,18 @@ import MarkEmailReadOutlinedIcon from '@mui/icons-material/MarkEmailReadOutlined
 import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import DeleteAlert from './DeleteAlert';
 import WorkHoursAlert from './WorkHoursAlert';
-import { deleteEmployeeById } from '../../../../api/employeesApi';
+import { deleteEmployeeById } from '../../../api/employeesApi';
 import {
   sortAlphabeticallyAscending,
   sortAlphabeticallyDescending,
   sortByPinAscending,
   sortByPinDescending,
-} from '../../../../helpers/sortFuncs';
-import { useEmployeesContext } from '../../../../contexts/employeeContext';
-import { useAgenciesContext } from '../../../../contexts/agenciesContext';
-import getAgienciesIdToNameMap from '../../../../helpers/getAgenciesIdToNameMap';
+} from '../../../helpers/sortFuncs';
+import { useEmployeesContext } from '../../../contexts/employeeContext';
+import { useAgenciesContext } from '../../../contexts/agenciesContext';
+import getAgienciesIdToNameMap from '../../../helpers/getAgenciesIdToNameMap';
 import AddEmployeeModal from './AddEmployeeModal';
-import { SendEmailAlert } from '../SendEmailAlert';
+import { SendEmailAlert } from './SendEmailAlert';
 
 const sortingOrder = Object.freeze({
   Descending: 'descending',

@@ -14,10 +14,10 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import { createEmployee, updateEmployeeById } from '../../../../api/employeesApi';
-import { useAgenciesContext } from '../../../../contexts/agenciesContext';
-import { useEmployeesContext } from '../../../../contexts/employeeContext';
-import getNextPin from '../../../../helpers/getNextPin';
+import { createEmployee, updateEmployeeById } from '../../../api/employeesApi';
+import { useAgenciesContext } from '../../../contexts/agenciesContext';
+import { useEmployeesContext } from '../../../contexts/employeeContext';
+import getNextPin from '../../../helpers/getNextPin';
 
 const style = {
   position: 'absolute',
@@ -61,6 +61,8 @@ export default function AddEmployeeModal({
   const { employees, fetchEmployees } = useEmployeesContext();
 
   const agenciesNamesList = agencies?.map((agency) => agency?.name);
+
+  console.log(activeEmployee);
 
   useEffect(() => {
     if (activeEmployee) {

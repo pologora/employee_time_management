@@ -9,7 +9,7 @@ import {
   getAllSntiRaport,
   getEmployeeRaportByIdAndDate,
 } from '../../../api/raportsApi';
-import WorkTimeUpdateCreateAlert from '../employees/components/WorkTimeUpdateCreateAlert';
+import WorkTimeUpdateCreateAlert from '../employees/WorkTimeUpdateCreateAlert';
 
 function Raporty() {
   const [selectedComponent, setSelectedComponent] = useState('home');
