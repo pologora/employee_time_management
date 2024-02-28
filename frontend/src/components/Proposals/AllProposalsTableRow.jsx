@@ -44,11 +44,7 @@ export function AllProposalsTableRow({ vacation }) {
       <TableCell sx={{ color }}>
         {fullTitle}
       </TableCell>
-      {/* <TableCell>
-        <IconButton color="primary" aria-label="add to shopping cart">
-        <KeyboardArrowDownIcon fontSize="small" />
-        </IconButton>
-    </TableCell> */}
+
     </StyledTableRowVacations>
 
   );

@@ -92,11 +92,13 @@ function EmployeesHome({ setSelectedEmployee, handleChangeComponentToRender }) {
           >
             Dodaj pracownika
           </Button>
+          {open && (
           <AddEmployeeModal
             open={open}
             setOpen={setOpen}
             title="Dodawanie pracownika"
           />
+          )}
         </Box>
         {!isLoading ? (
           <EmployeesTable

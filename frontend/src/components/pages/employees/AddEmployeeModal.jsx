@@ -62,8 +62,6 @@ export default function AddEmployeeModal({
 
   const agenciesNamesList = agencies?.map((agency) => agency?.name);
 
-  console.log(activeEmployee);
-
   useEffect(() => {
     if (activeEmployee) {
       const employee = employees.find((item) => item._id === activeEmployee.id);

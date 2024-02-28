@@ -4,8 +4,10 @@ import getTimeFromMinutes from './getTimeFromMinutes';
 import oneDocumentTotalTimeInMinutes from './timeOperations/oneDocumentTotalTimeInMinutes';
 
 export default (data, startDate, endDate) => {
-  const startD = new Date(startDate);
-  const endD = new Date(endDate);
+  const startD = new Date(`${startDate}`.slice(0, 19));
+  const endD = new Date(`${endDate}`.slice(0, 19));
+  endD.setHours(23, 59, 59);
+
   const calendar = createCalendarArray(startD, endD);
 
   const totalMonthWorkTime = getTimeFromMinutes(data?.totalWorkHours);
