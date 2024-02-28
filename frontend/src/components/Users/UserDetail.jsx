@@ -100,40 +100,35 @@ export function UserDetail() {
       )}
       <Button onClick={() => navigate('/users')} startIcon={<ArrowBackRoundedIcon />}>wstecz</Button>
       <Paper sx={{ padding: 2, marginTop: 2 }}>
+        <Typography className="bold" component="span" fontWeight={700}>text</Typography>
         <Typography variant="h5" gutterBottom>
           User Information
         </Typography>
-        <Typography variant="body1">
-          Imię:
-          {' '}
-          {user.name}
-        </Typography>
-        <Typography variant="body1">
-          Nazwisko:
-          {' '}
-          {user.surname}
-        </Typography>
+        <div className="userDetailFieldsContainer">
+          <Typography variant="body1">
+            Imię:
+          </Typography>
+          <Typography className="bold" fontWeight={700}>{user.name}</Typography>
+        </div>
+        <div className="userDetailFieldsContainer">
+          <Typography variant="body1">
+            Nazwisko:
+          </Typography>
+          <Typography className="bold" fontWeight={700}>{user.surname}</Typography>
+        </div>
         <UserDetailFieldWithUpdate
           title="Email"
           value={user.email}
           update={handleUpdate}
           name="email"
         />
-        <Typography variant="body1">
-          Role:
-          {' '}
-          {user.role}
-        </Typography>
+        <div className="userDetailFieldsContainer">
+          <Typography variant="body1">
+            Role:
+          </Typography>
+          <Typography className="bold" component="span" fontWeight={700}>{user.role}</Typography>
+        </div>
         <Box marginTop={2}>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={handleUpdate}
-            sx={{ marginRight: 2 }}
-          >
-            Update User
-          </Button>
-
           <Button
             variant="contained"
             color="error"

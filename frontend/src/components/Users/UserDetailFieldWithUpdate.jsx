@@ -24,12 +24,14 @@ export function UserDetailFieldWithUpdate({
       />
       )}
       <Box>
-        <Typography variant="body1" component="span" marginRight={2}>
-          {title}
-          {': '}
-          {value}
-        </Typography>
-        <Button onClick={handleEditClick}>zmień</Button>
+        <div className="userDetailFieldsContainer">
+          <Typography variant="body1" component="span" marginRight={2}>
+            {title}
+            {': '}
+          </Typography>
+          <Button onClick={handleEditClick}>zmień</Button>
+          <Typography className="bold" component="span" fontWeight={700}>{value}</Typography>
+        </div>
       </Box>
     </>
   );
