@@ -16,7 +16,6 @@ export function AllProposals() {
     queryKey: ['proposals', page],
   });
 
-  console.log(data);
   const itemsPerPage = 25;
   const minPage = 1;
   const pagesQuantity = Math.ceil((data?.vacationsSize || minPage) / itemsPerPage) || minPage;

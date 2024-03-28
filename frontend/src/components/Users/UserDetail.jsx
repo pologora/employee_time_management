@@ -100,9 +100,8 @@ export function UserDetail() {
       )}
       <Button onClick={() => navigate('/users')} startIcon={<ArrowBackRoundedIcon />}>wstecz</Button>
       <Paper sx={{ padding: 2, marginTop: 2 }}>
-        <Typography className="bold" component="span" fontWeight={700}>text</Typography>
         <Typography variant="h5" gutterBottom>
-          User Information
+          Dane użytkownika
         </Typography>
         <div className="userDetailFieldsContainer">
           <Typography variant="body1">
@@ -124,7 +123,7 @@ export function UserDetail() {
         />
         <div className="userDetailFieldsContainer">
           <Typography variant="body1">
-            Role:
+            Rola:
           </Typography>
           <Typography className="bold" component="span" fontWeight={700}>{user.role}</Typography>
         </div>
@@ -134,7 +133,7 @@ export function UserDetail() {
             color="error"
             onClick={handleDeleteClick}
           >
-            Delete User
+            Usuń użytkownika
           </Button>
         </Box>
       </Paper>
