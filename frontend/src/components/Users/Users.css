@@ -1,0 +1,11 @@
+.custom-link{
+    text-decoration: none; 
+    color: inherit;
+}
+
+.userDetailFieldsContainer {
+    width: min(80%,400px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

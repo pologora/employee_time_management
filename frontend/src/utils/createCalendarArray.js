@@ -28,6 +28,5 @@ export default (startDate, endDate) => {
       };
     },
   );
-
   return calendarArray;
 };

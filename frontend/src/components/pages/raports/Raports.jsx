@@ -9,7 +9,7 @@ import {
   getAllSntiRaport,
   getEmployeeRaportByIdAndDate,
 } from '../../../api/raportsApi';
-import WorkTimeUpdateCreateAlert from '../employees/components/WorkTimeUpdateCreateAlert';
+import WorkTimeUpdateCreateAlert from '../employees/WorkTimeUpdateCreateAlert';
 
 function Raporty() {
   const [selectedComponent, setSelectedComponent] = useState('home');
@@ -38,8 +38,8 @@ function Raporty() {
 
   const handleSingleEmployeeRaport = async (id, startDate, endDate) => {
     try {
-      const data = await getEmployeeRaportByIdAndDate(id, startDate, endDate);
-      setRaportData(data);
+      const { data } = await getEmployeeRaportByIdAndDate(id, startDate, endDate);
+      setRaportData(data.data);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('singleEmployee');
       setLastReport('single');
@@ -50,12 +50,12 @@ function Raporty() {
 
   const handleAllAgencjaGenerate = async (startDate, endDate, agency) => {
     try {
-      const data = await getAllAgencjaRaport(startDate, endDate);
-      let filteredData = data;
+      const { data } = await getAllAgencjaRaport(startDate, endDate);
+      let filteredData = data.data;
       if (agency) {
         const id = agency?._id || '';
         if (id) {
-          filteredData = data.filter((item) => item.agency === id);
+          filteredData = data.data.filter((item) => item.agency === id);
         }
       }
       setRaportData(filteredData);
@@ -68,8 +68,8 @@ function Raporty() {
 
   const handleAllSntiRaport = async (startDate, endDate) => {
     try {
-      const data = await getAllSntiRaport(startDate, endDate);
-      setRaportData(data);
+      const { data } = await getAllSntiRaport(startDate, endDate);
+      setRaportData(data?.data);
       setRaportRange([startDate, endDate]);
       setSelectedComponent('allSntiRaport');
       setLastReport('allSnti');

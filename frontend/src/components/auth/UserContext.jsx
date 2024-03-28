@@ -1,27 +1,38 @@
-import {
-  createContext, useState, useContext, useMemo, useEffect,
-} from 'react';
-import app from '../../options/realmConfig';
+import { createContext, useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import { getSafeContext } from '../../contexts/getSafeContext';
 
 const UserContext = createContext(null);
 
-export const useUser = () => useContext(UserContext);
+export function UserContextProvider({ children }) {
+  const [user, setUser] = useState(() => {
+    const cookieUser = Cookies.get('user');
+    return cookieUser ? JSON.parse(cookieUser) : null;
+  });
+  const navigate = useNavigate();
 
-export function UserProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const navigateToLogin = () => navigate('/login');
+
+  const signIn = (user) => {
+    setUser(user);
+  };
+
+  const signOut = () => {
+    setUser(null);
+    navigateToLogin();
+  };
 
   useEffect(() => {
-    const restoreUser = () => {
-      const { currentUser } = app;
-      setUser(currentUser);
-      setLoading(false);
-    };
+    if (user) {
+      Cookies.set('user', JSON.stringify(user), { expires: 365 });
+    } else {
+      Cookies.remove('user');
+    }
+  }, [user]);
 
-    restoreUser();
-  }, []);
-
-  const value = useMemo(() => ({ user, setUser, loading }), [user]);
-
-  return <UserContext.Provider value={value}>{children}</UserContext.Provider>;
+  // eslint-disable-next-line react/jsx-no-constructed-context-values
+  return <UserContext.Provider value={{ user, signIn, signOut }}>{children}</UserContext.Provider>;
 }
+
+export const useUserContext = getSafeContext(UserContext, 'UserContext');

@@ -10,8 +10,7 @@ function AllSntiRaport({
   closeTimeEditModal,
 }) {
   const [start, end] = raportRange;
-
-  const raports = raport.map((item) => generateSingleEmplRaport(item, start, end));
+  const raports = raport?.map((item) => generateSingleEmplRaport(item, start, end));
 
   const generateExcel = (employees, filename) => {
     const wb = XLSX.utils.book_new();

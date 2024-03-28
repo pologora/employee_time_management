@@ -1,38 +1,75 @@
-import useAxios from '../hooks/useAxios';
-import baseUrl from '../options/baseUrl';
+/* eslint-disable no-console */
+import axiosInstance from '../options/axiosInstance';
+
 import toISOStringWithLocalTimezone from '../utils/toISOStringWithLocalTimezone';
 
-const { post, deleteItem, get } = useAxios();
-
 export const createTime = async (id, startWork, endWork) => {
-  const url = `${baseUrl}/worktime?id=${id}&startWork=${startWork}&endWork=${endWork}`;
-  const response = post(url);
-  return response;
+  // should change date string to format like: 2024-02-01T15:30:00
+  const start = startWork.slice(0, 19);
+  const end = endWork.slice(0, 19);
+
+  try {
+    const newDocument = { id, startWork: start, endWork: end };
+    const url = '/worktime';
+
+    const { data: response } = await axiosInstance.post(url, newDocument);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const updateTime = async (id, startWork, endWork) => {
-  const url = `${baseUrl}/worktime/update?id=${id}&startWork=${startWork}&endWork=${endWork}`;
-  const response = post(url);
-  return response;
+  // should change date string to format like: 2024-02-01T15:30:00
+  const start = startWork.slice(0, 19);
+  const end = endWork.slice(0, 19);
+
+  try {
+    const newDocument = { startWork: start, endWork: end };
+    const url = `/worktime/${id}`;
+
+    const { data: response } = await axiosInstance.patch(url, newDocument);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const deleteTime = async (id) => {
-  const url = `${baseUrl}/worktime?id=${id}`;
-  const response = await deleteItem(url);
-  return response;
+  try {
+    const url = `/worktime/${id}`;
+
+    const { data: response } = await axiosInstance.delete(url);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const getTimeById = async (id) => {
-  const url = `${baseUrl}/worktime?id=${id}`;
-  const response = await get(url);
-  return response;
+  try {
+    const url = `/worktime/${id}`;
+    const { data: response } = await axiosInstance.get(url);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };
 
 export const getEmployeeWorkTimeByDate = async (id, startDate, endDate) => {
-  const url = `${baseUrl}/employee/worktime?id=${id}&startDate=${toISOStringWithLocalTimezone(
-    startDate,
-  )}&endDate=${toISOStringWithLocalTimezone(endDate)}`;
+  try {
+    const url = `/worktime?id=${id}&startDate=${toISOStringWithLocalTimezone(
+      startDate,
+    )}&endDate=${toISOStringWithLocalTimezone(endDate)}`;
 
-  const response = await get(url);
-  return response;
+    const { data: response } = await axiosInstance.get(url);
+    return response;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
 };

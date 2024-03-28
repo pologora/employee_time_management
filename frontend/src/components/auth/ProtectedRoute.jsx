@@ -1,18 +1,18 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from './UserContext';
+import { useUserContext } from './UserContext';
 
 function ProtectedRoute({ children }) {
-  const { user, loading } = useUser();
+  const { user } = useUserContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!user) {
       navigate('/login');
     }
-  }, [user, loading, navigate]);
+  }, [user, navigate]);
 
-  return !loading && user ? children : null;
+  return user ? children : null;
 }
 
 export default ProtectedRoute;

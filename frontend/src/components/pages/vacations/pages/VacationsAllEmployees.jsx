@@ -47,9 +47,9 @@ function VacationsAllEmployees({ reload, employees }) {
   const handleGetAllVacations = async () => {
     setIsLoading(true);
     try {
-      const data = { type: 'Wypoczynkowy' };
-      const vacations = await getAllVacationsByTimeAndType(data);
-      setVacationsData(vacations);
+      const queryData = { type: 'Wypoczynkowy' };
+      const { data } = await getAllVacationsByTimeAndType(queryData);
+      setVacationsData(data);
     } catch (error) {
       alert(error);
     } finally {
@@ -159,7 +159,7 @@ function VacationsAllEmployees({ reload, employees }) {
   };
 
   const handleGetLastYearVacationDaysLeft = async () => {
-    const data = await getLastYearVacationDaysLeft();
+    const { data } = await getLastYearVacationDaysLeft();
     setLastYearVacationLeftDays(data);
   };
 

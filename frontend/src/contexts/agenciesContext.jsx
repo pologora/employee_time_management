@@ -6,12 +6,22 @@ const AgenciesContext = createContext();
 export function AgenciesContextProvider({ children }) {
   const [agencies, setAgencies] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState('');
 
   const fetchAgencies = async () => {
     setIsLoading(true);
-    const data = await getAgencies();
-    setAgencies(data);
-    setIsLoading(false);
+    try {
+      const { data } = await getAgencies();
+      setAgencies(data);
+      setIsError(false);
+      setError('');
+    } catch (error) {
+      setIsError(true);
+      setError(error.message ?? 'Coś poszło nie tak');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   useState(() => {
@@ -19,7 +29,9 @@ export function AgenciesContextProvider({ children }) {
   }, []);
 
   // eslint-disable-next-line react/jsx-no-constructed-context-values
-  const contextValue = { agencies, isLoading, fetchAgencies };
+  const contextValue = {
+    agencies, isLoading, fetchAgencies, isError, error,
+  };
   return (
     <AgenciesContext.Provider value={contextValue}>
       {children}

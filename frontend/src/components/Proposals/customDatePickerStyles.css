@@ -1,0 +1,18 @@
+.react-datepicker__day--range-end {
+  background-color: #0a66c2 !important;
+  color: #fff !important;
+}
+
+.react-datepicker__day--range-start {
+  background-color: #0a66c2 !important;
+  color: #fff !important;
+}
+
+.react-datepicker__day--in-range {
+  background-color: #0a66c2 !important;
+  color: #fff !important;
+}
+
+.weekend {
+  background-color: #f0f0f0;
+}

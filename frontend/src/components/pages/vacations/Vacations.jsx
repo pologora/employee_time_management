@@ -23,7 +23,7 @@ function Vacations() {
   const handleGetSntiEmployees = async () => {
     setIsLoading(true);
     try {
-      const data = await getSntiEmployees();
+      const { data } = await getSntiEmployees();
       setEmployees(data);
     } catch (error) {
       alert(error);

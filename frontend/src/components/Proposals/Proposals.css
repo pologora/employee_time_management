@@ -1,0 +1,23 @@
+.proposalsLayoutContainer {
+    width: 100%;
+}
+
+.error {
+    color: red;
+}
+
+.proposalsPaginationContainer{
+    text-align: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+}
+
+.pendingProposalsTableContainer {
+   margin-top: 1rem;
+}
+
+.custom-link{
+    text-decoration: none; 
+    color: inherit;
+}

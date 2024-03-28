@@ -19,9 +19,9 @@ import {
 } from '@mui/material';
 import Pagination from '@mui/material/Pagination';
 import SettingsIcon from '@mui/icons-material/Settings';
-import vacationTypes from '../../../../options/vacationTypes';
 import UpdateVacationAlert from '../components/UpdateVacationAlert';
 import { getAllVacationsOrByEmloyee } from '../../../../api/vacationsApi';
+import { getRowColorByVacationType } from '../../../../helpers/helplers';
 
 const StyledTableRowVacations = styled(TableRow)(({ theme }) => ({
   '& > *': {
@@ -32,11 +32,6 @@ const StyledTableRowVacations = styled(TableRow)(({ theme }) => ({
     backgroundColor: theme.palette.action.hover,
   },
 }));
-
-const getRowColor = (type) => {
-  const color = vacationTypes.find((item) => item.label === type)?.color;
-  return color || vacationTypes.find((item) => item.label === 'inne').color;
-};
 
 function VacationsTable({
   reload, employees, updateVacation, deleteVacation,
@@ -53,12 +48,12 @@ function VacationsTable({
     setIsLoading(true);
     const employeeId = activeEmployee ? activeEmployee._id : '';
     try {
-      const data = await getAllVacationsOrByEmloyee(page, employeeId);
-      setVacations(data.vacationsList);
+      const { data, vacationsSize } = await getAllVacationsOrByEmloyee(page, employeeId);
+      setVacations(data);
       if (activeEmployee) {
-        setTotalPages(Math.ceil(data.vacationsList.length / 25));
+        setTotalPages(Math.ceil(vacationsSize / 25));
       } else {
-        setTotalPages(Math.ceil(data.vacationSize / 25));
+        setTotalPages(Math.ceil(vacationsSize / 25));
       }
     } catch (error) {
       alert(error.message);
@@ -66,6 +61,13 @@ function VacationsTable({
       setIsLoading(false);
     }
   }
+
+  const getAllVacationsDuration = () => vacations.reduce((acc, item) => {
+    if (item.type === 'Wypoczynkowy') {
+      return acc + item.duration;
+    }
+    return acc;
+  }, 0);
 
   const handleDeleteVacation = async (vacation) => {
     deleteVacation(vacation);
@@ -173,7 +175,7 @@ function VacationsTable({
                 component="span"
                 sx={{ marginLeft: 1, fontWeight: 'bold' }}
               >
-                {activeEmployee && activeEmployee.vacations}
+                {activeEmployee && getAllVacationsDuration()}
               </Typography>
             </Typography>
           </Box>
@@ -208,7 +210,7 @@ function VacationsTable({
                 </TableCell>
                 <TableCell
                   sx={{
-                    color: getRowColor(vacation.type),
+                    color: getRowColorByVacationType(vacation.type),
                   }}
                 >
                   {vacation.type}

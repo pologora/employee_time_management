@@ -69,7 +69,7 @@ export default function AddVacatonAlert({
       endVacation: toISOStringWithLocalTimezone(endDate),
       duration,
       type: typeVacation,
-      id,
+      employeeId: id,
     };
     handleAddVacation(newVacationData);
     onClose();
