@@ -10,7 +10,11 @@ This is a commercial, freelance project that was developed based on client needs
 - **Reporting** on employee work times for a selected period.
 - **Export of reports** to Excel files.
 
-## Usage
+## System Parts
+- [Admin panel (React, MaterialUI, Tailwindcss)](https://github.com/pologora/magazyn_time_management)
+- [Backend (Node.js, Express, MongoDB)](https://github.com/pologora/magazyn_backend)
+- [Users web app (React, Typescript, ModuleCSS)](https://github.com/pologora/vacations_app)
+- [Android app (React-native, Typescript)](https://github.com/pologora/employee_time_management/tree/master/mobile_app)
 
 ### Mobile App
 
