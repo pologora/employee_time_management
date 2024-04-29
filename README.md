@@ -5,7 +5,7 @@ This is a commercial, freelance project that was developed based on client needs
 ## Features
 
 - **Mobile app for employees** to start and end work, "offline first".
-- **Web app for employees to track vacations and create vacations request** to start and end work, "offline first".
+- **Web app for employees** to track vacations and create vacations request.
 - **Admin web application** for managing employees, work times, and vacations.
 - **CRUD operations** for employees, work times, and vacations.
 - **Reporting** on employee work times for a selected period.
