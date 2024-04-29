@@ -1,10 +1,11 @@
 # Employee Time Management System
 
-This is a commercial, freelance project that was developed based on client needs and is now being used by a warehouse company to manage employee work times, vacations, and attendance in various work environments. The system includes a mobile app for employees and an admin web application for managers, and is built using React Native, MongoDB Realm, React, and Material UI.
+This is a commercial, freelance project that was developed based on client needs and is now being used by a warehouse company to manage employee work times, vacations, and attendance in various work environments. The system includes a mobile and web app for employees, admin web application for managers, and is built using Node.js, React Native, MongoDB Realm, React, and Material UI
 
 ## Features
 
 - **Mobile app for employees** to start and end work, "offline first".
+- **Web app for employees to track vacations and create vacations request** to start and end work, "offline first".
 - **Admin web application** for managing employees, work times, and vacations.
 - **CRUD operations** for employees, work times, and vacations.
 - **Reporting** on employee work times for a selected period.
